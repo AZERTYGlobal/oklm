@@ -100,7 +100,7 @@
   ],
   "conformance": [
     {
-      "reference": "ISO/IEC 9995-1:2026",
+      "reference": "ISO/IEC 9995-1:2009",
       "scope": "Key reference grid used for canonical key identifiers.",
       "notes": "Illustrative claim for this example file only; the full layout declares its own conformance list."
     }

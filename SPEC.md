@@ -149,7 +149,7 @@ Cancellation behavior (Escape, unrelated key, focus change) differs across platf
 
 ### Conformance Declaration
 
-A manifest may claim conformance to normative references through the `conformance` array (D13). A global "ISO 9995 compliant" claim is invalid: each claim names one reference with edition (e.g. `ISO/IEC 9995-1:2026`, `AFNOR NF Z71-300:2019`) and states its scope. Partial conformance is allowed and must be scoped.
+A manifest may claim conformance to normative references through the `conformance` array (D13). A global "ISO 9995 compliant" claim is invalid: each claim names one reference with edition (e.g. `ISO/IEC 9995-1:2009`, `AFNOR NF Z71-300:2019`) and states its scope. Partial conformance is allowed and must be scoped.
 
 LDML alignment is not an ISO conformance claim; it is declared separately on the LDML export target (`exports[].options.conformsTo`, a whole number ≥ 45 per UTS #35 Part 7).
 
@@ -174,7 +174,10 @@ Namespaced extension blocks for data outside the LDML-aligned core. Reserved nam
 
 ## Example
 
-See [`examples/azerty-global-minimal.oklm.json`](examples/azerty-global-minimal.oklm.json) — a minimal, hand-written AZERTY Global subset that validates against the manifest schema: ISO 9995-1 key ids with mandatory `hid` and optional `xkb`/`code` aliases, `(group, level)` outputs in compact notation, two dead keys, a scoped conformance claim and two export targets.
+Two examples validate against the manifest schema:
+
+- [`examples/azerty-global.oklm.json`](examples/azerty-global.oklm.json) — the complete AZERTY Global layout (49 graphic keys, 8 ISO levels including CapsLock variants, 29 dead keys, 1016 compositions), generated from the layout's source of truth and verified field-by-field against it;
+- [`examples/azerty-global-minimal.oklm.json`](examples/azerty-global-minimal.oklm.json) — a minimal, hand-written subset: ISO 9995-1 key ids with mandatory `hid` and optional `xkb`/`code` aliases, `(group, level)` outputs in compact notation, two dead keys, a scoped conformance claim and two export targets.
 
 ## Validation Requirements
 
