@@ -85,7 +85,7 @@ select#layout { font: inherit; font-size: .95rem; padding: .45rem .7rem; border-
 .key .tl { top: .22rem; left: .34rem; }
 .key .bl { bottom: .22rem; left: .34rem; }
 .key .br { bottom: .22rem; right: .34rem; color: var(--muted); }
-.key .tr { top: .22rem; right: .34rem; color: var(--faint); font-size: .62rem; }
+.key .tr { top: .22rem; right: .34rem; color: var(--muted); font-size: .68rem; }
 .key .dead { color: var(--dead); font-weight: 700; }
 .key.frame .c { font-size: .66rem; }
 .kb-hint { font-size: .82rem; color: var(--faint); margin-top: .5rem; }
@@ -301,12 +301,14 @@ function activeLevel() {
 
 const SPACES = { " ": "space", " ": "no-break space", " ": "narrow no-break space" };
 
+const COMBINING = /^[̀-ͯ᪰-᫿᷀-᷿⃐-⃿︠-︯]$/;
 function deadLabel(id) {
   const dk = deadIndex[id];
   if (!dk) return "◌";
-  if (dk.display) return dk.display;
-  const c = dk.compositions || {};
-  return c[" "] || dk.fallback || Object.values(c)[0] || "◌";
+  let s = dk.display || (dk.compositions || {})[" "] || dk.fallback ||
+          Object.values(dk.compositions || {})[0] || "◌";
+  if (COMBINING.test(s)) s = "◌" + s;
+  return s;
 }
 function outLabel(out) {
   if (out == null) return null;
@@ -355,7 +357,9 @@ function renderKeyboard() {
                 l3 = outLabel(k.levels["3"]), l4 = outLabel(k.levels["4"]);
           const letter = l1 && l2 && !l1.dead && !l2.dead && !l3 && !l4 &&
                          l2.text === l1.text.toUpperCase() && l1.text !== l2.text;
-          if (letter) el.innerHTML = '<span class="lab c">' + esc(l2.text) + "</span>";
+          const spaceKey = l1 && l1.text === "␣";
+          if (spaceKey) el.innerHTML = '<span class="lab c" style="color:var(--faint)">␣</span>';
+          else if (letter) el.innerHTML = '<span class="lab c">' + esc(l2.text) + "</span>";
           else el.innerHTML =
             (l2 ? '<span class="lab tl' + (l2.dead ? " dead" : "") + '">' + esc(l2.text) + "</span>" : "") +
             (l1 ? '<span class="lab bl' + (l1.dead ? " dead" : "") + '">' + esc(l1.text) + "</span>" : "") +
@@ -371,17 +375,26 @@ function renderKeyboard() {
     maxX = Math.max(maxX, x);
   });
 
-  /* ISO L-shaped Enter spanning rows 1-2 */
+  /* ISO L-shaped Enter spanning rows 1-2, drawn as SVG to keep its border */
   if (iso) {
+    const W = 1.5 * U + 0.5 * GAP, H = 2 * U + GAP, cut = 0.25 * (U + GAP), mid = U, r = 6;
     const el = document.createElement("div");
     el.className = "key frame";
     el.style.left = (PAD + 13.5 * (U + GAP)) + "px";
     el.style.top = (PAD + 1 * (U + GAP)) + "px";
-    el.style.width = (1.5 * U + 0.5 * GAP) + "px";
-    el.style.height = (2 * U + GAP) + "px";
-    const cut = (0.25 * (U + GAP)) / (1.5 * U + 0.5 * GAP) * 100;
-    el.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, " + cut.toFixed(1) + "% 100%, " + cut.toFixed(1) + "% 48%, 0 48%)";
-    el.innerHTML = '<span class="lab c" style="align-items:flex-start; padding-top:.5rem">⏎</span>';
+    el.style.width = W + "px";
+    el.style.height = H + "px";
+    el.style.border = "none";
+    el.style.background = "transparent";
+    const d = "M " + r + " .5 H " + (W - r) + " Q " + (W - .5) + " .5 " + (W - .5) + " " + r +
+      " V " + (H - r) + " Q " + (W - .5) + " " + (H - .5) + " " + (W - r) + " " + (H - .5) +
+      " H " + (cut + r) + " Q " + (cut + .5) + " " + (H - .5) + " " + (cut + .5) + " " + (H - r) +
+      " V " + (mid + r) + " Q " + (cut + .5) + " " + (mid + .5) + " " + (cut - r) + " " + (mid + .5) +
+      " H " + r + " Q .5 " + (mid + .5) + " .5 " + (mid - r) +
+      " V " + r + " Q .5 .5 " + r + " .5 Z";
+    el.innerHTML = '<svg width="' + W + '" height="' + H + '" style="position:absolute;inset:0">' +
+      '<path d="' + d + '" fill="var(--keycap-frame)" stroke="var(--keycap-border)"/></svg>' +
+      '<span class="lab" style="top:.9rem; right:.55rem; font-size:.8rem">⏎</span>';
     kb.appendChild(el);
   }
   kb.style.width = (2 * PAD + maxX * (U + GAP) - GAP) + "px";
