@@ -5,164 +5,260 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OKLM — Open Keyboard Layout Model</title>
 <meta name="description" content="An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='6' width='30' height='20' rx='4' fill='%230b57d0'/%3E%3Cg fill='white'%3E%3Crect x='5' y='10' width='4' height='4' rx='1'/%3E%3Crect x='11' y='10' width='4' height='4' rx='1'/%3E%3Crect x='17' y='10' width='4' height='4' rx='1'/%3E%3Crect x='23' y='10' width='4' height='4' rx='1'/%3E%3Crect x='5' y='16' width='4' height='4' rx='1' fill='%23f4a261'/%3E%3Crect x='11' y='16' width='10' height='4' rx='1'/%3E%3Crect x='23' y='16' width='4' height='4' rx='1'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='6' width='30' height='20' rx='4' fill='%233b82f6'/%3E%3Cg fill='white'%3E%3Crect x='5' y='10' width='4' height='4' rx='1'/%3E%3Crect x='11' y='10' width='4' height='4' rx='1'/%3E%3Crect x='17' y='10' width='4' height='4' rx='1'/%3E%3Crect x='23' y='10' width='4' height='4' rx='1'/%3E%3Crect x='5' y='16' width='4' height='4' rx='1' fill='%23fb923c'/%3E%3Crect x='11' y='16' width='10' height='4' rx='1'/%3E%3Crect x='23' y='16' width='4' height='4' rx='1'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #ffffff; --fg: #1b1f24; --muted: #59636e; --faint: #818b98;
-  --accent: #0b57d0; --accent-soft: #e8f0fe;
-  --card: #f6f8fa; --border: #d1d9e0; --border-soft: #e6ebf1;
-  --keycap: #ffffff; --keycap-frame: #eef1f4; --keycap-border: #c9d1d9;
-  --dead: #b3591c; --dead-soft: #fff1e5;
-  --code-bg: #f6f8fa;
+  --bg: #fafbfd; --bg2: #f1f4f8; --fg: #131922; --muted: #5a6675; --faint: #8f9aa8;
+  --accent: #2563eb; --accent-fg: #2563eb; --accent-soft: rgba(37, 99, 235, .09);
+  --dead: #c2410c; --dead-soft: rgba(194, 65, 12, .10);
+  --panel: #ffffff; --border: #dde3ea; --border-strong: #c8d1db;
+  --deck: linear-gradient(180deg, #eef1f6, #e3e8ef);
+  --kc1: #ffffff; --kc2: #f2f4f8; --kc-border: #cdd5de; --kc-lip: #b9c2cd;
+  --kc-frame1: #e8ecf1; --kc-frame2: #dde2e9;
+  --shadow: 0 1px 2px rgba(19, 25, 34, .06), 0 8px 24px rgba(19, 25, 34, .06);
+  --glow: radial-gradient(60rem 30rem at 70% -10%, rgba(37, 99, 235, .07), transparent 60%);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0d1117; --fg: #e6edf3; --muted: #9aa4af; --faint: #6e7a86;
-    --accent: #7aa5f8; --accent-soft: #16233c;
-    --card: #161b22; --border: #30363d; --border-soft: #21262d;
-    --keycap: #1c2128; --keycap-frame: #14181e; --keycap-border: #3a424b;
-    --dead: #e8956d; --dead-soft: #3a2417;
-    --code-bg: #161b22;
+    --bg: #0b0e14; --bg2: #0e1219; --fg: #e7ecf3; --muted: #97a2b1; --faint: #626d7c;
+    --accent: #6ea2ff; --accent-fg: #8ab4ff; --accent-soft: rgba(110, 162, 255, .12);
+    --dead: #ff9e64; --dead-soft: rgba(255, 158, 100, .12);
+    --panel: #12161f; --border: #232a36; --border-strong: #313a49;
+    --deck: linear-gradient(180deg, #151a24, #10141d);
+    --kc1: #232a36; --kc2: #1a202b; --kc-border: #333c4b; --kc-lip: #0d1118;
+    --kc-frame1: #181e28; --kc-frame2: #131822;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+    --glow: radial-gradient(60rem 30rem at 70% -10%, rgba(110, 162, 255, .10), transparent 60%);
   }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--fg);
-  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
-  -webkit-font-smoothing: antialiased; }
-code, pre, .mono { font-family: ui-monospace, "Cascadia Code", Consolas, "SF Mono", monospace; }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.wrap { max-width: 66rem; margin: 0 auto; padding: 0 1.25rem; }
+  font: 16px/1.7 "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility; }
+code, pre, .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+a { color: var(--accent-fg); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.wrap { max-width: 71rem; margin: 0 auto; padding: 0 1.4rem; }
+::selection { background: var(--accent-soft); }
 
-header.site { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-soft); }
-header.site .wrap { display: flex; align-items: center; gap: 1.4rem; height: 3.2rem; }
-.brand { font-weight: 750; letter-spacing: .04em; font-size: 1.02rem; color: var(--fg); }
-.brand span { color: var(--accent); }
-nav.top { display: flex; gap: 1.1rem; margin-left: auto; font-size: .92rem; }
+/* ---------- header ---------- */
+header.site { position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+header.site .wrap { display: flex; align-items: center; gap: 1.6rem; height: 3.6rem; }
+.brand { display: inline-flex; align-items: center; justify-content: center;
+  font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: .88rem; letter-spacing: .1em;
+  color: var(--fg); background: linear-gradient(180deg, var(--kc1), var(--kc2));
+  border: 1px solid var(--kc-border); border-bottom-width: 3px; border-radius: 8px;
+  padding: .3rem .7rem; }
+.brand:hover { text-decoration: none; border-color: var(--accent); }
+nav.top { display: flex; gap: 1.4rem; margin-left: auto; font-size: .9rem; font-weight: 500; }
 nav.top a { color: var(--muted); }
 nav.top a:hover { color: var(--fg); text-decoration: none; }
+nav.top a.gh { color: var(--fg); }
 
-.hero { padding: 4.2rem 0 2.6rem; }
-.hero h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.15; margin: 0 0 .8rem; letter-spacing: -.01em; }
-.hero p.lead { font-size: 1.16rem; color: var(--muted); max-width: 44rem; margin: 0 0 1.3rem; }
-.chip { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--border);
-  border-radius: 999px; padding: .22rem .8rem; font-size: .82rem; color: var(--muted); background: var(--card); }
-.chip::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); }
-.buttons { margin-top: 1.5rem; display: flex; gap: .7rem; flex-wrap: wrap; }
-.btn { border: 1px solid var(--border); border-radius: 8px; padding: .55rem 1.05rem;
-  background: var(--card); font-weight: 600; font-size: .95rem; color: var(--fg); }
-.btn:hover { border-color: var(--accent); text-decoration: none; }
+/* ---------- hero ---------- */
+.hero-bg { background: var(--glow); }
+.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: 3rem; align-items: center; padding: 5.2rem 0 4rem; }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; padding-top: 3.4rem; } .hero-art { display: none; } }
+.chip { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--border);
+  border-radius: 999px; padding: .28rem .9rem; font-size: .8rem; font-weight: 500;
+  color: var(--muted); background: var(--panel); box-shadow: var(--shadow); }
+.chip::before { content: ""; width: .48rem; height: .48rem; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.hero h1 { font-size: clamp(2.3rem, 4.6vw, 3.4rem); line-height: 1.06; letter-spacing: -.035em;
+  font-weight: 800; margin: 1.1rem 0 1rem; }
+.hero h1 em { font-style: normal; color: var(--accent-fg); }
+.hero p.lead { font-size: 1.12rem; color: var(--muted); max-width: 36rem; margin: 0 0 1.6rem; }
+.buttons { display: flex; gap: .7rem; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--border-strong);
+  border-radius: 10px; padding: .6rem 1.15rem; background: var(--panel);
+  font-weight: 600; font-size: .93rem; color: var(--fg); box-shadow: var(--shadow);
+  transition: transform .12s, border-color .12s; }
+.btn:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-1px); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-@media (prefers-color-scheme: dark) { .btn.primary { color: #0d1117; } }
+@media (prefers-color-scheme: dark) { .btn.primary { color: #0b0e14; } }
 
-section { padding: 2.6rem 0; border-top: 1px solid var(--border-soft); }
-section h2 { font-size: 1.45rem; margin: 0 0 .4rem; letter-spacing: -.005em; }
-section p.sub { color: var(--muted); margin: 0 0 1.4rem; max-width: 46rem; }
+/* hero keycap art */
+.hero-art { display: flex; flex-direction: column; align-items: center; gap: .8rem;
+  transform: rotate(-3deg); }
+.hero-row { display: flex; gap: .8rem; }
+.hk { width: 5.4rem; height: 5.4rem; border-radius: 14px; position: relative;
+  background: linear-gradient(180deg, var(--kc1), var(--kc2));
+  border: 1px solid var(--kc-border); border-bottom: 4px solid var(--kc-lip);
+  box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center;
+  font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 1.7rem; }
+.hk small { position: absolute; bottom: .45rem; right: .6rem; font-size: .78rem;
+  font-weight: 500; color: var(--dead); }
+.hk.acc { color: var(--accent-fg); }
+.hero-row:nth-child(2) { transform: translateX(1.3rem); }
 
-/* ---- demo ---- */
-.demo-bar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: .9rem; }
-select#layout { font: inherit; font-size: .95rem; padding: .45rem .7rem; border-radius: 8px;
-  border: 1px solid var(--border); background: var(--card); color: var(--fg); }
-.mods { display: flex; gap: .4rem; margin-left: auto; flex-wrap: wrap; }
-.mod { font: inherit; font-size: .85rem; font-weight: 600; padding: .38rem .75rem; border-radius: 999px;
-  border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; }
-.mod[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-.demo-meta { font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
-.demo-meta .mono { color: var(--fg); }
-.kb-scroll { overflow-x: auto; padding-bottom: .4rem; }
-.kb { position: relative; margin: 0 auto; }
-.key { position: absolute; border: 1px solid var(--keycap-border); border-radius: 6px;
-  background: var(--keycap); font-size: .72rem; line-height: 1.15; cursor: pointer;
-  transition: border-color .08s, transform .05s; user-select: none; }
-.key:hover { border-color: var(--accent); z-index: 2; }
-.key.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); z-index: 3; }
-.key.frame { background: var(--keycap-frame); color: var(--faint); cursor: default; font-size: .62rem; }
-.key.frame:hover { border-color: var(--keycap-border); }
+/* ---------- sections ---------- */
+section { padding: 3.6rem 0; }
+section + section { border-top: 1px solid var(--border); }
+.kicker { font-family: "JetBrains Mono", monospace; font-size: .74rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--accent-fg); margin: 0 0 .5rem; }
+section h2 { font-size: clamp(1.5rem, 2.6vw, 1.9rem); letter-spacing: -.02em;
+  font-weight: 750; margin: 0 0 .55rem; }
+section p.sub { color: var(--muted); margin: 0 0 1.7rem; max-width: 47rem; font-size: 1.02rem; }
+
+/* ---------- demo ---------- */
+#demo { background: var(--bg2); }
+.demo-bar { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; margin-bottom: .9rem; }
+select#layout { font: inherit; font-size: .93rem; font-weight: 600; padding: .5rem .85rem;
+  border-radius: 10px; border: 1px solid var(--border-strong); background: var(--panel);
+  color: var(--fg); box-shadow: var(--shadow); cursor: pointer; }
+.mods { display: flex; gap: .45rem; margin-left: auto; flex-wrap: wrap; }
+.mod { font: inherit; font-size: .84rem; font-weight: 600; padding: .42rem .85rem;
+  border-radius: 999px; border: 1px solid var(--border-strong); background: var(--panel);
+  color: var(--muted); cursor: pointer; transition: all .12s; }
+.mod:hover { border-color: var(--accent); color: var(--fg); }
+.mod[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { .mod[aria-pressed="true"] { color: #0b0e14; } }
+.demo-meta { font-size: .86rem; color: var(--muted); margin-bottom: 1.2rem; }
+.demo-meta .mono { color: var(--fg); font-weight: 500; }
+
+.kb-scroll { overflow-x: auto; padding: .2rem .2rem 1rem; }
+.kb-deck { position: relative; margin: 0 auto; width: max-content;
+  background: var(--deck); border: 1px solid var(--border);
+  border-radius: 22px; padding: 16px; box-shadow: var(--shadow); }
+.kb { position: relative; }
+.key { position: absolute; border-radius: 8px; cursor: pointer; user-select: none;
+  background: linear-gradient(180deg, var(--kc1), var(--kc2));
+  border: 1px solid var(--kc-border); border-bottom: 3px solid var(--kc-lip);
+  font-size: .74rem; line-height: 1.1; font-weight: 500;
+  transition: transform .1s, border-color .1s, box-shadow .1s; }
+.key:hover { transform: translateY(-2px); border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .18); z-index: 2; }
+.key.sel { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); z-index: 3; }
+.key.frame { background: linear-gradient(180deg, var(--kc-frame1), var(--kc-frame2));
+  color: var(--faint); cursor: default; font-size: .64rem; font-weight: 500; }
+.key.frame:hover { transform: none; border-color: var(--kc-border); box-shadow: none; }
 .key .lab { position: absolute; }
-.key .c { inset: 0; display: flex; align-items: center; justify-content: center; font-size: .95rem; }
-.key .tl { top: .22rem; left: .34rem; }
-.key .bl { bottom: .22rem; left: .34rem; }
-.key .br { bottom: .22rem; right: .34rem; color: var(--muted); }
-.key .tr { top: .22rem; right: .34rem; color: var(--muted); font-size: .68rem; }
+.key .c { inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.key .big { top: .3rem; left: .42rem; font-size: .98rem; font-weight: 600; }
+.key .tl { top: .26rem; left: .42rem; }
+.key .bl { bottom: .3rem; left: .42rem; }
+.key .br { bottom: .3rem; right: .42rem; color: var(--muted); }
+.key .tr { top: .26rem; right: .42rem; color: var(--muted); font-size: .68rem; }
 .key .dead { color: var(--dead); font-weight: 700; }
-.key.frame .c { font-size: .66rem; }
-.kb-hint { font-size: .82rem; color: var(--faint); margin-top: .5rem; }
+.key.frame .c { font-size: .68rem; }
+.kb-hint { font-size: .84rem; color: var(--faint); margin-top: .3rem; }
+.legend-dot { display: inline-block; width: .55rem; height: .55rem; border-radius: 3px;
+  background: var(--dead); vertical-align: baseline; margin-right: .25rem; }
 
-.inspector { margin-top: 1.1rem; border: 1px solid var(--border); border-radius: 10px;
-  background: var(--card); padding: 1rem 1.2rem; min-height: 3rem; }
-.inspector h3 { margin: 0 0 .55rem; font-size: 1rem; display: flex; gap: .6rem; align-items: baseline; flex-wrap: wrap; }
+.inspector { margin-top: 1.3rem; border: 1px solid var(--border); border-radius: 14px;
+  background: var(--panel); padding: 1.15rem 1.35rem; min-height: 3.4rem; box-shadow: var(--shadow); }
+.inspector h3 { margin: 0 0 .6rem; font-size: 1.02rem; display: flex; gap: .7rem;
+  align-items: baseline; flex-wrap: wrap; }
 .inspector h3 .ids { font-size: .8rem; color: var(--muted); font-weight: 400; }
-.lvl-table { display: grid; grid-template-columns: max-content 1fr; gap: .18rem .9rem; font-size: .88rem; }
+.lvl-table { display: grid; grid-template-columns: max-content 1fr; gap: .22rem 1rem; font-size: .88rem; }
 .lvl-table .n { color: var(--muted); }
 .out { font-weight: 600; }
 .out.deadref { color: var(--dead); }
-.comp-wrap { margin-top: .8rem; }
-.comp-wrap h4 { margin: 0 0 .4rem; font-size: .85rem; color: var(--muted); font-weight: 600; }
-.comps { display: flex; flex-wrap: wrap; gap: .3rem; max-height: 9.5rem; overflow-y: auto; }
-.comps span { border: 1px solid var(--border-soft); background: var(--bg); border-radius: 6px;
-  padding: .1rem .45rem; font-size: .84rem; white-space: nowrap; }
+.comp-wrap { margin-top: .9rem; }
+.comp-wrap h4 { margin: 0 0 .45rem; font-size: .85rem; color: var(--muted); font-weight: 600; }
+.comps { display: flex; flex-wrap: wrap; gap: .32rem; max-height: 9.5rem; overflow-y: auto; }
+.comps span { border: 1px solid var(--border); background: var(--bg); border-radius: 7px;
+  padding: .12rem .5rem; font-size: .85rem; white-space: nowrap; }
 .comps b { color: var(--dead); font-weight: 600; }
 .placeholder { color: var(--faint); font-size: .92rem; }
 
-/* ---- content sections ---- */
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
-.card { border: 1px solid var(--border-soft); border-radius: 10px; padding: 1.05rem 1.2rem; background: var(--card); }
-.card h3 { margin: 0 0 .35rem; font-size: .98rem; }
-.card p { margin: 0; font-size: .9rem; color: var(--muted); }
-pre.snippet { background: var(--code-bg); border: 1px solid var(--border-soft); border-radius: 10px;
-  padding: 1rem 1.2rem; overflow-x: auto; font-size: .84rem; line-height: 1.5; margin: 0; }
-.pipeline { display: flex; align-items: stretch; gap: .6rem; flex-wrap: wrap; font-size: .88rem; }
-.pipeline .node { border: 1px solid var(--border); border-radius: 10px; background: var(--card);
-  padding: .7rem .95rem; display: flex; flex-direction: column; justify-content: center; }
-.pipeline .node b { font-size: .92rem; }
-.pipeline .node small { color: var(--muted); }
-.pipeline .arrow { align-self: center; color: var(--faint); font-size: 1.1rem; }
-.pipeline .targets { display: grid; grid-template-columns: repeat(2, max-content); gap: .3rem .9rem;
-  border: 1px dashed var(--border); border-radius: 10px; padding: .7rem .95rem; color: var(--muted); }
-table.examples { width: 100%; border-collapse: collapse; font-size: .9rem; }
-table.examples th, table.examples td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--border-soft); }
-table.examples th { color: var(--muted); font-weight: 600; font-size: .82rem; }
-table.examples td.mono { white-space: nowrap; }
-.ex-scroll { overflow-x: auto; }
+/* ---------- snippet ---------- */
+pre.snippet { background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.2rem 1.4rem; overflow-x: auto; font-size: .86rem; line-height: 1.6; margin: 0;
+  box-shadow: var(--shadow); }
+.tok-k { color: var(--accent-fg); }
+.tok-s { color: var(--dead); }
 
-footer.site { border-top: 1px solid var(--border-soft); padding: 2rem 0 2.6rem; margin-top: 2.6rem;
-  color: var(--muted); font-size: .88rem; }
-footer.site .wrap { display: flex; flex-wrap: wrap; gap: .8rem 2.2rem; }
+/* ---------- principles ---------- */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1rem; }
+.card { border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.35rem;
+  background: var(--panel); box-shadow: var(--shadow); transition: transform .12s, border-color .12s; }
+.card:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.card .num { font-family: "JetBrains Mono", monospace; font-size: .74rem; color: var(--accent-fg);
+  font-weight: 700; letter-spacing: .1em; }
+.card h3 { margin: .35rem 0 .4rem; font-size: 1.02rem; font-weight: 700; }
+.card p { margin: 0; font-size: .9rem; color: var(--muted); }
+
+/* ---------- pipeline ---------- */
+.pipeline { display: flex; align-items: stretch; gap: .8rem; flex-wrap: wrap; font-size: .9rem; }
+.pipeline .node { border: 1px solid var(--border); border-radius: 14px; background: var(--panel);
+  padding: .9rem 1.15rem; display: flex; flex-direction: column; justify-content: center;
+  box-shadow: var(--shadow); }
+.pipeline .node b { font-size: .95rem; }
+.pipeline .node small { color: var(--muted); }
+.pipeline .arrow { align-self: center; color: var(--faint); font-size: 1.35rem; }
+.pipeline .targets { display: grid; grid-template-columns: repeat(2, max-content);
+  gap: .4rem 1.1rem; border: 1px dashed var(--border-strong); border-radius: 14px;
+  padding: .9rem 1.15rem; color: var(--muted); font-size: .84rem; }
+
+/* ---------- examples ---------- */
+.table-card { border: 1px solid var(--border); border-radius: 14px; background: var(--panel);
+  box-shadow: var(--shadow); overflow-x: auto; }
+table.examples { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 46rem; }
+table.examples th, table.examples td { text-align: left; padding: .68rem 1.1rem; }
+table.examples th { color: var(--muted); font-weight: 600; font-size: .78rem;
+  text-transform: uppercase; letter-spacing: .07em; border-bottom: 1px solid var(--border); }
+table.examples tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+table.examples tbody tr:last-child { border-bottom: none; }
+table.examples tbody tr:hover { background: var(--accent-soft); }
+table.examples td.mono { white-space: nowrap; font-size: .84rem; }
+.lic { display: inline-block; border: 1px solid var(--border-strong); border-radius: 6px;
+  padding: .05rem .45rem; font-size: .76rem; font-family: "JetBrains Mono", monospace;
+  color: var(--muted); white-space: nowrap; }
+
+/* ---------- footer ---------- */
+footer.site { border-top: 1px solid var(--border); padding: 2.4rem 0 3rem;
+  color: var(--muted); font-size: .88rem; background: var(--bg2); }
+footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-items: center; }
 </style>
 </head>
 <body>
 
 <header class="site">
   <div class="wrap">
-    <a class="brand" href="#">OKLM<span>.</span></a>
+    <a class="brand" href="#">OKLM</a>
     <nav class="top">
       <a href="#demo">Demo</a>
       <a href="#principles">Principles</a>
       <a href="#examples">Examples</a>
       <a href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Spec</a>
-      <a href="https://github.com/AZERTYGlobal/oklm">GitHub</a>
+      <a class="gh" href="https://github.com/AZERTYGlobal/oklm">GitHub ↗</a>
     </nav>
   </div>
 </header>
 
 <main>
-  <div class="hero wrap">
-    <p class="chip">Draft 0.1 — schemas, six example layouts and a validator</p>
-    <h1>One open source of truth<br>per keyboard layout.</h1>
-    <p class="lead">The Open Keyboard Layout Model is a human-maintainable JSON format to describe, validate and export keyboard layouts — to Unicode LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
-    <div class="buttons">
-      <a class="btn primary" href="https://github.com/AZERTYGlobal/oklm">GitHub repository</a>
-      <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
-      <a class="btn" href="https://github.com/AZERTYGlobal/oklm/tree/main/schemas">JSON Schemas</a>
+  <div class="hero-bg">
+    <div class="hero wrap">
+      <div>
+        <p class="chip">Draft 0.1 — schemas, six example layouts and a validator</p>
+        <h1>One open source of truth per <em>keyboard layout</em>.</h1>
+        <p class="lead">OKLM is a human-maintainable JSON model to describe, validate and export keyboard layouts — to Unicode LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
+        <div class="buttons">
+          <a class="btn primary" href="https://github.com/AZERTYGlobal/oklm">GitHub repository</a>
+          <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
+          <a class="btn" href="#demo">Try the demo ↓</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-row"><span class="hk">O</span><span class="hk">K</span></div>
+        <div class="hero-row"><span class="hk">L</span><span class="hk acc">M<small>◌̂</small></span></div>
+      </div>
     </div>
   </div>
 
   <section id="demo">
     <div class="wrap">
+      <p class="kicker">Live demo</p>
       <h2>The format, demonstrating itself</h2>
-      <p class="sub">This keyboard is rendered live from the actual <code>.oklm.json</code> manifests published in the repository — nothing here is drawn by hand. Pick a layout, toggle modifiers, click any key. <span style="color:var(--dead); font-weight:600">Orange</span> marks dead keys: click one to see its composition table.</p>
+      <p class="sub">This keyboard is rendered from the actual <code>.oklm.json</code> manifests published in the repository — nothing is drawn by hand. Pick a layout, toggle modifiers, click any key. <span class="legend-dot"></span><span style="color:var(--dead); font-weight:600">Orange</span> marks dead keys: click one to see its composition table.</p>
       <div class="demo-bar">
         <select id="layout" aria-label="Layout"></select>
         <div class="mods" role="group" aria-label="Modifiers">
@@ -173,39 +269,42 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: .8rem 2.2rem; }
         </div>
       </div>
       <div class="demo-meta" id="meta"></div>
-      <div class="kb-scroll"><div class="kb" id="kb"></div></div>
-      <p class="kb-hint">Greyed keys are frame keys (out of the draft 0.1 core). ISO layouts show the B00 key next to the left Shift; the ANSI layout has none.</p>
+      <div class="kb-scroll"><div class="kb-deck"><div class="kb" id="kb"></div></div></div>
+      <p class="kb-hint">Keycap convention: Shift output top-left, base bottom-left, AltGr bottom-right, Shift+AltGr top-right — letters show a single capital plus their AltGr extras. Greyed keys are frame keys, out of the draft 0.1 core.</p>
       <div class="inspector" id="inspector"><span class="placeholder">Click a key to inspect its outputs, HID usage, XKB name and W3C code.</span></div>
     </div>
   </section>
 
   <section id="snippet-s">
     <div class="wrap">
+      <p class="kicker">The manifest</p>
       <h2>A key, in five lines</h2>
       <p class="sub">Canonical ISO/IEC 9995-1 position, a mandatory USB HID anchor, cross-references for Linux and the web, and outputs by ISO level. Readable, diffable, hand-correctable.</p>
       <pre class="snippet"><code>{
-  "id": "D01", "hid": "0x14", "xkb": "AD01", "code": "KeyQ",
-  "levels": { "1": "a", "2": "A" },
-  "categories": ["letter", "french"]
+  <span class="tok-k">"id"</span>: <span class="tok-s">"D01"</span>, <span class="tok-k">"hid"</span>: <span class="tok-s">"0x14"</span>, <span class="tok-k">"xkb"</span>: <span class="tok-s">"AD01"</span>, <span class="tok-k">"code"</span>: <span class="tok-s">"KeyQ"</span>,
+  <span class="tok-k">"levels"</span>: { <span class="tok-k">"1"</span>: <span class="tok-s">"a"</span>, <span class="tok-k">"2"</span>: <span class="tok-s">"A"</span> },
+  <span class="tok-k">"categories"</span>: [<span class="tok-s">"letter"</span>, <span class="tok-s">"french"</span>]
 }</code></pre>
     </div>
   </section>
 
   <section id="principles">
     <div class="wrap">
-      <h2>Design principles</h2>
-      <p class="sub">OKLM complements existing standards instead of competing with them.</p>
+      <p class="kicker">Design principles</p>
+      <h2>Complement the standards, don't compete</h2>
+      <p class="sub">OKLM builds on ISO/IEC 9995 and Unicode CLDR/LDML Keyboard instead of reinventing them.</p>
       <div class="grid2">
-        <div class="card"><h3>Human-maintainable</h3><p>An <code>.oklm.json</code> manifest must be readable, correctable and versionable without a proprietary generator. Stable field order, explicit names, compact notation.</p></div>
-        <div class="card"><h3>Standards-aligned</h3><p>ISO/IEC 9995 key numbers and (group, level) terminology. The text core compiles to Unicode LDML Keyboard 3.0 rather than reinventing transforms and markers.</p></div>
-        <div class="card"><h3>Validated</h3><p>JSON Schemas for manifests and conversion reports, plus a CLI validator that also checks uniqueness and dead-key reference resolution.</p></div>
-        <div class="card"><h3>Loss-aware conversions</h3><p>Every OKLM ⇄ LDML conversion must produce a machine-readable report. Nothing is silently discarded, in either direction.</p></div>
+        <div class="card"><span class="num">01</span><h3>Human-maintainable</h3><p>An <code>.oklm.json</code> manifest must be readable, correctable and versionable without a proprietary generator. Stable field order, explicit names, compact notation.</p></div>
+        <div class="card"><span class="num">02</span><h3>Standards-aligned</h3><p>ISO/IEC 9995 key numbers and (group, level) terminology. The text core compiles to Unicode LDML Keyboard 3.0 rather than reinventing transforms and markers.</p></div>
+        <div class="card"><span class="num">03</span><h3>Validated</h3><p>JSON Schemas for manifests and conversion reports, plus a CLI validator that also checks uniqueness and dead-key reference resolution.</p></div>
+        <div class="card"><span class="num">04</span><h3>Loss-aware conversions</h3><p>Every OKLM ⇄ LDML conversion must produce a machine-readable report. Nothing is silently discarded, in either direction.</p></div>
       </div>
     </div>
   </section>
 
   <section id="pipeline-s">
     <div class="wrap">
+      <p class="kicker">Architecture</p>
       <h2>Describe once, export everywhere</h2>
       <p class="sub">The manifest is the source model; standards and platforms are export targets.</p>
       <div class="pipeline">
@@ -224,18 +323,19 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: .8rem 2.2rem; }
 
   <section id="examples">
     <div class="wrap">
+      <p class="kicker">Proof of concept</p>
       <h2>Six layouts already described</h2>
       <p class="sub">From the 29-dead-key AZERTY Global to the bare ANSI QWERTY baseline — including both options of the French standard NF Z71-300. Converted manifests are verified field-by-field against their source.</p>
-      <div class="ex-scroll">
+      <div class="table-card">
       <table class="examples">
         <thead><tr><th>Manifest</th><th>Layout</th><th>Keys / levels / dead keys</th><th>Layout license</th></tr></thead>
         <tbody>
-          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-global.oklm.json">azerty-global</a></td><td>AZERTY Global 2026</td><td>49 / 8 / 29</td><td>EUPL-1.2</td></tr>
-          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-afnor.oklm.json">azerty-afnor</a></td><td>AZERTY option of NF Z71-300:2019</td><td>49 / 8 / 22</td><td>CC-BY</td></tr>
-          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/bepo.oklm.json">bepo</a></td><td>BÉPO (ergonomic option of NF Z71-300)</td><td>49 / 8 / 21</td><td>CC-BY-SA / GFDL</td></tr>
-          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-traditionnel.oklm.json">azerty-traditionnel</a></td><td>Legacy Windows French AZERTY</td><td>49 / 5 / 4</td><td>NOASSERTION</td></tr>
-          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/qwerty-us.oklm.json">qwerty-us</a></td><td>US QWERTY (ANSI baseline)</td><td>48 / 3 / 0</td><td>CC0-1.0</td></tr>
-          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-global-minimal.oklm.json">azerty-global-minimal</a></td><td>Six-key teaching subset</td><td>6 / 2 / 2</td><td>EUPL-1.2</td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-global.oklm.json">azerty-global</a></td><td>AZERTY Global 2026</td><td>49 / 8 / 29</td><td><span class="lic">EUPL-1.2</span></td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-afnor.oklm.json">azerty-afnor</a></td><td>AZERTY option of NF Z71-300:2019</td><td>49 / 8 / 22</td><td><span class="lic">CC-BY</span></td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/bepo.oklm.json">bepo</a></td><td>BÉPO (ergonomic option of NF Z71-300)</td><td>49 / 8 / 21</td><td><span class="lic">CC-BY-SA / GFDL</span></td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-traditionnel.oklm.json">azerty-traditionnel</a></td><td>Legacy Windows French AZERTY</td><td>49 / 5 / 4</td><td><span class="lic">NOASSERTION</span></td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/qwerty-us.oklm.json">qwerty-us</a></td><td>US QWERTY (ANSI baseline)</td><td>48 / 3 / 0</td><td><span class="lic">CC0-1.0</span></td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-global-minimal.oklm.json">azerty-global-minimal</a></td><td>Six-key teaching subset</td><td>6 / 2 / 2</td><td><span class="lic">EUPL-1.2</span></td></tr>
         </tbody>
       </table>
       </div>
@@ -244,8 +344,9 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: .8rem 2.2rem; }
 
   <section id="status">
     <div class="wrap">
-      <h2>Status</h2>
-      <p class="sub">OKLM is a public draft, not yet a published standard. Available today: the draft 0.1 manifest schema, a conversion-report schema, six example layouts and a reference validator. Next: LDML Keyboard exporters and importers with loss reports. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
+      <p class="kicker">Status</p>
+      <h2>A public draft, in the open</h2>
+      <p class="sub">OKLM is not yet a published standard. Available today: the draft 0.1 manifest schema, a conversion-report schema, six example layouts and a reference validator. Next: LDML Keyboard exporters and importers with loss reports. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
     </div>
   </section>
 </main>
@@ -268,18 +369,17 @@ const LAYOUTS = [
   { file: "azerty-traditionnel.oklm.json",  label: "AZERTY traditionnel (Windows)" },
   { file: "qwerty-us.oklm.json",            label: "QWERTY US (ANSI)" },
 ];
-const U = 52, GAP = 5, PAD = 8;           /* keycap unit px, gap, padding */
+const U = 56, GAP = 6, PAD = 2;
 const SELECTOR_NAMES = { "1": "base", "2": "Shift", "3": "AltGr", "4": "Shift+AltGr",
   "5": "Caps", "6": "Caps+Shift", "7": "Caps+AltGr", "8": "Caps+Shift+AltGr" };
 
-/* rows: [y, [ [id|label, width, isFrame], ... ] ] */
 function geometry(kind) {
   const iso = kind !== "ansi";
   const rows = [
-    [0, [["E00",1],["E01",1],["E02",1],["E03",1],["E04",1],["E05",1],["E06",1],["E07",1],["E08",1],["E09",1],["E10",1],["E11",1],["E12",1],["Backspace ⌫",2,1]]],
-    [1, [["Tab ⇥",1.5,1],["D01",1],["D02",1],["D03",1],["D04",1],["D05",1],["D06",1],["D07",1],["D08",1],["D09",1],["D10",1],["D11",1],["D12",1]].concat(iso ? [] : [["D13",1.5]])],
-    [2, [["Caps ⇪",1.75,1],["C01",1],["C02",1],["C03",1],["C04",1],["C05",1],["C06",1],["C07",1],["C08",1],["C09",1],["C10",1],["C11",1]].concat(iso ? [["C12",1]] : [["Enter ⏎",2.25,1]])],
-    [3, (iso ? [["Shift ⇧",1.25,1],["B00",1]] : [["Shift ⇧",2.25,1]]).concat([["B01",1],["B02",1],["B03",1],["B04",1],["B05",1],["B06",1],["B07",1],["B08",1],["B09",1],["B10",1],["Shift ⇧",2.75,1]])],
+    [0, [["E00",1],["E01",1],["E02",1],["E03",1],["E04",1],["E05",1],["E06",1],["E07",1],["E08",1],["E09",1],["E10",1],["E11",1],["E12",1],["⌫",2,1]]],
+    [1, [["⇥",1.5,1],["D01",1],["D02",1],["D03",1],["D04",1],["D05",1],["D06",1],["D07",1],["D08",1],["D09",1],["D10",1],["D11",1],["D12",1]].concat(iso ? [] : [["D13",1.5]])],
+    [2, [["⇪",1.75,1],["C01",1],["C02",1],["C03",1],["C04",1],["C05",1],["C06",1],["C07",1],["C08",1],["C09",1],["C10",1],["C11",1]].concat(iso ? [["C12",1]] : [["⏎",2.25,1]])],
+    [3, (iso ? [["⇧",1.25,1],["B00",1]] : [["⇧",2.25,1]]).concat([["B01",1],["B02",1],["B03",1],["B04",1],["B05",1],["B06",1],["B07",1],["B08",1],["B09",1],["B10",1],["⇧",2.75,1]])],
     [4, [["Ctrl",1.25,1],["❖",1.25,1],["Alt",1.25,1],["A03",6.25],["AltGr",1.25,1],["❖",1.25,1],["☰",1.25,1],["Ctrl",1.25,1]]],
   ];
   return { rows, iso };
@@ -288,20 +388,19 @@ function geometry(kind) {
 /* ---------- state ---------- */
 let manifest = null, deadIndex = {}, selectedKey = null;
 const mods = { shift: false, altgr: false, caps: false, all: true };
-
 const $ = (id) => document.getElementById(id);
 
 function activeLevel() {
   if (mods.all) return null;
-  let lv = 1;
+  let lv;
   if (mods.caps) lv = mods.shift && mods.altgr ? 8 : mods.altgr ? 7 : mods.shift ? 6 : 5;
   else lv = mods.shift && mods.altgr ? 4 : mods.altgr ? 3 : mods.shift ? 2 : 1;
   return String(lv);
 }
 
-const SPACES = { " ": "space", " ": "no-break space", " ": "narrow no-break space" };
-
+const SPACES = { " ": "space", " ": "no-break space", " ": "narrow no-break space" };
 const COMBINING = /^[̀-ͯ᪰-᫿᷀-᷿⃐-⃿︠-︯]$/;
+
 function deadLabel(id) {
   const dk = deadIndex[id];
   if (!dk) return "◌";
@@ -317,8 +416,23 @@ function outLabel(out) {
   if (out.modifier) return { text: out.modifier, dead: false };
   return { text: "?", dead: false };
 }
-
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+function lab(cls, o) {
+  return o ? '<span class="lab ' + cls + (o.dead ? " dead" : "") + '">' + esc(o.text) + "</span>" : "";
+}
+
+/* Keycap labels, engraved-keycap convention:
+   letters -> single capital (top-left, big) + AltGr bottom-right + Shift+AltGr top-right;
+   others  -> Shift top-left, base bottom-left, AltGr bottom-right, Shift+AltGr top-right. */
+function capHTML(k) {
+  const l1 = outLabel(k.levels["1"]), l2 = outLabel(k.levels["2"]),
+        l3 = outLabel(k.levels["3"]), l4 = outLabel(k.levels["4"]);
+  if (l1 && l1.text === "␣") return '<span class="lab c" style="color:var(--faint)">␣</span>';
+  const letter = l1 && l2 && !l1.dead && !l2.dead &&
+                 l2.text === l1.text.toUpperCase() && l1.text !== l2.text;
+  if (letter) return lab("big", l2) + lab("br", l3) + lab("tr", l4);
+  return lab("tl", l2) + lab("bl", l1) + lab("br", l3) + lab("tr", l4);
+}
 
 /* ---------- rendering ---------- */
 function renderKeyboard() {
@@ -350,21 +464,10 @@ function renderKeyboard() {
         el.title = id;
         if (lv) {
           const o = outLabel(k.levels[lv]);
-          el.innerHTML = o ? '<span class="lab c' + (o.dead ? " dead" : "") + '">' + esc(o.text) + "</span>" : "";
+          el.innerHTML = o ? lab("c", o) : "";
           if (!o) el.style.opacity = .45;
         } else {
-          const l1 = outLabel(k.levels["1"]), l2 = outLabel(k.levels["2"]),
-                l3 = outLabel(k.levels["3"]), l4 = outLabel(k.levels["4"]);
-          const letter = l1 && l2 && !l1.dead && !l2.dead && !l3 && !l4 &&
-                         l2.text === l1.text.toUpperCase() && l1.text !== l2.text;
-          const spaceKey = l1 && l1.text === "␣";
-          if (spaceKey) el.innerHTML = '<span class="lab c" style="color:var(--faint)">␣</span>';
-          else if (letter) el.innerHTML = '<span class="lab c">' + esc(l2.text) + "</span>";
-          else el.innerHTML =
-            (l2 ? '<span class="lab tl' + (l2.dead ? " dead" : "") + '">' + esc(l2.text) + "</span>" : "") +
-            (l1 ? '<span class="lab bl' + (l1.dead ? " dead" : "") + '">' + esc(l1.text) + "</span>" : "") +
-            (l3 ? '<span class="lab br' + (l3.dead ? " dead" : "") + '">' + esc(l3.text) + "</span>" : "") +
-            (l4 ? '<span class="lab tr' + (l4.dead ? " dead" : "") + '">' + esc(l4.text) + "</span>" : "");
+          el.innerHTML = capHTML(k);
         }
         el.addEventListener("click", () => selectKey(id));
         if (selectedKey === id) el.classList.add("sel");
@@ -377,7 +480,7 @@ function renderKeyboard() {
 
   /* ISO L-shaped Enter spanning rows 1-2, drawn as SVG to keep its border */
   if (iso) {
-    const W = 1.5 * U + 0.5 * GAP, H = 2 * U + GAP, cut = 0.25 * (U + GAP), mid = U, r = 6;
+    const W = 1.5 * U + 0.5 * GAP, H = 2 * U + GAP, cut = 0.25 * (U + GAP), mid = U, r = 7;
     const el = document.createElement("div");
     el.className = "key frame";
     el.style.left = (PAD + 13.5 * (U + GAP)) + "px";
@@ -387,14 +490,14 @@ function renderKeyboard() {
     el.style.border = "none";
     el.style.background = "transparent";
     const d = "M " + r + " .5 H " + (W - r) + " Q " + (W - .5) + " .5 " + (W - .5) + " " + r +
-      " V " + (H - r) + " Q " + (W - .5) + " " + (H - .5) + " " + (W - r) + " " + (H - .5) +
+      " V " + (H - r - 2) + " Q " + (W - .5) + " " + (H - .5) + " " + (W - r) + " " + (H - .5) +
       " H " + (cut + r) + " Q " + (cut + .5) + " " + (H - .5) + " " + (cut + .5) + " " + (H - r) +
       " V " + (mid + r) + " Q " + (cut + .5) + " " + (mid + .5) + " " + (cut - r) + " " + (mid + .5) +
       " H " + r + " Q .5 " + (mid + .5) + " .5 " + (mid - r) +
       " V " + r + " Q .5 .5 " + r + " .5 Z";
     el.innerHTML = '<svg width="' + W + '" height="' + H + '" style="position:absolute;inset:0">' +
-      '<path d="' + d + '" fill="var(--keycap-frame)" stroke="var(--keycap-border)"/></svg>' +
-      '<span class="lab" style="top:.9rem; right:.55rem; font-size:.8rem">⏎</span>';
+      '<path d="' + d + '" fill="var(--kc-frame1)" stroke="var(--kc-border)"/></svg>' +
+      '<span class="lab" style="top:.85rem; right:.6rem; font-size:.8rem">⏎</span>';
     kb.appendChild(el);
   }
   kb.style.width = (2 * PAD + maxX * (U + GAP) - GAP) + "px";
