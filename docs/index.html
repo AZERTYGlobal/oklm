@@ -5,75 +5,468 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OKLM — Open Keyboard Layout Model</title>
 <meta name="description" content="An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='6' width='30' height='20' rx='4' fill='%230b57d0'/%3E%3Cg fill='white'%3E%3Crect x='5' y='10' width='4' height='4' rx='1'/%3E%3Crect x='11' y='10' width='4' height='4' rx='1'/%3E%3Crect x='17' y='10' width='4' height='4' rx='1'/%3E%3Crect x='23' y='10' width='4' height='4' rx='1'/%3E%3Crect x='5' y='16' width='4' height='4' rx='1' fill='%23f4a261'/%3E%3Crect x='11' y='16' width='10' height='4' rx='1'/%3E%3Crect x='23' y='16' width='4' height='4' rx='1'/%3E%3C/g%3E%3C/svg%3E">
 <style>
 :root {
-  --bg: #ffffff; --fg: #1a1a1a; --muted: #555; --accent: #0b57d0;
-  --card: #f5f6f8; --border: #dfe2e6;
+  --bg: #ffffff; --fg: #1b1f24; --muted: #59636e; --faint: #818b98;
+  --accent: #0b57d0; --accent-soft: #e8f0fe;
+  --card: #f6f8fa; --border: #d1d9e0; --border-soft: #e6ebf1;
+  --keycap: #ffffff; --keycap-frame: #eef1f4; --keycap-border: #c9d1d9;
+  --dead: #b3591c; --dead-soft: #fff1e5;
+  --code-bg: #f6f8fa;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #101214; --fg: #e6e6e6; --muted: #9aa0a6; --accent: #8ab4f8;
-          --card: #1a1d21; --border: #2c3036; }
+  :root {
+    --bg: #0d1117; --fg: #e6edf3; --muted: #9aa4af; --faint: #6e7a86;
+    --accent: #7aa5f8; --accent-soft: #16233c;
+    --card: #161b22; --border: #30363d; --border-soft: #21262d;
+    --keycap: #1c2128; --keycap-frame: #14181e; --keycap-border: #3a424b;
+    --dead: #e8956d; --dead-soft: #3a2417;
+    --code-bg: #161b22;
+  }
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--fg);
-  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
-main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
-h1 { font-size: 2.2rem; line-height: 1.2; margin: 0 0 .4rem; }
-h2 { font-size: 1.25rem; margin: 2.2rem 0 .6rem; }
-p { margin: .6rem 0; }
-.tagline { color: var(--muted); font-size: 1.1rem; margin-bottom: 1.4rem; }
-.status { display: inline-block; border: 1px solid var(--border); border-radius: 999px;
-  padding: .15rem .7rem; font-size: .85rem; color: var(--muted); margin-bottom: 1.6rem; }
+  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased; }
+code, pre, .mono { font-family: ui-monospace, "Cascadia Code", Consolas, "SF Mono", monospace; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-.buttons { margin: 1.4rem 0 0; display: flex; gap: .7rem; flex-wrap: wrap; }
-.buttons a { border: 1px solid var(--border); border-radius: 8px; padding: .5rem 1rem;
-  background: var(--card); font-weight: 600; }
-pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-  padding: 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.45; }
-code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
-ul { padding-left: 1.2rem; }
-li { margin: .25rem 0; }
-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);
-  color: var(--muted); font-size: .9rem; }
+.wrap { max-width: 66rem; margin: 0 auto; padding: 0 1.25rem; }
+
+header.site { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-soft); }
+header.site .wrap { display: flex; align-items: center; gap: 1.4rem; height: 3.2rem; }
+.brand { font-weight: 750; letter-spacing: .04em; font-size: 1.02rem; color: var(--fg); }
+.brand span { color: var(--accent); }
+nav.top { display: flex; gap: 1.1rem; margin-left: auto; font-size: .92rem; }
+nav.top a { color: var(--muted); }
+nav.top a:hover { color: var(--fg); text-decoration: none; }
+
+.hero { padding: 4.2rem 0 2.6rem; }
+.hero h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.15; margin: 0 0 .8rem; letter-spacing: -.01em; }
+.hero p.lead { font-size: 1.16rem; color: var(--muted); max-width: 44rem; margin: 0 0 1.3rem; }
+.chip { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--border);
+  border-radius: 999px; padding: .22rem .8rem; font-size: .82rem; color: var(--muted); background: var(--card); }
+.chip::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); }
+.buttons { margin-top: 1.5rem; display: flex; gap: .7rem; flex-wrap: wrap; }
+.btn { border: 1px solid var(--border); border-radius: 8px; padding: .55rem 1.05rem;
+  background: var(--card); font-weight: 600; font-size: .95rem; color: var(--fg); }
+.btn:hover { border-color: var(--accent); text-decoration: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { .btn.primary { color: #0d1117; } }
+
+section { padding: 2.6rem 0; border-top: 1px solid var(--border-soft); }
+section h2 { font-size: 1.45rem; margin: 0 0 .4rem; letter-spacing: -.005em; }
+section p.sub { color: var(--muted); margin: 0 0 1.4rem; max-width: 46rem; }
+
+/* ---- demo ---- */
+.demo-bar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: .9rem; }
+select#layout { font: inherit; font-size: .95rem; padding: .45rem .7rem; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--card); color: var(--fg); }
+.mods { display: flex; gap: .4rem; margin-left: auto; flex-wrap: wrap; }
+.mod { font: inherit; font-size: .85rem; font-weight: 600; padding: .38rem .75rem; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; }
+.mod[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.demo-meta { font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
+.demo-meta .mono { color: var(--fg); }
+.kb-scroll { overflow-x: auto; padding-bottom: .4rem; }
+.kb { position: relative; margin: 0 auto; }
+.key { position: absolute; border: 1px solid var(--keycap-border); border-radius: 6px;
+  background: var(--keycap); font-size: .72rem; line-height: 1.15; cursor: pointer;
+  transition: border-color .08s, transform .05s; user-select: none; }
+.key:hover { border-color: var(--accent); z-index: 2; }
+.key.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); z-index: 3; }
+.key.frame { background: var(--keycap-frame); color: var(--faint); cursor: default; font-size: .62rem; }
+.key.frame:hover { border-color: var(--keycap-border); }
+.key .lab { position: absolute; }
+.key .c { inset: 0; display: flex; align-items: center; justify-content: center; font-size: .95rem; }
+.key .tl { top: .22rem; left: .34rem; }
+.key .bl { bottom: .22rem; left: .34rem; }
+.key .br { bottom: .22rem; right: .34rem; color: var(--muted); }
+.key .tr { top: .22rem; right: .34rem; color: var(--faint); font-size: .62rem; }
+.key .dead { color: var(--dead); font-weight: 700; }
+.key.frame .c { font-size: .66rem; }
+.kb-hint { font-size: .82rem; color: var(--faint); margin-top: .5rem; }
+
+.inspector { margin-top: 1.1rem; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card); padding: 1rem 1.2rem; min-height: 3rem; }
+.inspector h3 { margin: 0 0 .55rem; font-size: 1rem; display: flex; gap: .6rem; align-items: baseline; flex-wrap: wrap; }
+.inspector h3 .ids { font-size: .8rem; color: var(--muted); font-weight: 400; }
+.lvl-table { display: grid; grid-template-columns: max-content 1fr; gap: .18rem .9rem; font-size: .88rem; }
+.lvl-table .n { color: var(--muted); }
+.out { font-weight: 600; }
+.out.deadref { color: var(--dead); }
+.comp-wrap { margin-top: .8rem; }
+.comp-wrap h4 { margin: 0 0 .4rem; font-size: .85rem; color: var(--muted); font-weight: 600; }
+.comps { display: flex; flex-wrap: wrap; gap: .3rem; max-height: 9.5rem; overflow-y: auto; }
+.comps span { border: 1px solid var(--border-soft); background: var(--bg); border-radius: 6px;
+  padding: .1rem .45rem; font-size: .84rem; white-space: nowrap; }
+.comps b { color: var(--dead); font-weight: 600; }
+.placeholder { color: var(--faint); font-size: .92rem; }
+
+/* ---- content sections ---- */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+.card { border: 1px solid var(--border-soft); border-radius: 10px; padding: 1.05rem 1.2rem; background: var(--card); }
+.card h3 { margin: 0 0 .35rem; font-size: .98rem; }
+.card p { margin: 0; font-size: .9rem; color: var(--muted); }
+pre.snippet { background: var(--code-bg); border: 1px solid var(--border-soft); border-radius: 10px;
+  padding: 1rem 1.2rem; overflow-x: auto; font-size: .84rem; line-height: 1.5; margin: 0; }
+.pipeline { display: flex; align-items: stretch; gap: .6rem; flex-wrap: wrap; font-size: .88rem; }
+.pipeline .node { border: 1px solid var(--border); border-radius: 10px; background: var(--card);
+  padding: .7rem .95rem; display: flex; flex-direction: column; justify-content: center; }
+.pipeline .node b { font-size: .92rem; }
+.pipeline .node small { color: var(--muted); }
+.pipeline .arrow { align-self: center; color: var(--faint); font-size: 1.1rem; }
+.pipeline .targets { display: grid; grid-template-columns: repeat(2, max-content); gap: .3rem .9rem;
+  border: 1px dashed var(--border); border-radius: 10px; padding: .7rem .95rem; color: var(--muted); }
+table.examples { width: 100%; border-collapse: collapse; font-size: .9rem; }
+table.examples th, table.examples td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--border-soft); }
+table.examples th { color: var(--muted); font-weight: 600; font-size: .82rem; }
+table.examples td.mono { white-space: nowrap; }
+.ex-scroll { overflow-x: auto; }
+
+footer.site { border-top: 1px solid var(--border-soft); padding: 2rem 0 2.6rem; margin-top: 2.6rem;
+  color: var(--muted); font-size: .88rem; }
+footer.site .wrap { display: flex; flex-wrap: wrap; gap: .8rem 2.2rem; }
 </style>
 </head>
 <body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="#">OKLM<span>.</span></a>
+    <nav class="top">
+      <a href="#demo">Demo</a>
+      <a href="#principles">Principles</a>
+      <a href="#examples">Examples</a>
+      <a href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Spec</a>
+      <a href="https://github.com/AZERTYGlobal/oklm">GitHub</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-<h1>OKLM</h1>
-<p class="tagline">Open Keyboard Layout Model — one open, human-maintainable source of truth per keyboard layout, exported everywhere it is needed.</p>
-<p class="status">Draft 0.1 — schemas, example and validator available</p>
+  <div class="hero wrap">
+    <p class="chip">Draft 0.1 — schemas, six example layouts and a validator</p>
+    <h1>One open source of truth<br>per keyboard layout.</h1>
+    <p class="lead">The Open Keyboard Layout Model is a human-maintainable JSON format to describe, validate and export keyboard layouts — to Unicode LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
+    <div class="buttons">
+      <a class="btn primary" href="https://github.com/AZERTYGlobal/oklm">GitHub repository</a>
+      <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
+      <a class="btn" href="https://github.com/AZERTYGlobal/oklm/tree/main/schemas">JSON Schemas</a>
+    </div>
+  </div>
 
-<p>Keyboard layouts are still distributed as OS-specific files, static images, installer packages and informal documentation. OKLM defines a common representation so a layout can be described once — keys, levels, dead keys, legends, metadata — then exported to LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
+  <section id="demo">
+    <div class="wrap">
+      <h2>The format, demonstrating itself</h2>
+      <p class="sub">This keyboard is rendered live from the actual <code>.oklm.json</code> manifests published in the repository — nothing here is drawn by hand. Pick a layout, toggle modifiers, click any key. <span style="color:var(--dead); font-weight:600">Orange</span> marks dead keys: click one to see its composition table.</p>
+      <div class="demo-bar">
+        <select id="layout" aria-label="Layout"></select>
+        <div class="mods" role="group" aria-label="Modifiers">
+          <button class="mod" id="m-all" aria-pressed="true">All levels</button>
+          <button class="mod" id="m-shift" aria-pressed="false">Shift</button>
+          <button class="mod" id="m-altgr" aria-pressed="false">AltGr</button>
+          <button class="mod" id="m-caps" aria-pressed="false">Caps Lock</button>
+        </div>
+      </div>
+      <div class="demo-meta" id="meta"></div>
+      <div class="kb-scroll"><div class="kb" id="kb"></div></div>
+      <p class="kb-hint">Greyed keys are frame keys (out of the draft 0.1 core). ISO layouts show the B00 key next to the left Shift; the ANSI layout has none.</p>
+      <div class="inspector" id="inspector"><span class="placeholder">Click a key to inspect its outputs, HID usage, XKB name and W3C code.</span></div>
+    </div>
+  </section>
 
-<div class="buttons">
-<a href="https://github.com/AZERTYGlobal/oklm">GitHub repository</a>
-<a href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
-<a href="https://github.com/AZERTYGlobal/oklm/tree/main/schemas">JSON Schemas</a>
-</div>
-
-<h2>Design principles</h2>
-<ul>
-<li><strong>Human-maintainable</strong>: an <code>.oklm.json</code> manifest must be readable, correctable and versionable without a proprietary generator.</li>
-<li><strong>Standards-aligned</strong>: ISO/IEC 9995 key numbers and (group, level) terminology; the text core compiles to Unicode LDML Keyboard 3.0 rather than reinventing it.</li>
-<li><strong>Validated</strong>: JSON Schemas plus a CLI validator for manifests and conversion reports.</li>
-<li><strong>Loss-aware conversions</strong>: every OKLM ⇄ LDML conversion produces a machine-readable report — nothing is silently discarded.</li>
-</ul>
-
-<h2>A key, in five lines</h2>
-<pre><code>{
+  <section id="snippet-s">
+    <div class="wrap">
+      <h2>A key, in five lines</h2>
+      <p class="sub">Canonical ISO/IEC 9995-1 position, a mandatory USB HID anchor, cross-references for Linux and the web, and outputs by ISO level. Readable, diffable, hand-correctable.</p>
+      <pre class="snippet"><code>{
   "id": "D01", "hid": "0x14", "xkb": "AD01", "code": "KeyQ",
   "levels": { "1": "a", "2": "A" },
   "categories": ["letter", "french"]
 }</code></pre>
+    </div>
+  </section>
 
-<h2>Status</h2>
-<p>OKLM is a public draft, not yet a published standard. The manifest schema (draft 0.1), a conversion-report schema, a minimal AZERTY Global example and a reference validator are available in the repository. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
+  <section id="principles">
+    <div class="wrap">
+      <h2>Design principles</h2>
+      <p class="sub">OKLM complements existing standards instead of competing with them.</p>
+      <div class="grid2">
+        <div class="card"><h3>Human-maintainable</h3><p>An <code>.oklm.json</code> manifest must be readable, correctable and versionable without a proprietary generator. Stable field order, explicit names, compact notation.</p></div>
+        <div class="card"><h3>Standards-aligned</h3><p>ISO/IEC 9995 key numbers and (group, level) terminology. The text core compiles to Unicode LDML Keyboard 3.0 rather than reinventing transforms and markers.</p></div>
+        <div class="card"><h3>Validated</h3><p>JSON Schemas for manifests and conversion reports, plus a CLI validator that also checks uniqueness and dead-key reference resolution.</p></div>
+        <div class="card"><h3>Loss-aware conversions</h3><p>Every OKLM ⇄ LDML conversion must produce a machine-readable report. Nothing is silently discarded, in either direction.</p></div>
+      </div>
+    </div>
+  </section>
 
-<footer>
-<p>Specification and documentation: CC BY 4.0 · Tooling: EUPL 1.2<br>
-<a href="https://github.com/AZERTYGlobal/oklm">github.com/AZERTYGlobal/oklm</a></p>
-</footer>
+  <section id="pipeline-s">
+    <div class="wrap">
+      <h2>Describe once, export everywhere</h2>
+      <p class="sub">The manifest is the source model; standards and platforms are export targets.</p>
+      <div class="pipeline">
+        <div class="node"><b class="mono">layout.oklm.json</b><small>source of truth</small></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>OKLM tooling</b><small>validate · convert · report</small></div>
+        <div class="arrow">→</div>
+        <div class="targets mono">
+          <span>LDML Keyboard 3.0</span><span>Windows / macOS / XKB</span>
+          <span>web testers</span><span>keycaps &amp; stickers</span>
+          <span>dynamic key displays</span><span>assistant knowledge</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="examples">
+    <div class="wrap">
+      <h2>Six layouts already described</h2>
+      <p class="sub">From the 29-dead-key AZERTY Global to the bare ANSI QWERTY baseline — including both options of the French standard NF Z71-300. Converted manifests are verified field-by-field against their source.</p>
+      <div class="ex-scroll">
+      <table class="examples">
+        <thead><tr><th>Manifest</th><th>Layout</th><th>Keys / levels / dead keys</th><th>Layout license</th></tr></thead>
+        <tbody>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-global.oklm.json">azerty-global</a></td><td>AZERTY Global 2026</td><td>49 / 8 / 29</td><td>EUPL-1.2</td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-afnor.oklm.json">azerty-afnor</a></td><td>AZERTY option of NF Z71-300:2019</td><td>49 / 8 / 22</td><td>CC-BY</td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/bepo.oklm.json">bepo</a></td><td>BÉPO (ergonomic option of NF Z71-300)</td><td>49 / 8 / 21</td><td>CC-BY-SA / GFDL</td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-traditionnel.oklm.json">azerty-traditionnel</a></td><td>Legacy Windows French AZERTY</td><td>49 / 5 / 4</td><td>NOASSERTION</td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/qwerty-us.oklm.json">qwerty-us</a></td><td>US QWERTY (ANSI baseline)</td><td>48 / 3 / 0</td><td>CC0-1.0</td></tr>
+          <tr><td class="mono"><a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/azerty-global-minimal.oklm.json">azerty-global-minimal</a></td><td>Six-key teaching subset</td><td>6 / 2 / 2</td><td>EUPL-1.2</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="status">
+    <div class="wrap">
+      <h2>Status</h2>
+      <p class="sub">OKLM is a public draft, not yet a published standard. Available today: the draft 0.1 manifest schema, a conversion-report schema, six example layouts and a reference validator. Next: LDML Keyboard exporters and importers with loss reports. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
+    </div>
+  </section>
 </main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Specification &amp; documentation: CC BY 4.0 · Tooling: EUPL 1.2</span>
+    <span><a href="https://github.com/AZERTYGlobal/oklm">github.com/AZERTYGlobal/oklm</a></span>
+    <span>OKLM does not replace Unicode CLDR/LDML Keyboard — it exports to it.</span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ---------- data ---------- */
+const LAYOUTS = [
+  { file: "azerty-global.oklm.json",        label: "AZERTY Global 2026" },
+  { file: "azerty-afnor.oklm.json",         label: "AZERTY AFNOR (NF Z71-300)" },
+  { file: "bepo.oklm.json",                 label: "BÉPO (NF Z71-300)" },
+  { file: "azerty-traditionnel.oklm.json",  label: "AZERTY traditionnel (Windows)" },
+  { file: "qwerty-us.oklm.json",            label: "QWERTY US (ANSI)" },
+];
+const U = 52, GAP = 5, PAD = 8;           /* keycap unit px, gap, padding */
+const SELECTOR_NAMES = { "1": "base", "2": "Shift", "3": "AltGr", "4": "Shift+AltGr",
+  "5": "Caps", "6": "Caps+Shift", "7": "Caps+AltGr", "8": "Caps+Shift+AltGr" };
+
+/* rows: [y, [ [id|label, width, isFrame], ... ] ] */
+function geometry(kind) {
+  const iso = kind !== "ansi";
+  const rows = [
+    [0, [["E00",1],["E01",1],["E02",1],["E03",1],["E04",1],["E05",1],["E06",1],["E07",1],["E08",1],["E09",1],["E10",1],["E11",1],["E12",1],["Backspace ⌫",2,1]]],
+    [1, [["Tab ⇥",1.5,1],["D01",1],["D02",1],["D03",1],["D04",1],["D05",1],["D06",1],["D07",1],["D08",1],["D09",1],["D10",1],["D11",1],["D12",1]].concat(iso ? [] : [["D13",1.5]])],
+    [2, [["Caps ⇪",1.75,1],["C01",1],["C02",1],["C03",1],["C04",1],["C05",1],["C06",1],["C07",1],["C08",1],["C09",1],["C10",1],["C11",1]].concat(iso ? [["C12",1]] : [["Enter ⏎",2.25,1]])],
+    [3, (iso ? [["Shift ⇧",1.25,1],["B00",1]] : [["Shift ⇧",2.25,1]]).concat([["B01",1],["B02",1],["B03",1],["B04",1],["B05",1],["B06",1],["B07",1],["B08",1],["B09",1],["B10",1],["Shift ⇧",2.75,1]])],
+    [4, [["Ctrl",1.25,1],["❖",1.25,1],["Alt",1.25,1],["A03",6.25],["AltGr",1.25,1],["❖",1.25,1],["☰",1.25,1],["Ctrl",1.25,1]]],
+  ];
+  return { rows, iso };
+}
+
+/* ---------- state ---------- */
+let manifest = null, deadIndex = {}, selectedKey = null;
+const mods = { shift: false, altgr: false, caps: false, all: true };
+
+const $ = (id) => document.getElementById(id);
+
+function activeLevel() {
+  if (mods.all) return null;
+  let lv = 1;
+  if (mods.caps) lv = mods.shift && mods.altgr ? 8 : mods.altgr ? 7 : mods.shift ? 6 : 5;
+  else lv = mods.shift && mods.altgr ? 4 : mods.altgr ? 3 : mods.shift ? 2 : 1;
+  return String(lv);
+}
+
+const SPACES = { " ": "space", " ": "no-break space", " ": "narrow no-break space" };
+
+function deadLabel(id) {
+  const dk = deadIndex[id];
+  if (!dk) return "◌";
+  if (dk.display) return dk.display;
+  const c = dk.compositions || {};
+  return c[" "] || dk.fallback || Object.values(c)[0] || "◌";
+}
+function outLabel(out) {
+  if (out == null) return null;
+  if (typeof out === "string") return { text: SPACES[out] ? "␣" : out, dead: false };
+  if (out.deadKey) return { text: deadLabel(out.deadKey), dead: true };
+  if (out.modifier) return { text: out.modifier, dead: false };
+  return { text: "?", dead: false };
+}
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+/* ---------- rendering ---------- */
+function renderKeyboard() {
+  const kb = $("kb");
+  kb.innerHTML = "";
+  const byId = {};
+  (manifest.keys || []).forEach(k => byId[k.id] = k);
+  const kind = (manifest.geometry && String(manifest.geometry[0]).startsWith("ansi")) ? "ansi" : "iso";
+  const { rows, iso } = geometry(kind);
+  const lv = activeLevel();
+  let maxX = 0;
+
+  rows.forEach(([ry, keys]) => {
+    let x = 0;
+    keys.forEach(([id, w, isFrame]) => {
+      const el = document.createElement("div");
+      el.className = "key" + (isFrame ? " frame" : "");
+      el.style.left = (PAD + x * (U + GAP)) + "px";
+      el.style.top = (PAD + ry * (U + GAP)) + "px";
+      el.style.width = (w * U + (w - 1) * GAP) + "px";
+      el.style.height = U + "px";
+      const k = !isFrame && byId[id];
+      if (isFrame || !k) {
+        el.classList.add("frame");
+        el.innerHTML = '<span class="lab c">' + (isFrame ? esc(id) : "") + "</span>";
+      } else {
+        el.dataset.id = id;
+        el.setAttribute("role", "button");
+        el.title = id;
+        if (lv) {
+          const o = outLabel(k.levels[lv]);
+          el.innerHTML = o ? '<span class="lab c' + (o.dead ? " dead" : "") + '">' + esc(o.text) + "</span>" : "";
+          if (!o) el.style.opacity = .45;
+        } else {
+          const l1 = outLabel(k.levels["1"]), l2 = outLabel(k.levels["2"]),
+                l3 = outLabel(k.levels["3"]), l4 = outLabel(k.levels["4"]);
+          const letter = l1 && l2 && !l1.dead && !l2.dead && !l3 && !l4 &&
+                         l2.text === l1.text.toUpperCase() && l1.text !== l2.text;
+          if (letter) el.innerHTML = '<span class="lab c">' + esc(l2.text) + "</span>";
+          else el.innerHTML =
+            (l2 ? '<span class="lab tl' + (l2.dead ? " dead" : "") + '">' + esc(l2.text) + "</span>" : "") +
+            (l1 ? '<span class="lab bl' + (l1.dead ? " dead" : "") + '">' + esc(l1.text) + "</span>" : "") +
+            (l3 ? '<span class="lab br' + (l3.dead ? " dead" : "") + '">' + esc(l3.text) + "</span>" : "") +
+            (l4 ? '<span class="lab tr' + (l4.dead ? " dead" : "") + '">' + esc(l4.text) + "</span>" : "");
+        }
+        el.addEventListener("click", () => selectKey(id));
+        if (selectedKey === id) el.classList.add("sel");
+      }
+      kb.appendChild(el);
+      x += w;
+    });
+    maxX = Math.max(maxX, x);
+  });
+
+  /* ISO L-shaped Enter spanning rows 1-2 */
+  if (iso) {
+    const el = document.createElement("div");
+    el.className = "key frame";
+    el.style.left = (PAD + 13.5 * (U + GAP)) + "px";
+    el.style.top = (PAD + 1 * (U + GAP)) + "px";
+    el.style.width = (1.5 * U + 0.5 * GAP) + "px";
+    el.style.height = (2 * U + GAP) + "px";
+    const cut = (0.25 * (U + GAP)) / (1.5 * U + 0.5 * GAP) * 100;
+    el.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, " + cut.toFixed(1) + "% 100%, " + cut.toFixed(1) + "% 48%, 0 48%)";
+    el.innerHTML = '<span class="lab c" style="align-items:flex-start; padding-top:.5rem">⏎</span>';
+    kb.appendChild(el);
+  }
+  kb.style.width = (2 * PAD + maxX * (U + GAP) - GAP) + "px";
+  kb.style.height = (2 * PAD + 5 * (U + GAP) - GAP) + "px";
+}
+
+function renderMeta() {
+  const m = manifest;
+  const nk = (m.keys || []).length, nd = (m.deadKeys || []).length;
+  $("meta").innerHTML =
+    '<span class="mono">' + esc(m.name) + "</span> · " + esc(m.version) +
+    " · license " + esc(m.license) + " · " + nk + " keys · " + nd + " dead keys · " +
+    '<a href="https://github.com/AZERTYGlobal/oklm/blob/main/examples/' + esc(currentFile()) + '">view manifest</a>';
+}
+
+function selectKey(id) {
+  selectedKey = id;
+  document.querySelectorAll(".key.sel").forEach(e => e.classList.remove("sel"));
+  const el = document.querySelector('.key[data-id="' + id + '"]');
+  if (el) el.classList.add("sel");
+  const k = (manifest.keys || []).find(x => x.id === id);
+  if (!k) return;
+  let html = "<h3><span class=\"mono\">" + esc(k.id) + "</span><span class=\"ids mono\">hid " + esc(k.hid) +
+    (k.xkb ? " · xkb " + esc(k.xkb) : "") + (k.code ? " · code " + esc(k.code) : "") + "</span></h3>";
+  html += '<div class="lvl-table">';
+  const deadRefs = [];
+  for (let i = 1; i <= 8; i++) {
+    const out = k.levels[String(i)];
+    if (out == null) continue;
+    const o = outLabel(out);
+    const raw = typeof out === "string"
+      ? '"' + esc(out) + '"' + (SPACES[out] ? " (" + SPACES[out] + ")" : "")
+      : out.deadKey ? "dead key <b>" + esc(out.deadKey) + "</b>" : esc(JSON.stringify(out));
+    if (typeof out === "object" && out.deadKey) deadRefs.push(out.deadKey);
+    html += '<span class="n">' + i + " · " + SELECTOR_NAMES[String(i)] + "</span>" +
+            '<span class="out' + (o.dead ? " deadref" : "") + ' mono">' + raw + "</span>";
+  }
+  html += "</div>";
+  deadRefs.forEach(dId => {
+    const dk = deadIndex[dId];
+    if (!dk) return;
+    const entries = Object.entries(dk.compositions || {});
+    html += '<div class="comp-wrap"><h4>Dead key <span class="mono">' + esc(dId) + "</span>" +
+      (dk.name ? " — " + esc(dk.name) : "") + " · " + entries.length + " compositions</h4><div class=\"comps\">" +
+      entries.map(([b, o]) => "<span>" + esc(SPACES[b] ? "␣" : b) + " → <b>" + esc(o) + "</b></span>").join("") +
+      "</div></div>";
+  });
+  $("inspector").innerHTML = html;
+}
+
+/* ---------- wiring ---------- */
+function currentFile() { return $("layout").value; }
+
+async function loadLayout(file) {
+  const res = await fetch("manifests/" + file);
+  manifest = await res.json();
+  deadIndex = {};
+  (manifest.deadKeys || []).forEach(d => deadIndex[d.id] = d);
+  selectedKey = null;
+  $("inspector").innerHTML = '<span class="placeholder">Click a key to inspect its outputs, HID usage, XKB name and W3C code.</span>';
+  renderMeta();
+  renderKeyboard();
+}
+
+function setMod(name) {
+  if (name === "all") { mods.all = true; mods.shift = mods.altgr = mods.caps = false; }
+  else { mods[name] = !mods[name]; mods.all = !(mods.shift || mods.altgr || mods.caps); }
+  $("m-all").setAttribute("aria-pressed", mods.all);
+  $("m-shift").setAttribute("aria-pressed", mods.shift);
+  $("m-altgr").setAttribute("aria-pressed", mods.altgr);
+  $("m-caps").setAttribute("aria-pressed", mods.caps);
+  renderKeyboard();
+}
+
+const sel = $("layout");
+LAYOUTS.forEach(l => {
+  const o = document.createElement("option");
+  o.value = l.file; o.textContent = l.label;
+  sel.appendChild(o);
+});
+sel.addEventListener("change", () => loadLayout(currentFile()));
+["all", "shift", "altgr", "caps"].forEach(n => $("m-" + n).addEventListener("click", () => setMod(n)));
+loadLayout(LAYOUTS[0].file).catch(() => {
+  $("meta").textContent = "Could not load the manifest — the demo requires the site to be served over HTTP.";
+});
+</script>
 </body>
 </html>

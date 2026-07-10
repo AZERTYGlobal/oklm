@@ -1,0 +1,559 @@
+{
+  "schemaVersion": "0.1",
+  "layoutId": "qwerty-us",
+  "name": "QWERTY US",
+  "version": "ANSI (US 104-key)",
+  "license": "CC0-1.0",
+  "authors": [
+    "Traditional US layout (public domain); manifest by the OKLM project"
+  ],
+  "description": "Complete OKLM description of the standard US QWERTY layout (47 graphic keys plus space, 2 shift levels plus CapsLock variants on letters, no dead keys). Hand-written as the ANSI baseline example: the simplest widely deployed layout, in contrast with the dead-key-rich French manifests. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "locales": [
+    "en",
+    "en-US"
+  ],
+  "geometry": [
+    "ansi-full",
+    "ansi-tkl",
+    "ansi-75",
+    "ansi-60"
+  ],
+  "levelSelectors": {
+    "2": [
+      "Level2Shift"
+    ],
+    "5": [
+      "CapsLock"
+    ]
+  },
+  "keys": [
+    {
+      "id": "E00",
+      "hid": "0x35",
+      "xkb": "TLDE",
+      "code": "Backquote",
+      "levels": {
+        "1": "`",
+        "2": "~"
+      }
+    },
+    {
+      "id": "E01",
+      "hid": "0x1E",
+      "xkb": "AE01",
+      "code": "Digit1",
+      "levels": {
+        "1": "1",
+        "2": "!"
+      }
+    },
+    {
+      "id": "E02",
+      "hid": "0x1F",
+      "xkb": "AE02",
+      "code": "Digit2",
+      "levels": {
+        "1": "2",
+        "2": "@"
+      }
+    },
+    {
+      "id": "E03",
+      "hid": "0x20",
+      "xkb": "AE03",
+      "code": "Digit3",
+      "levels": {
+        "1": "3",
+        "2": "#"
+      }
+    },
+    {
+      "id": "E04",
+      "hid": "0x21",
+      "xkb": "AE04",
+      "code": "Digit4",
+      "levels": {
+        "1": "4",
+        "2": "$"
+      }
+    },
+    {
+      "id": "E05",
+      "hid": "0x22",
+      "xkb": "AE05",
+      "code": "Digit5",
+      "levels": {
+        "1": "5",
+        "2": "%"
+      }
+    },
+    {
+      "id": "E06",
+      "hid": "0x23",
+      "xkb": "AE06",
+      "code": "Digit6",
+      "levels": {
+        "1": "6",
+        "2": "^"
+      }
+    },
+    {
+      "id": "E07",
+      "hid": "0x24",
+      "xkb": "AE07",
+      "code": "Digit7",
+      "levels": {
+        "1": "7",
+        "2": "&"
+      }
+    },
+    {
+      "id": "E08",
+      "hid": "0x25",
+      "xkb": "AE08",
+      "code": "Digit8",
+      "levels": {
+        "1": "8",
+        "2": "*"
+      }
+    },
+    {
+      "id": "E09",
+      "hid": "0x26",
+      "xkb": "AE09",
+      "code": "Digit9",
+      "levels": {
+        "1": "9",
+        "2": "("
+      }
+    },
+    {
+      "id": "E10",
+      "hid": "0x27",
+      "xkb": "AE10",
+      "code": "Digit0",
+      "levels": {
+        "1": "0",
+        "2": ")"
+      }
+    },
+    {
+      "id": "E11",
+      "hid": "0x2D",
+      "xkb": "AE11",
+      "code": "Minus",
+      "levels": {
+        "1": "-",
+        "2": "_"
+      }
+    },
+    {
+      "id": "E12",
+      "hid": "0x2E",
+      "xkb": "AE12",
+      "code": "Equal",
+      "levels": {
+        "1": "=",
+        "2": "+"
+      }
+    },
+    {
+      "id": "D01",
+      "hid": "0x14",
+      "xkb": "AD01",
+      "code": "KeyQ",
+      "levels": {
+        "1": "q",
+        "2": "Q",
+        "5": "Q"
+      }
+    },
+    {
+      "id": "D02",
+      "hid": "0x1A",
+      "xkb": "AD02",
+      "code": "KeyW",
+      "levels": {
+        "1": "w",
+        "2": "W",
+        "5": "W"
+      }
+    },
+    {
+      "id": "D03",
+      "hid": "0x08",
+      "xkb": "AD03",
+      "code": "KeyE",
+      "levels": {
+        "1": "e",
+        "2": "E",
+        "5": "E"
+      }
+    },
+    {
+      "id": "D04",
+      "hid": "0x15",
+      "xkb": "AD04",
+      "code": "KeyR",
+      "levels": {
+        "1": "r",
+        "2": "R",
+        "5": "R"
+      }
+    },
+    {
+      "id": "D05",
+      "hid": "0x17",
+      "xkb": "AD05",
+      "code": "KeyT",
+      "levels": {
+        "1": "t",
+        "2": "T",
+        "5": "T"
+      }
+    },
+    {
+      "id": "D06",
+      "hid": "0x1C",
+      "xkb": "AD06",
+      "code": "KeyY",
+      "levels": {
+        "1": "y",
+        "2": "Y",
+        "5": "Y"
+      }
+    },
+    {
+      "id": "D07",
+      "hid": "0x18",
+      "xkb": "AD07",
+      "code": "KeyU",
+      "levels": {
+        "1": "u",
+        "2": "U",
+        "5": "U"
+      }
+    },
+    {
+      "id": "D08",
+      "hid": "0x0C",
+      "xkb": "AD08",
+      "code": "KeyI",
+      "levels": {
+        "1": "i",
+        "2": "I",
+        "5": "I"
+      }
+    },
+    {
+      "id": "D09",
+      "hid": "0x12",
+      "xkb": "AD09",
+      "code": "KeyO",
+      "levels": {
+        "1": "o",
+        "2": "O",
+        "5": "O"
+      }
+    },
+    {
+      "id": "D10",
+      "hid": "0x13",
+      "xkb": "AD10",
+      "code": "KeyP",
+      "levels": {
+        "1": "p",
+        "2": "P",
+        "5": "P"
+      }
+    },
+    {
+      "id": "D11",
+      "hid": "0x2F",
+      "xkb": "AD11",
+      "code": "BracketLeft",
+      "levels": {
+        "1": "[",
+        "2": "{"
+      }
+    },
+    {
+      "id": "D12",
+      "hid": "0x30",
+      "xkb": "AD12",
+      "code": "BracketRight",
+      "levels": {
+        "1": "]",
+        "2": "}"
+      }
+    },
+    {
+      "id": "D13",
+      "hid": "0x31",
+      "xkb": "BKSL",
+      "code": "Backslash",
+      "levels": {
+        "1": "\\",
+        "2": "|"
+      }
+    },
+    {
+      "id": "C01",
+      "hid": "0x04",
+      "xkb": "AC01",
+      "code": "KeyA",
+      "levels": {
+        "1": "a",
+        "2": "A",
+        "5": "A"
+      }
+    },
+    {
+      "id": "C02",
+      "hid": "0x16",
+      "xkb": "AC02",
+      "code": "KeyS",
+      "levels": {
+        "1": "s",
+        "2": "S",
+        "5": "S"
+      }
+    },
+    {
+      "id": "C03",
+      "hid": "0x07",
+      "xkb": "AC03",
+      "code": "KeyD",
+      "levels": {
+        "1": "d",
+        "2": "D",
+        "5": "D"
+      }
+    },
+    {
+      "id": "C04",
+      "hid": "0x09",
+      "xkb": "AC04",
+      "code": "KeyF",
+      "levels": {
+        "1": "f",
+        "2": "F",
+        "5": "F"
+      }
+    },
+    {
+      "id": "C05",
+      "hid": "0x0A",
+      "xkb": "AC05",
+      "code": "KeyG",
+      "levels": {
+        "1": "g",
+        "2": "G",
+        "5": "G"
+      }
+    },
+    {
+      "id": "C06",
+      "hid": "0x0B",
+      "xkb": "AC06",
+      "code": "KeyH",
+      "levels": {
+        "1": "h",
+        "2": "H",
+        "5": "H"
+      }
+    },
+    {
+      "id": "C07",
+      "hid": "0x0D",
+      "xkb": "AC07",
+      "code": "KeyJ",
+      "levels": {
+        "1": "j",
+        "2": "J",
+        "5": "J"
+      }
+    },
+    {
+      "id": "C08",
+      "hid": "0x0E",
+      "xkb": "AC08",
+      "code": "KeyK",
+      "levels": {
+        "1": "k",
+        "2": "K",
+        "5": "K"
+      }
+    },
+    {
+      "id": "C09",
+      "hid": "0x0F",
+      "xkb": "AC09",
+      "code": "KeyL",
+      "levels": {
+        "1": "l",
+        "2": "L",
+        "5": "L"
+      }
+    },
+    {
+      "id": "C10",
+      "hid": "0x33",
+      "xkb": "AC10",
+      "code": "Semicolon",
+      "levels": {
+        "1": ";",
+        "2": ":"
+      }
+    },
+    {
+      "id": "C11",
+      "hid": "0x34",
+      "xkb": "AC11",
+      "code": "Quote",
+      "levels": {
+        "1": "'",
+        "2": "\""
+      }
+    },
+    {
+      "id": "B01",
+      "hid": "0x1D",
+      "xkb": "AB01",
+      "code": "KeyZ",
+      "levels": {
+        "1": "z",
+        "2": "Z",
+        "5": "Z"
+      }
+    },
+    {
+      "id": "B02",
+      "hid": "0x1B",
+      "xkb": "AB02",
+      "code": "KeyX",
+      "levels": {
+        "1": "x",
+        "2": "X",
+        "5": "X"
+      }
+    },
+    {
+      "id": "B03",
+      "hid": "0x06",
+      "xkb": "AB03",
+      "code": "KeyC",
+      "levels": {
+        "1": "c",
+        "2": "C",
+        "5": "C"
+      }
+    },
+    {
+      "id": "B04",
+      "hid": "0x19",
+      "xkb": "AB04",
+      "code": "KeyV",
+      "levels": {
+        "1": "v",
+        "2": "V",
+        "5": "V"
+      }
+    },
+    {
+      "id": "B05",
+      "hid": "0x05",
+      "xkb": "AB05",
+      "code": "KeyB",
+      "levels": {
+        "1": "b",
+        "2": "B",
+        "5": "B"
+      }
+    },
+    {
+      "id": "B06",
+      "hid": "0x11",
+      "xkb": "AB06",
+      "code": "KeyN",
+      "levels": {
+        "1": "n",
+        "2": "N",
+        "5": "N"
+      }
+    },
+    {
+      "id": "B07",
+      "hid": "0x10",
+      "xkb": "AB07",
+      "code": "KeyM",
+      "levels": {
+        "1": "m",
+        "2": "M",
+        "5": "M"
+      }
+    },
+    {
+      "id": "B08",
+      "hid": "0x36",
+      "xkb": "AB08",
+      "code": "Comma",
+      "levels": {
+        "1": ",",
+        "2": "<"
+      }
+    },
+    {
+      "id": "B09",
+      "hid": "0x37",
+      "xkb": "AB09",
+      "code": "Period",
+      "levels": {
+        "1": ".",
+        "2": ">"
+      }
+    },
+    {
+      "id": "B10",
+      "hid": "0x38",
+      "xkb": "AB10",
+      "code": "Slash",
+      "levels": {
+        "1": "/",
+        "2": "?"
+      }
+    },
+    {
+      "id": "A03",
+      "hid": "0x2C",
+      "xkb": "SPCE",
+      "code": "Space",
+      "levels": {
+        "1": " ",
+        "2": " "
+      }
+    }
+  ],
+  "conformance": [
+    {
+      "reference": "ISO/IEC 9995-1:2009",
+      "scope": "Key reference grid used for canonical key identifiers."
+    }
+  ],
+  "exports": [
+    {
+      "target": "ldml-keyboard-3",
+      "id": "ldml",
+      "options": {
+        "conformsTo": 45
+      }
+    },
+    {
+      "target": "web-tester",
+      "id": "web"
+    }
+  ],
+  "metadata": {
+    "description": "ANSI keyboards have no B00 (ISO extra) key; the backslash key sits at D13. CapsLock levels are declared only on letter keys; other keys are unaffected by CapsLock."
+  }
+}
