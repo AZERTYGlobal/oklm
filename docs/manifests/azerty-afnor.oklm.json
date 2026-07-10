@@ -3,7 +3,7 @@
   "layoutId": "azerty-afnor",
   "name": "French (Standard, AZERTY)",
   "version": "NF Z71-300:2019 (AZERTY option)",
-  "license": "CC-BY-4.0",
+  "license": "NOASSERTION",
   "authors": [
     "AFNOR NF Z71-300 working group"
   ],
@@ -1444,7 +1444,7 @@
     }
   ],
   "metadata": {
-    "description": "Converted from the azerty.global web tester data; that data remains the authoritative source for this manifest. The AZERTY-NF layout is distributed under CC-BY per the community driver project (norme-azerty.fr); the NF Z71-300 standard document itself remains (c) AFNOR.",
+    "description": "Converted from the azerty.global web tester data; that data remains the authoritative source for this manifest. The layout is the AZERTY option specified by AFNOR NF Z71-300:2019; the standard document is (c) AFNOR and no standalone license is published for the layout mapping itself, hence NOASSERTION. Community driver implementations exist under their own licenses (CC-BY 4.0, MIT and others; see norme-azerty.fr).",
     "links": {
       "standard": "https://norme-azerty.fr"
     },

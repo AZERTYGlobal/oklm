@@ -6,7 +6,7 @@ Six manifests, all validating against `schemas/oklm-manifest.schema.json`
 | Manifest | Layout | Keys / levels / dead keys | Provenance | License of the layout |
 |---|---|---|---|---|
 | `azerty-global.oklm.json` | AZERTY Global 2026 | 49 / 8 / 29 | Generated from the layout's source of truth, verified field-by-field | EUPL-1.2 |
-| `azerty-afnor.oklm.json` | AZERTY option of AFNOR NF Z71-300:2019 | 49 / 8 / 22 | Generated from the azerty.global web tester data, verified field-by-field | CC-BY (per the community driver project; the standard document is (c) AFNOR) |
+| `azerty-afnor.oklm.json` | AZERTY option of AFNOR NF Z71-300:2019 | 49 / 8 / 22 | Generated from the azerty.global web tester data, verified field-by-field | NOASSERTION (standard document (c) AFNOR; no standalone license published for the mapping; community drivers carry their own licenses) |
 | `bepo.oklm.json` | BÉPO (ergonomic option of NF Z71-300) | 49 / 8 / 21 | Generated from the azerty.global web tester data, verified field-by-field | CC-BY-SA / GFDL (bepo.fr community) |
 | `azerty-traditionnel.oklm.json` | Legacy Windows French AZERTY | 49 / 5 / 4 | Generated from the azerty.global web tester data, verified field-by-field | NOASSERTION (no license published by Microsoft) |
 | `qwerty-us.oklm.json` | US QWERTY (ANSI baseline) | 48 / 3 / 0 | Hand-written | Public-domain heritage; manifest under CC0-1.0 |

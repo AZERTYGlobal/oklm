@@ -1,7 +1,7 @@
 # OKLM — Campagne de deep research (dossier `research/`)
 
-> But : alimenter la conception du modèle OKLM (voir `../SPEC.md`, `../README.md`,
-> `.agent/CONTEXT_OKLM.md`) avec une compréhension exhaustive de l'écosystème clavier, via des
+> But : alimenter la conception du modèle OKLM (voir `../SPEC.md`, `../README.md`)
+> avec une compréhension exhaustive de l'écosystème clavier, via des
 > deep research recoupées sur plusieurs moteurs (Perplexity, ChatGPT, Gemini).
 >
 > **Document de reprise** : à lire en premier par toute IA/personne qui continue le travail.
@@ -13,7 +13,6 @@
 | `Deep Research Prompts.md` | Les **16 prompts** (source). Carte + ordre suggéré en tête. |
 | `Décisions de conception — deep research.md` | **Journal des décisions** (D1…), source vivante pour `SPEC.md`. |
 | `results/` | **Bruts archivés** des rapports, un fichier par prompt × moteur. |
-| `Prompt de démarrage Codex.md` | Prompt prêt à coller en début de session Codex pour traiter un rapport (+ notice d'adaptation). |
 | `README.md` | Ce document. |
 
 ## Workflow pour traiter un rapport de prompt

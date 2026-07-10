@@ -43,7 +43,7 @@ After version 1.0:
 
 ## Contribution Model
 
-To decide before public release.
+A formal contribution process is not defined yet for draft 0.1. Until then, use GitHub issues on the public repository.
 
 Expected contribution paths:
 
@@ -67,4 +67,4 @@ Canonical file extension: `.oklm.json`.
 
 ---
 
-*Last updated: 2026-06-03*
+*Last updated: 2026-07-10*
