@@ -72,7 +72,8 @@ nav.top a.gh { color: var(--fg); }
 .chip::before { content: ""; width: .48rem; height: .48rem; border-radius: 50%;
   background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 .hero h1 { font-size: clamp(2.3rem, 4.6vw, 3.4rem); line-height: 1.06; letter-spacing: -.035em;
-  font-weight: 800; margin: 1.1rem 0 1rem; }
+  font-weight: 800; margin: 0 0 1rem; }
+.hero .chip { margin-top: 1.7rem; }
 .hero h1 em { font-style: normal; color: var(--accent-fg); }
 .hero p.lead { font-size: 1.12rem; color: var(--muted); max-width: 36rem; margin: 0 0 1.6rem; }
 .buttons { display: flex; gap: .7rem; flex-wrap: wrap; }
@@ -238,7 +239,6 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
   <div class="hero-bg">
     <div class="hero wrap">
       <div>
-        <p class="chip">Draft 0.1 — schemas, six example layouts and a validator</p>
         <h1>One open source of truth per <em>keyboard layout</em>.</h1>
         <p class="lead">OKLM is a human-maintainable JSON model to describe, validate and export keyboard layouts — to Unicode LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
         <div class="buttons">
@@ -246,6 +246,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
           <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
           <a class="btn" href="#demo">Try the demo ↓</a>
         </div>
+        <p class="chip">Draft 0.1 — schemas, six example layouts and a validator</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="hero-row"><span class="hk">O</span><span class="hk">K</span></div>
