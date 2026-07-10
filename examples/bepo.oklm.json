@@ -1,0 +1,1442 @@
+{
+  "schemaVersion": "0.1",
+  "layoutId": "bepo",
+  "name": "French (Standard, BÉPO)",
+  "version": "2026",
+  "license": "CC-BY-SA-3.0 OR GFDL-1.2-or-later",
+  "authors": [
+    "Communauté bépo / Association Ergodis"
+  ],
+  "description": "Complete OKLM description of the BÉPO ergonomic French layout (49 graphic keys, 8 ISO levels, 21 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "locales": [
+    "fr",
+    "fr-FR"
+  ],
+  "geometry": [
+    "iso-full",
+    "iso-tkl",
+    "iso-75"
+  ],
+  "levelSelectors": {
+    "2": [
+      "Level2Shift"
+    ],
+    "3": [
+      "Level3Shift"
+    ],
+    "4": [
+      "Level2Shift",
+      "Level3Shift"
+    ],
+    "5": [
+      "CapsLock"
+    ],
+    "6": [
+      "CapsLock",
+      "Level2Shift"
+    ],
+    "7": [
+      "CapsLock",
+      "Level3Shift"
+    ],
+    "8": [
+      "CapsLock",
+      "Level2Shift",
+      "Level3Shift"
+    ]
+  },
+  "keys": [
+    {
+      "id": "E00",
+      "hid": "0x35",
+      "xkb": "TLDE",
+      "code": "Backquote",
+      "levels": {
+        "1": "$",
+        "2": "#",
+        "3": "–",
+        "4": "¶"
+      }
+    },
+    {
+      "id": "E01",
+      "hid": "0x1E",
+      "xkb": "AE01",
+      "code": "Digit1",
+      "levels": {
+        "1": "\"",
+        "2": "1",
+        "3": "—",
+        "4": "„",
+        "5": "1",
+        "6": "\""
+      }
+    },
+    {
+      "id": "E02",
+      "hid": "0x1F",
+      "xkb": "AE02",
+      "code": "Digit2",
+      "levels": {
+        "1": "«",
+        "2": "2",
+        "3": "<",
+        "4": "“",
+        "5": "2",
+        "6": "«"
+      }
+    },
+    {
+      "id": "E03",
+      "hid": "0x20",
+      "xkb": "AE03",
+      "code": "Digit3",
+      "levels": {
+        "1": "»",
+        "2": "3",
+        "3": ">",
+        "4": "”",
+        "5": "3",
+        "6": "»"
+      }
+    },
+    {
+      "id": "E04",
+      "hid": "0x21",
+      "xkb": "AE04",
+      "code": "Digit4",
+      "levels": {
+        "1": "(",
+        "2": "4",
+        "3": "[",
+        "4": "⩽",
+        "5": "4",
+        "6": "("
+      }
+    },
+    {
+      "id": "E05",
+      "hid": "0x22",
+      "xkb": "AE05",
+      "code": "Digit5",
+      "levels": {
+        "1": ")",
+        "2": "5",
+        "3": "]",
+        "4": "⩾",
+        "5": "5",
+        "6": ")"
+      }
+    },
+    {
+      "id": "E06",
+      "hid": "0x23",
+      "xkb": "AE06",
+      "code": "Digit6",
+      "levels": {
+        "1": "@",
+        "2": "6",
+        "3": "^",
+        "5": "6",
+        "6": "@"
+      }
+    },
+    {
+      "id": "E07",
+      "hid": "0x24",
+      "xkb": "AE07",
+      "code": "Digit7",
+      "levels": {
+        "1": "+",
+        "2": "7",
+        "3": "±",
+        "5": "7",
+        "6": "+"
+      }
+    },
+    {
+      "id": "E08",
+      "hid": "0x25",
+      "xkb": "AE08",
+      "code": "Digit8",
+      "levels": {
+        "1": "-",
+        "2": "8",
+        "3": "−",
+        "4": "¼",
+        "5": "8",
+        "6": "-"
+      }
+    },
+    {
+      "id": "E09",
+      "hid": "0x26",
+      "xkb": "AE09",
+      "code": "Digit9",
+      "levels": {
+        "1": "/",
+        "2": "9",
+        "3": "÷",
+        "4": "½",
+        "5": "9",
+        "6": "/"
+      }
+    },
+    {
+      "id": "E10",
+      "hid": "0x27",
+      "xkb": "AE10",
+      "code": "Digit0",
+      "levels": {
+        "1": "*",
+        "2": "0",
+        "3": "×",
+        "4": "¾",
+        "5": "0",
+        "6": "*"
+      }
+    },
+    {
+      "id": "E11",
+      "hid": "0x2D",
+      "xkb": "AE11",
+      "code": "Minus",
+      "levels": {
+        "1": "=",
+        "2": "°",
+        "3": "≠",
+        "4": "′"
+      }
+    },
+    {
+      "id": "E12",
+      "hid": "0x2E",
+      "xkb": "AE12",
+      "code": "Equal",
+      "levels": {
+        "1": "%",
+        "2": "`",
+        "3": "‰",
+        "4": "″"
+      }
+    },
+    {
+      "id": "D01",
+      "hid": "0x14",
+      "xkb": "AD01",
+      "code": "KeyQ",
+      "levels": {
+        "1": "b",
+        "2": "B",
+        "3": "|",
+        "5": "B",
+        "6": "b"
+      }
+    },
+    {
+      "id": "D02",
+      "hid": "0x1A",
+      "xkb": "AD02",
+      "code": "KeyW",
+      "levels": {
+        "1": "é",
+        "2": "É",
+        "3": {
+          "deadKey": "acute"
+        },
+        "5": "É",
+        "6": "é"
+      }
+    },
+    {
+      "id": "D03",
+      "hid": "0x08",
+      "xkb": "AD03",
+      "code": "KeyE",
+      "levels": {
+        "1": "p",
+        "2": "P",
+        "3": "&",
+        "4": "§",
+        "5": "P",
+        "6": "p"
+      }
+    },
+    {
+      "id": "D04",
+      "hid": "0x15",
+      "xkb": "AD04",
+      "code": "KeyR",
+      "levels": {
+        "1": "o",
+        "2": "O",
+        "3": "œ",
+        "4": "Œ",
+        "5": "O",
+        "6": "o",
+        "7": "Œ",
+        "8": "œ"
+      }
+    },
+    {
+      "id": "D05",
+      "hid": "0x17",
+      "xkb": "AD05",
+      "code": "KeyT",
+      "levels": {
+        "1": "è",
+        "2": "È",
+        "3": {
+          "deadKey": "grave"
+        },
+        "4": "`",
+        "5": "È",
+        "6": "è"
+      }
+    },
+    {
+      "id": "D06",
+      "hid": "0x1C",
+      "xkb": "AD06",
+      "code": "KeyY",
+      "levels": {
+        "1": {
+          "deadKey": "circumflex"
+        },
+        "2": "!",
+        "3": "¡"
+      }
+    },
+    {
+      "id": "D07",
+      "hid": "0x18",
+      "xkb": "AD07",
+      "code": "KeyU",
+      "levels": {
+        "1": "v",
+        "2": "V",
+        "3": {
+          "deadKey": "caron"
+        },
+        "5": "V",
+        "6": "v"
+      }
+    },
+    {
+      "id": "D08",
+      "hid": "0x0C",
+      "xkb": "AD08",
+      "code": "KeyI",
+      "levels": {
+        "1": "d",
+        "2": "D",
+        "3": {
+          "deadKey": "scientific"
+        },
+        "5": "D",
+        "6": "d"
+      }
+    },
+    {
+      "id": "D09",
+      "hid": "0x12",
+      "xkb": "AD09",
+      "code": "KeyO",
+      "levels": {
+        "1": "l",
+        "2": "L",
+        "3": {
+          "deadKey": "stroke"
+        },
+        "4": "£",
+        "5": "L",
+        "6": "l"
+      }
+    },
+    {
+      "id": "D10",
+      "hid": "0x13",
+      "xkb": "AD10",
+      "code": "KeyP",
+      "levels": {
+        "1": "j",
+        "2": "J",
+        "5": "J",
+        "6": "j"
+      }
+    },
+    {
+      "id": "D11",
+      "hid": "0x2F",
+      "xkb": "AD11",
+      "code": "BracketLeft",
+      "levels": {
+        "1": "z",
+        "2": "Z",
+        "3": {
+          "deadKey": "horizontal-stroke"
+        },
+        "5": "Z",
+        "6": "z"
+      }
+    },
+    {
+      "id": "D12",
+      "hid": "0x30",
+      "xkb": "AD12",
+      "code": "BracketRight",
+      "levels": {
+        "1": "w",
+        "2": "W",
+        "5": "W",
+        "6": "w"
+      }
+    },
+    {
+      "id": "C01",
+      "hid": "0x04",
+      "xkb": "AC01",
+      "code": "KeyA",
+      "levels": {
+        "1": "a",
+        "2": "A",
+        "3": "æ",
+        "4": "Æ",
+        "5": "A",
+        "6": "a",
+        "7": "Æ",
+        "8": "æ"
+      }
+    },
+    {
+      "id": "C02",
+      "hid": "0x16",
+      "xkb": "AC02",
+      "code": "KeyS",
+      "levels": {
+        "1": "u",
+        "2": "U",
+        "3": "ù",
+        "4": "Ù",
+        "5": "U",
+        "6": "u",
+        "7": "Ù",
+        "8": "ù"
+      }
+    },
+    {
+      "id": "C03",
+      "hid": "0x07",
+      "xkb": "AC03",
+      "code": "KeyD",
+      "levels": {
+        "1": "i",
+        "2": "I",
+        "3": {
+          "deadKey": "diaeresis"
+        },
+        "4": {
+          "deadKey": "dot-above"
+        },
+        "5": "I",
+        "6": "i"
+      }
+    },
+    {
+      "id": "C04",
+      "hid": "0x09",
+      "xkb": "AC04",
+      "code": "KeyF",
+      "levels": {
+        "1": "e",
+        "2": "E",
+        "3": "€",
+        "4": {
+          "deadKey": "currencies"
+        },
+        "5": "E",
+        "6": "e"
+      }
+    },
+    {
+      "id": "C05",
+      "hid": "0x0A",
+      "xkb": "AC05",
+      "code": "KeyG",
+      "levels": {
+        "1": ",",
+        "2": ";",
+        "3": "'",
+        "4": {
+          "deadKey": "comma"
+        }
+      }
+    },
+    {
+      "id": "C06",
+      "hid": "0x0B",
+      "xkb": "AC06",
+      "code": "KeyH",
+      "levels": {
+        "1": "c",
+        "2": "C",
+        "3": {
+          "deadKey": "cedilla"
+        },
+        "4": "©",
+        "5": "C",
+        "6": "c"
+      }
+    },
+    {
+      "id": "C07",
+      "hid": "0x0D",
+      "xkb": "AC07",
+      "code": "KeyJ",
+      "levels": {
+        "1": "t",
+        "2": "T",
+        "3": {
+          "deadKey": "superscript"
+        },
+        "4": "™",
+        "5": "T",
+        "6": "t"
+      }
+    },
+    {
+      "id": "C08",
+      "hid": "0x0E",
+      "xkb": "AC08",
+      "code": "KeyK",
+      "levels": {
+        "1": "s",
+        "2": "S",
+        "3": {
+          "deadKey": "extended-latin"
+        },
+        "4": "ſ",
+        "5": "S",
+        "6": "s"
+      }
+    },
+    {
+      "id": "C09",
+      "hid": "0x0F",
+      "xkb": "AC09",
+      "code": "KeyL",
+      "levels": {
+        "1": "r",
+        "2": "R",
+        "3": {
+          "deadKey": "breve"
+        },
+        "4": "®",
+        "5": "R",
+        "6": "r"
+      }
+    },
+    {
+      "id": "C10",
+      "hid": "0x33",
+      "xkb": "AC10",
+      "code": "Semicolon",
+      "levels": {
+        "1": "n",
+        "2": "N",
+        "3": {
+          "deadKey": "tilde"
+        },
+        "5": "N",
+        "6": "n"
+      }
+    },
+    {
+      "id": "C11",
+      "hid": "0x34",
+      "xkb": "AC11",
+      "code": "Quote",
+      "levels": {
+        "1": "m",
+        "2": "M",
+        "3": {
+          "deadKey": "macron"
+        },
+        "5": "M",
+        "6": "m"
+      }
+    },
+    {
+      "id": "C12",
+      "hid": "0x31",
+      "xkb": "BKSL",
+      "code": "Backslash",
+      "levels": {
+        "1": "ç",
+        "2": "Ç",
+        "5": "Ç",
+        "6": "ç"
+      }
+    },
+    {
+      "id": "B00",
+      "hid": "0x64",
+      "xkb": "LSGT",
+      "code": "IntlBackslash",
+      "levels": {
+        "1": "ê",
+        "2": "Ê",
+        "3": "/",
+        "4": "^",
+        "5": "Ê",
+        "6": "ê"
+      }
+    },
+    {
+      "id": "B01",
+      "hid": "0x1D",
+      "xkb": "AB01",
+      "code": "KeyZ",
+      "levels": {
+        "1": "à",
+        "2": "À",
+        "3": "\\",
+        "5": "À",
+        "6": "à"
+      }
+    },
+    {
+      "id": "B02",
+      "hid": "0x1B",
+      "xkb": "AB02",
+      "code": "KeyX",
+      "levels": {
+        "1": "y",
+        "2": "Y",
+        "3": "{",
+        "4": "‘",
+        "5": "Y",
+        "6": "y"
+      }
+    },
+    {
+      "id": "B03",
+      "hid": "0x06",
+      "xkb": "AB03",
+      "code": "KeyC",
+      "levels": {
+        "1": "x",
+        "2": "X",
+        "3": "}",
+        "4": "’",
+        "5": "X",
+        "6": "x"
+      }
+    },
+    {
+      "id": "B04",
+      "hid": "0x19",
+      "xkb": "AB04",
+      "code": "KeyV",
+      "levels": {
+        "1": ".",
+        "2": ":",
+        "3": "…",
+        "4": "·"
+      }
+    },
+    {
+      "id": "B05",
+      "hid": "0x05",
+      "xkb": "AB05",
+      "code": "KeyB",
+      "levels": {
+        "1": "k",
+        "2": "K",
+        "3": "~",
+        "4": "‑",
+        "5": "K",
+        "6": "k"
+      }
+    },
+    {
+      "id": "B06",
+      "hid": "0x11",
+      "xkb": "AB06",
+      "code": "KeyN",
+      "levels": {
+        "1": "’",
+        "2": "?",
+        "3": "¿"
+      }
+    },
+    {
+      "id": "B07",
+      "hid": "0x10",
+      "xkb": "AB07",
+      "code": "KeyM",
+      "levels": {
+        "1": "q",
+        "2": "Q",
+        "3": {
+          "deadKey": "ring-above"
+        },
+        "5": "Q",
+        "6": "q"
+      }
+    },
+    {
+      "id": "B08",
+      "hid": "0x36",
+      "xkb": "AB08",
+      "code": "Comma",
+      "levels": {
+        "1": "g",
+        "2": "G",
+        "3": {
+          "deadKey": "greek"
+        },
+        "4": "†",
+        "5": "G",
+        "6": "g"
+      }
+    },
+    {
+      "id": "B09",
+      "hid": "0x37",
+      "xkb": "AB09",
+      "code": "Period",
+      "levels": {
+        "1": "h",
+        "2": "H",
+        "3": {
+          "deadKey": "dot-below"
+        },
+        "4": "‡",
+        "5": "H",
+        "6": "h"
+      }
+    },
+    {
+      "id": "B10",
+      "hid": "0x38",
+      "xkb": "AB10",
+      "code": "Slash",
+      "levels": {
+        "1": "f",
+        "2": "F",
+        "3": {
+          "deadKey": "ogonek"
+        },
+        "5": "F",
+        "6": "f"
+      }
+    },
+    {
+      "id": "A03",
+      "hid": "0x2C",
+      "xkb": "SPCE",
+      "code": "Space",
+      "levels": {
+        "1": " ",
+        "2": " ",
+        "3": "_",
+        "4": " "
+      }
+    }
+  ],
+  "deadKeys": [
+    {
+      "id": "acute",
+      "name": "Acute accent",
+      "compositions": {
+        "a": "á",
+        "A": "Á",
+        "c": "ć",
+        "C": "Ć",
+        "e": "é",
+        "E": "É",
+        "g": "ǵ",
+        "G": "Ǵ",
+        "i": "í",
+        "I": "Í",
+        "k": "ḱ",
+        "K": "Ḱ",
+        "l": "ĺ",
+        "L": "Ĺ",
+        "m": "ḿ",
+        "M": "Ḿ",
+        "n": "ń",
+        "N": "Ń",
+        "o": "ó",
+        "O": "Ó",
+        "p": "ṕ",
+        "P": "Ṕ",
+        "r": "ŕ",
+        "R": "Ŕ",
+        "s": "ś",
+        "S": "Ś",
+        "u": "ú",
+        "U": "Ú",
+        "v": "ǘ",
+        "V": "Ǘ",
+        "w": "ẃ",
+        "W": "Ẃ",
+        "y": "ý",
+        "Y": "Ý",
+        "z": "ź",
+        "Z": "Ź",
+        "æ": "ǽ",
+        "Æ": "Ǽ",
+        " ": "´"
+      }
+    },
+    {
+      "id": "breve",
+      "name": "Breve",
+      "compositions": {
+        "a": "ă",
+        "A": "Ă",
+        "e": "ĕ",
+        "E": "Ĕ",
+        "g": "ğ",
+        "G": "Ğ",
+        "i": "ĭ",
+        "I": "Ĭ",
+        "o": "ŏ",
+        "O": "Ŏ",
+        "u": "ŭ",
+        "U": "Ŭ",
+        " ": "˘"
+      }
+    },
+    {
+      "id": "caron",
+      "name": "Caron/Háček",
+      "compositions": {
+        "a": "ǎ",
+        "A": "Ǎ",
+        "c": "č",
+        "C": "Č",
+        "d": "ď",
+        "D": "Ď",
+        "e": "ě",
+        "E": "Ě",
+        "g": "ǧ",
+        "G": "Ǧ",
+        "h": "ȟ",
+        "H": "Ȟ",
+        "i": "ǐ",
+        "I": "Ǐ",
+        "j": "ǰ",
+        "k": "ǩ",
+        "K": "Ǩ",
+        "l": "ľ",
+        "L": "Ľ",
+        "n": "ň",
+        "N": "Ň",
+        "o": "ǒ",
+        "O": "Ǒ",
+        "r": "ř",
+        "R": "Ř",
+        "s": "š",
+        "S": "Š",
+        "t": "ť",
+        "T": "Ť",
+        "u": "ǔ",
+        "U": "Ǔ",
+        "z": "ž",
+        "Z": "Ž",
+        " ": "ˇ"
+      }
+    },
+    {
+      "id": "cedilla",
+      "name": "Cedilla",
+      "compositions": {
+        "c": "ç",
+        "C": "Ç",
+        "d": "ḑ",
+        "D": "Ḑ",
+        "e": "ȩ",
+        "E": "Ȩ",
+        "g": "ģ",
+        "G": "Ģ",
+        "h": "ḩ",
+        "H": "Ḩ",
+        "k": "ķ",
+        "K": "Ķ",
+        "l": "ļ",
+        "L": "Ļ",
+        "n": "ņ",
+        "N": "Ņ",
+        "r": "ŗ",
+        "R": "Ŗ",
+        "s": "ş",
+        "S": "Ş",
+        "t": "ţ",
+        "T": "Ţ",
+        " ": "¸"
+      }
+    },
+    {
+      "id": "circumflex",
+      "name": "Circumflex accent",
+      "compositions": {
+        "a": "â",
+        "A": "Â",
+        "c": "ĉ",
+        "C": "Ĉ",
+        "e": "ê",
+        "E": "Ê",
+        "g": "ĝ",
+        "G": "Ĝ",
+        "h": "ĥ",
+        "H": "Ĥ",
+        "i": "î",
+        "I": "Î",
+        "j": "ĵ",
+        "J": "Ĵ",
+        "o": "ô",
+        "O": "Ô",
+        "s": "ŝ",
+        "S": "Ŝ",
+        "u": "û",
+        "U": "Û",
+        "w": "ŵ",
+        "W": "Ŵ",
+        "y": "ŷ",
+        "Y": "Ŷ",
+        "z": "ẑ",
+        "Z": "Ẑ",
+        " ": "^"
+      }
+    },
+    {
+      "id": "comma",
+      "name": "Comma below",
+      "compositions": {
+        "s": "ș",
+        "S": "Ș",
+        "t": "ț",
+        "T": "Ț",
+        " ": ","
+      }
+    },
+    {
+      "id": "currencies",
+      "name": "Currency symbols",
+      "compositions": {
+        "A": "₳",
+        "b": "₿",
+        "B": "฿",
+        "c": "¢",
+        "C": "₵",
+        "d": "₫",
+        "D": "₯",
+        "e": "₠",
+        "f": "ƒ",
+        "F": "₣",
+        "g": "₲",
+        "h": "₴",
+        "k": "₭",
+        "l": "₺",
+        "L": "₤",
+        "m": "₥",
+        "M": "ℳ",
+        "n": "₦",
+        "p": "₱",
+        "P": "₧",
+        "r": "₽",
+        "R": "₹",
+        "s": "₪",
+        "S": "₷",
+        "t": "₸",
+        "T": "₮",
+        "w": "₩",
+        "y": "¥",
+        "ç": "₢",
+        "Ç": "₡",
+        "%": "₰",
+        "|": "₾",
+        "®": "₨",
+        " ": "¤"
+      }
+    },
+    {
+      "id": "diaeresis",
+      "name": "Diaeresis/Umlaut",
+      "compositions": {
+        "a": "ä",
+        "A": "Ä",
+        "e": "ë",
+        "E": "Ë",
+        "h": "ḧ",
+        "H": "Ḧ",
+        "i": "ï",
+        "I": "Ï",
+        "o": "ö",
+        "O": "Ö",
+        "t": "ẗ",
+        "u": "ü",
+        "U": "Ü",
+        "w": "ẅ",
+        "W": "Ẅ",
+        "x": "ẍ",
+        "X": "Ẍ",
+        "y": "ÿ",
+        "Y": "Ÿ",
+        " ": "¨"
+      }
+    },
+    {
+      "id": "dot-above",
+      "name": "Dot above",
+      "compositions": {
+        "a": "ȧ",
+        "A": "Ȧ",
+        "b": "ḃ",
+        "B": "Ḃ",
+        "c": "ċ",
+        "C": "Ċ",
+        "d": "ḋ",
+        "D": "Ḋ",
+        "e": "ė",
+        "E": "Ė",
+        "f": "ḟ",
+        "F": "Ḟ",
+        "g": "ġ",
+        "G": "Ġ",
+        "h": "ḣ",
+        "H": "Ḣ",
+        "i": "ı",
+        "I": "İ",
+        "l": "ŀ",
+        "L": "Ŀ",
+        "m": "ṁ",
+        "M": "Ṁ",
+        "n": "ṅ",
+        "N": "Ṅ",
+        "o": "ȯ",
+        "O": "Ȯ",
+        "p": "ṗ",
+        "P": "Ṗ",
+        "r": "ṙ",
+        "R": "Ṙ",
+        "s": "ṡ",
+        "S": "Ṡ",
+        "t": "ṫ",
+        "T": "Ṫ",
+        "w": "ẇ",
+        "W": "Ẇ",
+        "x": "ẋ",
+        "X": "Ẋ",
+        "y": "ẏ",
+        "Y": "Ẏ",
+        "z": "ż",
+        "Z": "Ż",
+        "ſ": "ẛ",
+        " ": "˙"
+      }
+    },
+    {
+      "id": "dot-below",
+      "name": "Dot below",
+      "compositions": {
+        "a": "ạ",
+        "A": "Ạ",
+        "b": "ḅ",
+        "B": "Ḅ",
+        "d": "ḍ",
+        "D": "Ḍ",
+        "e": "ẹ",
+        "E": "Ẹ",
+        "h": "ḥ",
+        "H": "Ḥ",
+        "i": "ị",
+        "I": "Ị",
+        "k": "ḳ",
+        "K": "Ḳ",
+        "l": "ḷ",
+        "L": "Ḷ",
+        "m": "ṃ",
+        "M": "Ṃ",
+        "n": "ṇ",
+        "N": "Ṇ",
+        "o": "ọ",
+        "O": "Ọ",
+        "r": "ṛ",
+        "R": "Ṛ",
+        "s": "ṣ",
+        "S": "Ṣ",
+        "t": "ṭ",
+        "T": "Ṭ",
+        "u": "ụ",
+        "U": "Ụ",
+        "v": "ṿ",
+        "V": "Ṿ",
+        "w": "ẉ",
+        "W": "Ẉ",
+        "y": "ỵ",
+        "Y": "Ỵ",
+        "z": "ẓ",
+        "Z": "Ẓ",
+        " ": "."
+      }
+    },
+    {
+      "id": "extended-latin",
+      "name": "Extended Latin letters",
+      "compositions": {
+        "c": "θ",
+        "C": "ϴ",
+        "d": "ð",
+        "D": "Ð",
+        "e": "ə",
+        "E": "Ə",
+        "j": "ĳ",
+        "J": "Ĳ",
+        "n": "ŋ",
+        "N": "Ŋ",
+        "s": "ß",
+        "S": "ẞ",
+        "t": "þ",
+        "T": "Þ",
+        "-": "­",
+        "«": "‹",
+        "»": "›",
+        "ſ": "ẞ",
+        "‘": "ʻ",
+        "’": "ʼ",
+        " ": " ",
+        " ": "ß"
+      }
+    },
+    {
+      "id": "grave",
+      "name": "Grave accent",
+      "compositions": {
+        "a": "à",
+        "A": "À",
+        "e": "è",
+        "E": "È",
+        "i": "ì",
+        "I": "Ì",
+        "n": "ǹ",
+        "N": "Ǹ",
+        "o": "ò",
+        "O": "Ò",
+        "u": "ù",
+        "U": "Ù",
+        "w": "ẁ",
+        "W": "Ẁ",
+        "y": "ỳ",
+        "Y": "Ỳ",
+        " ": "`"
+      }
+    },
+    {
+      "id": "greek",
+      "name": "Greek letters",
+      "compositions": {
+        "a": "α",
+        "A": "Α",
+        "b": "β",
+        "B": "Β",
+        "c": "ψ",
+        "C": "Ψ",
+        "d": "δ",
+        "D": "Δ",
+        "e": "ε",
+        "E": "Ε",
+        "f": "φ",
+        "F": "Φ",
+        "g": "γ",
+        "G": "Γ",
+        "h": "η",
+        "H": "Η",
+        "i": "ι",
+        "I": "Ι",
+        "j": "ξ",
+        "J": "Ξ",
+        "k": "κ",
+        "K": "Κ",
+        "l": "λ",
+        "L": "Λ",
+        "m": "μ",
+        "M": "Μ",
+        "n": "ν",
+        "N": "Ν",
+        "o": "ο",
+        "O": "Ο",
+        "p": "π",
+        "P": "Π",
+        "r": "ρ",
+        "R": "Ρ",
+        "s": "σ",
+        "S": "Σ",
+        "t": "τ",
+        "T": "Τ",
+        "u": "θ",
+        "U": "Θ",
+        "v": "ω",
+        "V": "Ω",
+        "w": "ς",
+        "x": "χ",
+        "X": "Χ",
+        "y": "υ",
+        "Y": "Υ",
+        "z": "ζ",
+        "Z": "Ζ",
+        " ": "µ"
+      }
+    },
+    {
+      "id": "horizontal-stroke",
+      "name": "Horizontal stroke",
+      "compositions": {
+        "b": "ƀ",
+        "B": "Ƀ",
+        "d": "đ",
+        "D": "Đ",
+        "g": "ǥ",
+        "G": "Ǥ",
+        "h": "ħ",
+        "H": "Ħ",
+        "I": "Ɨ",
+        "j": "ɉ",
+        "J": "Ɉ",
+        "l": "ƚ",
+        "L": "Ƚ",
+        "r": "ɍ",
+        "R": "Ɍ",
+        "t": "ŧ",
+        "T": "Ŧ",
+        "U": "Ʉ",
+        "y": "ɏ",
+        "Y": "Ɏ",
+        "z": "ƶ",
+        "Z": "Ƶ",
+        " ": "-"
+      }
+    },
+    {
+      "id": "macron",
+      "name": "Macron",
+      "compositions": {
+        "a": "ā",
+        "A": "Ā",
+        "e": "ē",
+        "E": "Ē",
+        "g": "ḡ",
+        "G": "Ḡ",
+        "i": "ī",
+        "I": "Ī",
+        "o": "ō",
+        "O": "Ō",
+        "u": "ū",
+        "U": "Ū",
+        "y": "ȳ",
+        "Y": "Ȳ",
+        "æ": "ǣ",
+        "Æ": "Ǣ",
+        " ": "¯"
+      }
+    },
+    {
+      "id": "ogonek",
+      "name": "Ogonek",
+      "compositions": {
+        "a": "ą",
+        "A": "Ą",
+        "e": "ę",
+        "E": "Ę",
+        "i": "į",
+        "I": "Į",
+        "o": "ǫ",
+        "O": "Ǫ",
+        "u": "ų",
+        "U": "Ų",
+        " ": "˛"
+      }
+    },
+    {
+      "id": "ring-above",
+      "name": "Ring above",
+      "compositions": {
+        "a": "å",
+        "A": "Å",
+        "u": "ů",
+        "U": "Ů",
+        "w": "ẘ",
+        "y": "ẙ",
+        " ": "˚"
+      }
+    },
+    {
+      "id": "scientific",
+      "name": "Scientific symbols",
+      "compositions": {
+        "V": "√",
+        "-": "∞",
+        "⩽": "≤",
+        "⩾": "≥",
+        " ": "∞"
+      }
+    },
+    {
+      "id": "stroke",
+      "name": "Stroke (diagonal)",
+      "compositions": {
+        "A": "Ⱥ",
+        "c": "ȼ",
+        "C": "Ȼ",
+        "e": "ɇ",
+        "E": "Ɇ",
+        "l": "ł",
+        "L": "Ł",
+        "o": "ø",
+        "O": "Ø",
+        "T": "Ⱦ",
+        "<": "≮",
+        "=": "≠",
+        ">": "≯",
+        "ſ": "ẜ",
+        "⩽": "≰",
+        "⩾": "≱",
+        " ": "/"
+      }
+    },
+    {
+      "id": "superscript",
+      "name": "Superscript digits",
+      "compositions": {
+        "0": "⁰",
+        "1": "¹",
+        "2": "²",
+        "3": "³",
+        "4": "⁴",
+        "5": "⁵",
+        "6": "⁶",
+        "7": "⁷",
+        "8": "⁸",
+        "9": "⁹",
+        "(": "⁽",
+        ")": "⁾",
+        "+": "⁺",
+        "-": "⁻",
+        "=": "⁼",
+        " ": "ᵉ"
+      }
+    },
+    {
+      "id": "tilde",
+      "name": "Tilde",
+      "compositions": {
+        "a": "ã",
+        "A": "Ã",
+        "e": "ẽ",
+        "E": "Ẽ",
+        "i": "ĩ",
+        "I": "Ĩ",
+        "n": "ñ",
+        "N": "Ñ",
+        "o": "õ",
+        "O": "Õ",
+        "u": "ũ",
+        "U": "Ũ",
+        "v": "ṽ",
+        "V": "Ṽ",
+        "y": "ỹ",
+        "Y": "Ỹ",
+        "-": "≃",
+        "<": "≲",
+        "=": "≈",
+        ">": "≳",
+        " ": "~"
+      }
+    }
+  ],
+  "conformance": [
+    {
+      "reference": "ISO/IEC 9995-1:2009",
+      "scope": "Key reference grid used for canonical key identifiers."
+    },
+    {
+      "reference": "AFNOR NF Z71-300:2019",
+      "scope": "BÉPO is the ergonomic option of the standard. This manifest describes the layout as implemented in the azerty.global web tester data; it is not a certification or compliance claim."
+    }
+  ],
+  "exports": [
+    {
+      "target": "ldml-keyboard-3",
+      "id": "ldml",
+      "options": {
+        "conformsTo": 45
+      }
+    },
+    {
+      "target": "web-tester",
+      "id": "web"
+    }
+  ],
+  "metadata": {
+    "description": "Converted from the azerty.global web tester data; that data remains the authoritative source for this manifest. The bépo layout is dual-licensed CC-BY-SA / GFDL by its community (bepo.fr).",
+    "links": {
+      "community": "https://bepo.fr"
+    },
+    "training": {
+      "fingers": {
+        "E00": "left_pinky",
+        "E01": "left_pinky",
+        "E02": "left_ring",
+        "E03": "left_middle",
+        "E04": "left_index",
+        "E05": "left_index",
+        "E06": "right_index",
+        "E07": "right_index",
+        "E08": "right_middle",
+        "E09": "right_ring",
+        "E10": "right_pinky",
+        "E11": "right_pinky",
+        "E12": "right_pinky",
+        "D01": "left_pinky",
+        "D02": "left_ring",
+        "D03": "left_middle",
+        "D04": "left_index",
+        "D05": "left_index",
+        "D06": "right_index",
+        "D07": "right_index",
+        "D08": "right_middle",
+        "D09": "right_ring",
+        "D10": "right_pinky",
+        "D11": "right_pinky",
+        "D12": "right_pinky",
+        "C01": "left_pinky",
+        "C02": "left_ring",
+        "C03": "left_middle",
+        "C04": "left_index",
+        "C05": "left_index",
+        "C06": "right_index",
+        "C07": "right_index",
+        "C08": "right_middle",
+        "C09": "right_ring",
+        "C10": "right_pinky",
+        "C11": "right_pinky",
+        "C12": "right_pinky",
+        "B00": "left_pinky",
+        "B01": "left_pinky",
+        "B02": "left_ring",
+        "B03": "left_middle",
+        "B04": "left_index",
+        "B05": "left_index",
+        "B06": "right_index",
+        "B07": "right_index",
+        "B08": "right_middle",
+        "B09": "right_ring",
+        "B10": "right_pinky",
+        "A03": "thumb"
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@
     "Antoine OLIVIER",
     "AMCF"
   ],
-  "description": "Complete OKLM description of the AZERTY Global layout (49 graphic keys, 8 ISO levels including CapsLock variants, 29 dead keys), generated from the layout's source of truth and reviewed by hand. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "description": "Complete OKLM description of the AZERTY Global layout (49 graphic keys, 8 ISO levels, 29 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
   "locales": [
     "fr",
     "fr-FR"

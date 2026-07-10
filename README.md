@@ -145,7 +145,7 @@ Open Keyboard Layout Model/
 ├── INDUSTRY-ADOPTION.md
 ├── ROADMAP.md
 ├── GOVERNANCE.md
-├── examples/     # complete AZERTY Global layout + minimal subset (both validate)
+├── examples/     # six example manifests (5 complete layouts + minimal subset)
 ├── schemas/      # manifest + conversion-report JSON Schemas (draft 0.1)
 ├── validators/   # CLI validator + schema test suite
 ├── research/     # design research journal and raw reports (in French)

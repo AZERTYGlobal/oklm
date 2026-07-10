@@ -174,10 +174,7 @@ Namespaced extension blocks for data outside the LDML-aligned core. Reserved nam
 
 ## Example
 
-Two examples validate against the manifest schema:
-
-- [`examples/azerty-global.oklm.json`](examples/azerty-global.oklm.json) — the complete AZERTY Global layout (49 graphic keys, 8 ISO levels including CapsLock variants, 29 dead keys, 1016 compositions), generated from the layout's source of truth and verified field-by-field against it;
-- [`examples/azerty-global-minimal.oklm.json`](examples/azerty-global-minimal.oklm.json) — a minimal, hand-written subset: ISO 9995-1 key ids with mandatory `hid` and optional `xkb`/`code` aliases, `(group, level)` outputs in compact notation, two dead keys, a scoped conformance claim and two export targets.
+The [`examples/`](examples/) directory contains six manifests that validate against the manifest schema — complete descriptions of AZERTY Global, the AFNOR NF Z71-300 AZERTY, BÉPO, the legacy Windows French AZERTY and the US QWERTY baseline (see [`examples/README.md`](examples/README.md) for provenance and licenses), plus [`examples/azerty-global-minimal.oklm.json`](examples/azerty-global-minimal.oklm.json) — a minimal, hand-written subset: ISO 9995-1 key ids with mandatory `hid` and optional `xkb`/`code` aliases, `(group, level)` outputs in compact notation, two dead keys, a scoped conformance claim and two export targets.
 
 ## Validation Requirements
 
