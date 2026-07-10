@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oklm.org/schemas/0.1/oklm-manifest.schema.json",
+  "title": "OKLM Manifest",
+  "description": "JSON Schema for an Open Keyboard Layout Model manifest (.oklm.json), draft 0.1. An OKLM manifest must remain readable, correctable and versionable by a human without a proprietary generator: stable field order (follow the order of this schema's properties), explicit names, compact notation for simple mappings. The text core of a manifest is designed to compile to LDML Keyboard 3.0 (UTS #35 Part 7, root element keyboard3); OKLM does not reinvent LDML transforms, reorders, markers or UnicodeSet notation. Design decisions referenced as D1..D30 live in research/Décisions de conception — deep research.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "layoutId",
+    "name",
+    "version",
+    "license",
+    "authors",
+    "locales",
+    "geometry",
+    "keys"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "description": "Version of the OKLM manifest schema this file targets.",
+      "const": "0.1"
+    },
+    "layoutId": {
+      "description": "Stable machine identifier of the layout, lowercase kebab-case.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "name": {
+      "description": "Human-readable layout name.",
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "description": "Version of the layout itself (not of the schema).",
+      "type": "string",
+      "minLength": 1
+    },
+    "license": {
+      "description": "License of the layout data. SPDX identifier recommended (e.g. EUPL-1.2, CC-BY-4.0).",
+      "type": "string",
+      "minLength": 1
+    },
+    "authors": {
+      "description": "Layout authors or maintaining organizations.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "description": {
+      "description": "Optional free-text description of the layout or of this manifest.",
+      "type": "string"
+    },
+    "locales": {
+      "description": "Locales this layout is designed for, as BCP 47 language tags (e.g. \"fr\", \"fr-FR\"). The first entry is the primary locale.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$"
+      }
+    },
+    "geometry": {
+      "description": "Target physical geometries, declared as aliases (D5): the physical form factor family (iso-*, ansi-*, jis-*, abnt-*) plus size (e.g. iso-full, iso-tkl, ansi-60, custom). Geometry tells consumers which physical keys exist; omitting it would mean silently missing bindings. Canonical key positions remain ISO/IEC 9995-1 key numbers regardless of geometry (D1/D5/D24). A drawable geometry layer (absolute x/y/w/h, D23-D30) is intentionally NOT part of core v0.1; see the frame-keys / geometry extension namespaces.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      }
+    },
+    "levelSelectors": {
+      "description": "Optional declaration of how levels 2..8 are selected, using ISO/IEC 9995 functional qualifier names (D2/D14): modifiers are named by function, never by the physical key that activates them. Defaults when omitted: level 2 = [Level2Shift], level 3 = [Level3Shift], level 4 = [Level2Shift, Level3Shift]. Platform details (AltGr vs Ctrl+Alt, macOS Option) are export concerns.",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[2-8]$": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock"]
+          }
+        }
+      }
+    },
+    "keys": {
+      "description": "Graphic keys of the alphanumeric section. Key ids must be unique (checked by validators beyond JSON Schema). Frame keys (function row, navigation, numpad, Fn, media) are out of the LDML-aligned core (D11) and belong to the extensions block.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/key" }
+    },
+    "deadKeys": {
+      "description": "Dead-key composition tables, separate from the key mapping (D4). Each dead key is isomorphic to an LDML Keyboard 3.0 marker plus simple transforms: pressing the key outputs the marker \\m{id}; each composition entry compiles to one transform rule (\\m{id} + base -> output). Dead-key ids referenced from key outputs must be defined here.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/deadKey" }
+    },
+    "conformance": {
+      "description": "Explicit list of normative references this layout claims conformance to (D13). A global \"ISO 9995 compliant\" claim is invalid; list each part/edition and scope. Partial conformance is allowed. LDML alignment is NOT an ISO conformance claim and is declared separately on the LDML export target.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/conformanceClaim" }
+    },
+    "exports": {
+      "description": "Declared export targets. Export ids must be unique. Target-specific option schemas are intentionally not fixed in v0.1 (exporter research pending); options is a free object.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/exportTarget" }
+    },
+    "metadata": {
+      "description": "OKLM envelope metadata (D8): value that LDML does not cover, stripped on LDML export but preserved for non-OS consumers. Pedagogy, AI and accessibility blocks are separable extensions, never core; their inner structure is non-normative in v0.1.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "links": {
+          "description": "Named URLs (homepage, documentation, repository...).",
+          "type": "object",
+          "additionalProperties": { "type": "string", "format": "uri" }
+        },
+        "dynamicLegends": {
+          "description": "Dynamic legend metadata (non-normative in v0.1).",
+          "type": "object"
+        },
+        "training": {
+          "description": "Learning / pedagogy metadata (non-normative in v0.1).",
+          "type": "object"
+        },
+        "accessibility": {
+          "description": "Accessibility annotations (non-normative in v0.1).",
+          "type": "object"
+        },
+        "assistant": {
+          "description": "Scoped assistant/AI metadata (non-normative in v0.1). Must not require keylogging or embed predictive models.",
+          "type": "object"
+        }
+      }
+    },
+    "extensions": {
+      "description": "Namespaced extension blocks for data outside the LDML-aligned core. Reserved namespaces (contents intentionally unspecified in v0.1): frame-keys (D11: function/navigation/numpad/media/Fn keys, HID pages beyond 0x07), firmware (D10: physical matrix / QMK-ZMK bindings, scope arbitration pending), geometry (D23-D30: drawable absolute geometry), ldml (imported LDML constructs preserved during LDML -> OKLM conversion).",
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$" },
+      "additionalProperties": { "type": "object" }
+    }
+  },
+  "$defs": {
+    "key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "hid", "levels"],
+      "properties": {
+        "id": {
+          "description": "Canonical physical key identifier: ISO/IEC 9995-1 key number (D1), e.g. D01 (QWERTY Q position), C00 (Caps Lock), B00 (ISO extra key), E01 (digit row). ISO 9995-1 is the de jure position standard used by national layout norms.",
+          "type": "string",
+          "pattern": "^[A-E][0-9]{2}$"
+        },
+        "hid": {
+          "description": "Mandatory USB HID Usage ID from keyboard usage page 0x07, as a hex string (D1). Unambiguous machine anchor: disambiguates internationally (e.g. ABNT Ro 0x87 is not the ISO B00 key, HID 0x64).",
+          "type": "string",
+          "pattern": "^0x[0-9A-Fa-f]{2,4}$"
+        },
+        "xkb": {
+          "description": "Optional XKB key name alias for Linux export (D1), e.g. AD01, LSGT, SPCE. Note that XKB naming differs from the ISO grid (section prefix, column offsets).",
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9+]{1,7}$"
+        },
+        "code": {
+          "description": "Optional W3C UI Events KeyboardEvent.code cross-reference (D24), e.g. KeyQ, IntlBackslash, Space.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9]+$"
+        },
+        "name": {
+          "description": "Optional human-readable key label for documentation.",
+          "type": "string"
+        },
+        "levels": {
+          "description": "Outputs by ISO level for group 1 (D2/D3/D14): level 1 = base, 2 = Level2Shift, 3 = Level3Shift, 4 = levels 2+3 combined, 5-8 optional. A level with no output is simply omitted. Compact notation: a plain string is a literal text output (one or more codepoints, covering ligatures).",
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "patternProperties": {
+            "^[1-8]$": { "$ref": "#/$defs/output" }
+          }
+        },
+        "groups": {
+          "description": "Optional additional ISO groups (D3: groups are complete alternative keymaps, e.g. multi-script; a distinct axis from levels). Group 1 is the levels property above; entries here start at \"2\".",
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^[2-9]$": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 1,
+              "patternProperties": {
+                "^[1-8]$": { "$ref": "#/$defs/output" }
+              }
+            }
+          }
+        },
+        "categories": {
+          "description": "Optional semantic tags (e.g. letter, digit, punctuation, french).",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "output": {
+      "description": "What a key produces at one (group, level). Compact form: a string is literal text output. Object forms: { \"deadKey\": id } emits the dead-key marker; { \"modifier\": name } declares a functional modifier key (D2: named by function, not by physical key).",
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["deadKey"],
+          "properties": {
+            "deadKey": {
+              "description": "Id of a dead key defined in the top-level deadKeys array.",
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["modifier"],
+          "properties": {
+            "modifier": {
+              "type": "string",
+              "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock", "GroupSelect"]
+            }
+          }
+        }
+      ]
+    },
+    "deadKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "compositions"],
+      "properties": {
+        "id": {
+          "description": "Dead-key identifier; compiles to the LDML marker \\m{id}.",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "description": "Optional human-readable name.",
+          "type": "string"
+        },
+        "display": {
+          "description": "Optional standalone character shown while the dead key is pending (e.g. \"ˆ\").",
+          "type": "string",
+          "minLength": 1
+        },
+        "compositions": {
+          "description": "Composition table: base input string -> output string. Each entry compiles to one LDML simple transform (\\m{id} + base -> output). Document order is the rule order.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "minLength": 1 },
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "fallback": {
+          "description": "Optional text emitted in place of the pending marker when no composition matches. Cancellation behavior differs across platforms (D4); exporters document their mapping.",
+          "type": "string"
+        }
+      }
+    },
+    "conformanceClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference"],
+      "properties": {
+        "reference": {
+          "description": "One normative reference with edition, e.g. \"ISO/IEC 9995-1:2026\" or \"AFNOR NF Z71-300:2019\".",
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "description": "What part of the layout the claim covers (clauses, sections, key subset...).",
+          "type": "string"
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "exportTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target"],
+      "properties": {
+        "target": {
+          "description": "Export target kind, e.g. ldml-keyboard-3, web-tester, xkb, windows-klc, macos-keylayout, keymap-image.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "id": {
+          "description": "Optional stable id for this export declaration; must be unique across exports.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "options": {
+          "description": "Target-specific options (free-form in v0.1; per-exporter schemas will come with the exporter research prompts). For ldml-keyboard-3, conformsTo must be a whole number of 45 or greater per UTS #35 Part 7.",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

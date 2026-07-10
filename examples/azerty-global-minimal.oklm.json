@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "0.1",
+  "layoutId": "azerty-global",
+  "name": "AZERTY Global",
+  "version": "2026",
+  "license": "EUPL-1.2",
+  "authors": ["AMCF"],
+  "description": "Minimal illustrative subset of AZERTY Global, hand-written to exercise the OKLM manifest schema v0.1. This file is NOT the authoritative source of truth for the layout: it only shows a few AZERTY-inherited letter keys, the space bar and one dead-key pair.",
+  "locales": ["fr", "fr-FR"],
+  "geometry": ["iso-full", "iso-tkl"],
+  "levelSelectors": {
+    "2": ["Level2Shift"],
+    "3": ["Level3Shift"]
+  },
+  "keys": [
+    {
+      "id": "D01",
+      "hid": "0x14",
+      "xkb": "AD01",
+      "code": "KeyQ",
+      "levels": { "1": "a", "2": "A" },
+      "categories": ["letter", "french"]
+    },
+    {
+      "id": "D02",
+      "hid": "0x1A",
+      "xkb": "AD02",
+      "code": "KeyW",
+      "levels": { "1": "z", "2": "Z" },
+      "categories": ["letter", "french"]
+    },
+    {
+      "id": "D11",
+      "hid": "0x2F",
+      "xkb": "AD11",
+      "code": "BracketLeft",
+      "name": "Dead circumflex / dead diaeresis",
+      "levels": {
+        "1": { "deadKey": "circumflex" },
+        "2": { "deadKey": "diaeresis" }
+      },
+      "categories": ["deadkey", "french"]
+    },
+    {
+      "id": "C01",
+      "hid": "0x04",
+      "xkb": "AC01",
+      "code": "KeyA",
+      "levels": { "1": "q", "2": "Q" },
+      "categories": ["letter", "french"]
+    },
+    {
+      "id": "B01",
+      "hid": "0x1D",
+      "xkb": "AB01",
+      "code": "KeyZ",
+      "levels": { "1": "w", "2": "W" },
+      "categories": ["letter", "french"]
+    },
+    {
+      "id": "A03",
+      "hid": "0x2C",
+      "xkb": "SPCE",
+      "code": "Space",
+      "name": "Space bar",
+      "levels": { "1": " ", "2": " " },
+      "categories": ["space"]
+    }
+  ],
+  "deadKeys": [
+    {
+      "id": "circumflex",
+      "name": "Dead circumflex",
+      "display": "ˆ",
+      "compositions": {
+        "a": "â",
+        "e": "ê",
+        "i": "î",
+        "o": "ô",
+        "u": "û",
+        " ": "^"
+      },
+      "fallback": "^"
+    },
+    {
+      "id": "diaeresis",
+      "name": "Dead diaeresis",
+      "display": "¨",
+      "compositions": {
+        "a": "ä",
+        "e": "ë",
+        "i": "ï",
+        "o": "ö",
+        "u": "ü",
+        "y": "ÿ",
+        " ": "¨"
+      },
+      "fallback": "¨"
+    }
+  ],
+  "conformance": [
+    {
+      "reference": "ISO/IEC 9995-1:2026",
+      "scope": "Key reference grid used for canonical key identifiers.",
+      "notes": "Illustrative claim for this example file only; the full layout declares its own conformance list."
+    }
+  ],
+  "exports": [
+    {
+      "target": "ldml-keyboard-3",
+      "id": "ldml",
+      "options": { "conformsTo": 45 }
+    },
+    {
+      "target": "web-tester",
+      "id": "web"
+    }
+  ],
+  "metadata": {
+    "description": "Illustrative subset only. See azerty.global for the real layout.",
+    "links": {
+      "homepage": "https://azerty.global"
+    }
+  }
+}

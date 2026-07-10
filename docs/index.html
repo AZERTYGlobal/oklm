@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OKLM — Open Keyboard Layout Model</title>
+<meta name="description" content="An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.">
+<style>
+:root {
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #555; --accent: #0b57d0;
+  --card: #f5f6f8; --border: #dfe2e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #101214; --fg: #e6e6e6; --muted: #9aa0a6; --accent: #8ab4f8;
+          --card: #1a1d21; --border: #2c3036; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+h1 { font-size: 2.2rem; line-height: 1.2; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.2rem 0 .6rem; }
+p { margin: .6rem 0; }
+.tagline { color: var(--muted); font-size: 1.1rem; margin-bottom: 1.4rem; }
+.status { display: inline-block; border: 1px solid var(--border); border-radius: 999px;
+  padding: .15rem .7rem; font-size: .85rem; color: var(--muted); margin-bottom: 1.6rem; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.buttons { margin: 1.4rem 0 0; display: flex; gap: .7rem; flex-wrap: wrap; }
+.buttons a { border: 1px solid var(--border); border-radius: 8px; padding: .5rem 1rem;
+  background: var(--card); font-weight: 600; }
+pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.45; }
+code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+ul { padding-left: 1.2rem; }
+li { margin: .25rem 0; }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>OKLM</h1>
+<p class="tagline">Open Keyboard Layout Model — one open, human-maintainable source of truth per keyboard layout, exported everywhere it is needed.</p>
+<p class="status">Draft 0.1 — schemas, example and validator available</p>
+
+<p>Keyboard layouts are still distributed as OS-specific files, static images, installer packages and informal documentation. OKLM defines a common representation so a layout can be described once — keys, levels, dead keys, legends, metadata — then exported to LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
+
+<div class="buttons">
+<a href="https://github.com/AZERTYGlobal/oklm">GitHub repository</a>
+<a href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
+<a href="https://github.com/AZERTYGlobal/oklm/tree/main/schemas">JSON Schemas</a>
+</div>
+
+<h2>Design principles</h2>
+<ul>
+<li><strong>Human-maintainable</strong>: an <code>.oklm.json</code> manifest must be readable, correctable and versionable without a proprietary generator.</li>
+<li><strong>Standards-aligned</strong>: ISO/IEC 9995 key numbers and (group, level) terminology; the text core compiles to Unicode LDML Keyboard 3.0 rather than reinventing it.</li>
+<li><strong>Validated</strong>: JSON Schemas plus a CLI validator for manifests and conversion reports.</li>
+<li><strong>Loss-aware conversions</strong>: every OKLM ⇄ LDML conversion produces a machine-readable report — nothing is silently discarded.</li>
+</ul>
+
+<h2>A key, in five lines</h2>
+<pre><code>{
+  "id": "D01", "hid": "0x14", "xkb": "AD01", "code": "KeyQ",
+  "levels": { "1": "a", "2": "A" },
+  "categories": ["letter", "french"]
+}</code></pre>
+
+<h2>Status</h2>
+<p>OKLM is a public draft, not yet a published standard. The manifest schema (draft 0.1), a conversion-report schema, a minimal AZERTY Global example and a reference validator are available in the repository. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
+
+<footer>
+<p>Specification and documentation: CC BY 4.0 · Tooling: EUPL 1.2<br>
+<a href="https://github.com/AZERTYGlobal/oklm">github.com/AZERTYGlobal/oklm</a></p>
+</footer>
+</main>
+</body>
+</html>

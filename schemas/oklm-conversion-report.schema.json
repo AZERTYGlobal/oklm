@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oklm.org/schemas/0.1/oklm-conversion-report.schema.json",
+  "title": "OKLM Conversion Report",
+  "description": "JSON Schema for the machine-readable report every OKLM/LDML conversion must produce (see CONVERSIONS.md), draft 0.1. Core principle: never silently discard information — losses are explicit. Covers the two mandatory directions oklm-to-ldml and ldml-to-oklm; reports for other export targets are intentionally out of scope in v0.1 (exporter research pending).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "direction",
+    "source",
+    "target",
+    "compatibilityLevel",
+    "mappedFields",
+    "skippedFields",
+    "lossyMappings",
+    "warnings",
+    "errors"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "description": "Version of the conversion report schema.",
+      "const": "0.1"
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["oklm-to-ldml", "ldml-to-oklm"]
+    },
+    "source": { "$ref": "#/$defs/endpoint" },
+    "target": { "$ref": "#/$defs/endpoint" },
+    "compatibilityLevel": {
+      "description": "lossless-core: core mapping preserved. lossy-metadata: mapping preserved, metadata lost. lossy-mapping: mapping approximated, manual review required. failed: conversion not usable.",
+      "type": "string",
+      "enum": ["lossless-core", "lossy-metadata", "lossy-mapping", "failed"]
+    },
+    "mappedFields": {
+      "description": "Source fields successfully converted, as dotted paths (e.g. \"keys\", \"deadKeys\", \"metadata.description\").",
+      "type": "array",
+      "items": { "$ref": "#/$defs/fieldPath" }
+    },
+    "skippedFields": {
+      "description": "Source fields not converted at all, each with an explicit reason. For oklm-to-ldml this is where OKLM-only metadata losses are declared.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "reason"],
+        "properties": {
+          "path": { "$ref": "#/$defs/fieldPath" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "lossyMappings": {
+      "description": "Fields converted with approximation or partial loss of semantics.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "detail"],
+        "properties": {
+          "path": { "$ref": "#/$defs/fieldPath" },
+          "detail": {
+            "description": "What was approximated and how.",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "preservedAsExtensions": {
+      "description": "ldml-to-oklm only: LDML constructs not mapped to core OKLM but preserved verbatim in an extensions namespace.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["construct", "extensionNamespace"],
+        "properties": {
+          "construct": { "type": "string", "minLength": 1 },
+          "extensionNamespace": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$" }
+        }
+      }
+    },
+    "unsupportedConstructs": {
+      "description": "ldml-to-oklm only: LDML constructs that could be neither mapped nor preserved.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["construct", "detail"],
+        "properties": {
+          "construct": { "type": "string", "minLength": 1 },
+          "detail": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "suggestedEnrichmentTasks": {
+      "description": "ldml-to-oklm only: suggested OKLM metadata to add after import (legends, training, accessibility...).",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "roundTripConfidence": {
+      "description": "Expected fidelity of converting the result back to the source format.",
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "generator": {
+      "description": "Tool that produced this report.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" }
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "direction": { "const": "oklm-to-ldml" } } },
+      "then": { "required": ["roundTripConfidence"] }
+    },
+    {
+      "if": { "properties": { "direction": { "const": "ldml-to-oklm" } } },
+      "then": { "required": ["preservedAsExtensions", "unsupportedConstructs"] }
+    }
+  ],
+  "$defs": {
+    "endpoint": {
+      "description": "One side of the conversion. For OKLM files, version is the OKLM schemaVersion; for LDML files, version is the CLDR/UTS #35 version and conformsTo the declared keyboard3 conformance number (whole number >= 45).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format"],
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": ["oklm", "ldml-keyboard-3"]
+        },
+        "file": {
+          "description": "File name or path, informative only.",
+          "type": "string"
+        },
+        "version": { "type": "string" },
+        "conformsTo": {
+          "type": "integer",
+          "minimum": 45
+        }
+      }
+    },
+    "fieldPath": {
+      "description": "Dotted path into the source document, e.g. \"deadKeys\", \"metadata.training\".",
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
