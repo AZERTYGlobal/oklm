@@ -1,7 +1,8 @@
 # Zones instables — schéma OKLM v0.1
 
-> Note de conception accompagnant `oklm-manifest.schema.json` et
-> `oklm-conversion-report.schema.json` (draft 0.1, 2026-07-10).
+> Note de conception accompagnant `oklm-manifest.schema.json` (draft 0.1,
+> 2026-07-10) et `oklm-conversion-report.schema.json` (draft 0.2 depuis le
+> 2026-07-11 : ajout des directions `oklm-to-xkb` et `oklm-to-keylayout`).
 >
 > Le schéma v0.1 incorpore les décisions confirmées du journal
 > [`research/Décisions de conception — deep research.md`](../research/Décisions%20de%20conception%20—%20deep%20research.md)
@@ -55,9 +56,11 @@ ce namespace sans casser les manifestes existants.
 
 - `exports[].options` est un objet **libre** : chaque exporteur recevra son propre
   sous-schéma d'options une fois son prompt traité.
-- Le schéma de rapport de conversion ne couvre que les deux directions
-  obligatoires (`oklm-to-ldml`, `ldml-to-oklm`) ; les rapports des autres cibles
-  d'export seront ajoutés avec les exporteurs.
+- Le schéma de rapport de conversion couvrait en v0.1 les deux directions
+  obligatoires (`oklm-to-ldml`, `ldml-to-oklm`) ; le draft 0.2 (2026-07-11) a
+  ajouté `oklm-to-xkb` et `oklm-to-keylayout` avec les exporteurs v1
+  (`tools/exporters/`). Les rapports des cibles restantes (windows-klc,
+  web-tester…) seront ajoutés avec leurs exporteurs.
 - La liste des valeurs de `target` est ouverte (pattern, pas d'enum) pour la même
   raison.
 
@@ -114,4 +117,4 @@ au 2026-07-10).
 
 ---
 
-*Dernière mise à jour : 2026-07-10*
+*Dernière mise à jour : 2026-07-11*
