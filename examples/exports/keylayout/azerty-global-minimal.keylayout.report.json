@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-keylayout",
+  "source": {
+    "format": "oklm",
+    "file": "azerty-global-minimal.oklm.json",
+    "version": "0.1"
+  },
+  "target": {
+    "format": "apple-keylayout"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keys",
+    "keys[].levels",
+    "levelSelectors",
+    "deadKeys"
+  ],
+  "skippedFields": [
+    {
+      "path": "layoutId",
+      "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "authors",
+      "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "license",
+      "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "locales",
+      "reason": "macOS keylayout files are not locale-tagged; only the layout name is used"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "geometry",
+      "detail": "the <layouts> hardware-detection range is not modeled per OKLM geometry in v1; the generic first=0 last=17 mapSet=ANSI range from Apple's reference example is used"
+    }
+  ],
+  "warnings": [],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.1"
+  },
+  "roundTripConfidence": "medium"
+}

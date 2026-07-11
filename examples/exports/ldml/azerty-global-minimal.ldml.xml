@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr" conformsTo="45">
+  <version number="2026"/>
+  <info name="AZERTY Global"/>
+  <keys>
+    <key id="k_D01_1" output="a"/>
+    <key id="k_D01_2" output="A"/>
+    <key id="k_D02_1" output="z"/>
+    <key id="k_D02_2" output="Z"/>
+    <key id="k_D11_1" output="\m{circumflex}"/>
+    <key id="k_D11_2" output="\m{diaeresis}"/>
+    <key id="k_C01_1" output="q"/>
+    <key id="k_C01_2" output="Q"/>
+    <key id="k_B01_1" output="w"/>
+    <key id="k_B01_2" output="W"/>
+    <key id="k_A03_1" output=" "/>
+    <key id="k_A03_2" output=" "/>
+  </keys>
+  <displays>
+    <display output="\m{circumflex}" display="ˆ"/>
+    <display output="\m{diaeresis}" display="¨"/>
+  </displays>
+  <forms>
+    <form id="azerty-global-minimal-form">
+      <scanCodes codes="10 11 1A"/>
+      <scanCodes codes="1E"/>
+      <scanCodes codes="2C"/>
+      <scanCodes codes="39"/>
+    </form>
+  </forms>
+  <layers formId="azerty-global-minimal-form">
+    <layer modifiers="none">
+      <row keys="k_D01_1 k_D02_1 k_D11_1"/>
+      <row keys="k_C01_1"/>
+      <row keys="k_B01_1"/>
+      <row keys="k_A03_1"/>
+    </layer>
+    <layer modifiers="shift">
+      <row keys="k_D01_2 k_D02_2 k_D11_2"/>
+      <row keys="k_C01_2"/>
+      <row keys="k_B01_2"/>
+      <row keys="k_A03_2"/>
+    </layer>
+  </layers>
+  <transforms type="simple">
+    <transformGroup>
+      <transform from="\m{circumflex}a" to="â"/>
+      <transform from="\m{circumflex}e" to="ê"/>
+      <transform from="\m{circumflex}i" to="î"/>
+      <transform from="\m{circumflex}o" to="ô"/>
+      <transform from="\m{circumflex}u" to="û"/>
+      <transform from="\m{circumflex} " to="^"/>
+      <transform from="\m{circumflex}" to="^"/>
+      <transform from="\m{diaeresis}a" to="ä"/>
+      <transform from="\m{diaeresis}e" to="ë"/>
+      <transform from="\m{diaeresis}i" to="ï"/>
+      <transform from="\m{diaeresis}o" to="ö"/>
+      <transform from="\m{diaeresis}u" to="ü"/>
+      <transform from="\m{diaeresis}y" to="ÿ"/>
+      <transform from="\m{diaeresis} " to="¨"/>
+      <transform from="\m{diaeresis}" to="¨"/>
+    </transformGroup>
+  </transforms>
+</keyboard3>

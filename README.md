@@ -132,6 +132,29 @@ Future export targets:
 - accessibility-optimized legends;
 - local assistant knowledge files.
 
+## Exporters
+
+`tools/export.py` converts an `.oklm.json` manifest to one of three one-way
+export targets, each producing a target file plus a conversion report:
+
+```text
+python tools/export.py --target ldml|xkb|keylayout FILE.oklm.json [FILE ...]
+```
+
+- `ldml`: CLDR/UTS #35 Part 7 `keyboard3` XML;
+- `xkb`: a standalone `xkb_symbols` block for Linux;
+- `keylayout`: an Apple `.keylayout` file for macOS.
+
+Every export writes `<name>.<ext>` and `<name>.<ext>.report.json`, the
+latter validating against
+[`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json).
+Reports declare exactly what was mapped, skipped, or approximated — see
+[CONVERSIONS.md](CONVERSIONS.md) "Other Export Targets" for the current,
+honest list of scope limits (e.g. xkb only exports ISO/IEC 9995 levels
+1-4). `examples/exports/` holds committed reference exports for all six
+example manifests; `tools/tests/run_tests.py` checks them for regressions,
+determinism, and schema validity.
+
 ## Repository Shape
 
 Current public repository structure:
@@ -146,12 +169,12 @@ Open Keyboard Layout Model/
 ├── ROADMAP.md
 ├── GOVERNANCE.md
 ├── examples/     # six example manifests (5 complete layouts + minimal subset)
-├── schemas/      # manifest + conversion-report JSON Schemas (draft 0.1)
-├── validators/   # CLI validator + schema test suite
-├── research/     # design research journal and raw reports (in French)
-└── docs/         # oklm.org landing page (GitHub Pages)
+│   └── exports/  # committed reference exports (ldml/xkb/keylayout) for each example
+├── schemas/      # manifest + conversion-report JSON Schemas (manifest 0.1, report 0.2)
+├── tools/        # export.py CLI + exporters/ (ldml, xkb, keylayout) + tests/
+└── validators/   # reference validation script
 
-Planned next: exporters/, importers/, tests/
+Planned next: LDML/xkb/keylayout importers.
 ```
 
 ## Naming
@@ -180,4 +203,4 @@ Layout data described *with* OKLM keeps its own license, declared in the manifes
 
 ---
 
-*Last updated: 2026-07-10*
+*Last updated: 2026-07-11*

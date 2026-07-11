@@ -20,3 +20,17 @@ situations for the described layouts.
 
 None of these files is the authoritative source of the layout it describes;
 each manifest's `metadata.description` states its provenance.
+
+## Exports
+
+[`exports/`](exports/) holds committed reference exports of all six
+manifests to the three v1 exporter targets (`ldml/`, `xkb/`, `keylayout/`),
+each with its conversion report. Regenerate with:
+
+```bash
+python tools/export.py --target ldml|xkb|keylayout --out examples/exports/<target> examples/*.oklm.json
+```
+
+`tools/tests/run_tests.py` fails if a fresh export no longer matches these
+committed files (regression) or if a report stops validating against
+`schemas/oklm-conversion-report.schema.json`.

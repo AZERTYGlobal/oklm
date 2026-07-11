@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oklm.org/schemas/0.1/oklm-conversion-report.schema.json",
   "title": "OKLM Conversion Report",
-  "description": "JSON Schema for the machine-readable report every OKLM/LDML conversion must produce (see CONVERSIONS.md), draft 0.1. Core principle: never silently discard information — losses are explicit. Covers the two mandatory directions oklm-to-ldml and ldml-to-oklm; reports for other export targets are intentionally out of scope in v0.1 (exporter research pending).",
+  "description": "JSON Schema for the machine-readable report every OKLM conversion or export must produce (see CONVERSIONS.md), draft 0.2. Core principle: never silently discard information — losses are explicit. Covers the two mandatory bidirectional directions oklm-to-ldml and ldml-to-oklm, plus the one-way v1 export directions oklm-to-xkb and oklm-to-keylayout (see CONVERSIONS.md \"Other export targets\"); import from xkb/keylayout remains out of scope.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -20,11 +20,11 @@
   "properties": {
     "schemaVersion": {
       "description": "Version of the conversion report schema.",
-      "const": "0.1"
+      "enum": ["0.1", "0.2"]
     },
     "direction": {
       "type": "string",
-      "enum": ["oklm-to-ldml", "ldml-to-oklm"]
+      "enum": ["oklm-to-ldml", "ldml-to-oklm", "oklm-to-xkb", "oklm-to-keylayout"]
     },
     "source": { "$ref": "#/$defs/endpoint" },
     "target": { "$ref": "#/$defs/endpoint" },
@@ -129,7 +129,11 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "direction": { "const": "oklm-to-ldml" } } },
+      "if": {
+        "properties": {
+          "direction": { "enum": ["oklm-to-ldml", "oklm-to-xkb", "oklm-to-keylayout"] }
+        }
+      },
       "then": { "required": ["roundTripConfidence"] }
     },
     {
@@ -139,14 +143,14 @@
   ],
   "$defs": {
     "endpoint": {
-      "description": "One side of the conversion. For OKLM files, version is the OKLM schemaVersion; for LDML files, version is the CLDR/UTS #35 version and conformsTo the declared keyboard3 conformance number (whole number >= 45).",
+      "description": "One side of the conversion. For OKLM files, version is the OKLM schemaVersion; for LDML files, version is the CLDR/UTS #35 version and conformsTo the declared keyboard3 conformance number (whole number >= 45); xkb-symbols and apple-keylayout files do not use version/conformsTo.",
       "type": "object",
       "additionalProperties": false,
       "required": ["format"],
       "properties": {
         "format": {
           "type": "string",
-          "enum": ["oklm", "ldml-keyboard-3"]
+          "enum": ["oklm", "ldml-keyboard-3", "xkb-symbols", "apple-keylayout"]
         },
         "file": {
           "description": "File name or path, informative only.",

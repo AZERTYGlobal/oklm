@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-keylayout",
+  "source": {
+    "format": "oklm",
+    "file": "azerty-afnor.oklm.json",
+    "version": "0.1"
+  },
+  "target": {
+    "format": "apple-keylayout"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keys",
+    "keys[].levels",
+    "levelSelectors",
+    "deadKeys"
+  ],
+  "skippedFields": [
+    {
+      "path": "layoutId",
+      "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "authors",
+      "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "license",
+      "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "locales",
+      "reason": "macOS keylayout files are not locale-tagged; only the layout name is used"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "levelSelectors.Level3Shift",
+      "detail": "exported as macOS modifier 'anyOption'; actual physical binding (AltGr vs Ctrl+Alt vs macOS Option) is platform-specific per SPEC.md"
+    },
+    {
+      "path": "geometry",
+      "detail": "the <layouts> hardware-detection range is not modeled per OKLM geometry in v1; the generic first=0 last=17 mapSet=ANSI range from Apple's reference example is used"
+    }
+  ],
+  "warnings": [
+    "deadKeys[acute]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[breve]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[caron]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[cedilla]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[circumflex]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[comma]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[currencies]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[diaeresis]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[dot-above]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[dot-below]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[double-acute]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[double-grave]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[extended-latin]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[grave]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[greek]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[horizontal-stroke]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[inverted-breve]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[macron]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[ogonek]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[ring-above]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[stroke]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
+    "deadKeys[tilde]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.1"
+  },
+  "roundTripConfidence": "medium"
+}

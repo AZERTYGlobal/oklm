@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE keyboard SYSTEM "file://localhost/System/Library/DTDs/KeyboardLayout.dtd">
+<keyboard group="0" id="-25218" name="French (Standard, AZERTY)" maxout="1">
+  <layouts>
+    <layout first="0" last="17" modifiers="modifiers" mapSet="ANSI"/>
+  </layouts>
+  <modifierMap id="modifiers" defaultIndex="0">
+    <keyMapSelect mapIndex="0">
+      <modifier keys=""/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="1">
+      <modifier keys="anyShift"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="2">
+      <modifier keys="anyOption"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="3">
+      <modifier keys="anyOption anyShift"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="4">
+      <modifier keys="caps"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="5">
+      <modifier keys="caps anyShift"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="6">
+      <modifier keys="caps anyOption"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="7">
+      <modifier keys="caps anyOption anyShift"/>
+    </keyMapSelect>
+  </modifierMap>
+  <keyMapSet id="ANSI">
+    <keyMap index="0">
+      <key code="50" output="@"/>
+      <key code="18" output="à"/>
+      <key code="19" output="é"/>
+      <key code="20" output="è"/>
+      <key code="21" output="ê"/>
+      <key code="23" output="("/>
+      <key code="22" output=")"/>
+      <key code="26" action="char_2018"/>
+      <key code="28" action="char_2019"/>
+      <key code="25" action="char_00ab"/>
+      <key code="29" action="char_00bb"/>
+      <key code="27" action="char_0027"/>
+      <key code="24" action="dk_circumflex"/>
+      <key code="12" action="char_0061"/>
+      <key code="13" action="char_007a"/>
+      <key code="14" action="char_0065"/>
+      <key code="15" action="char_0072"/>
+      <key code="17" action="char_0074"/>
+      <key code="16" action="char_0079"/>
+      <key code="32" action="char_0075"/>
+      <key code="34" action="char_0069"/>
+      <key code="31" action="char_006f"/>
+      <key code="35" action="char_0070"/>
+      <key code="33" action="char_002d"/>
+      <key code="30" output="+"/>
+      <key code="0" output="q"/>
+      <key code="1" action="char_0073"/>
+      <key code="2" action="char_0064"/>
+      <key code="3" action="char_0066"/>
+      <key code="5" action="char_0067"/>
+      <key code="4" action="char_0068"/>
+      <key code="38" action="char_006a"/>
+      <key code="40" action="char_006b"/>
+      <key code="37" action="char_006c"/>
+      <key code="41" action="char_006d"/>
+      <key code="39" action="char_002f"/>
+      <key code="42" output="*"/>
+      <key code="10" action="char_003c"/>
+      <key code="6" action="char_0077"/>
+      <key code="7" action="char_0078"/>
+      <key code="8" action="char_0063"/>
+      <key code="9" action="char_0076"/>
+      <key code="11" action="char_0062"/>
+      <key code="45" action="char_006e"/>
+      <key code="46" action="char_002e"/>
+      <key code="43" action="char_002c"/>
+      <key code="47" output=":"/>
+      <key code="44" output=";"/>
+      <key code="49" action="char_0020"/>
+    </keyMap>
+    <keyMap index="1">
+      <key code="50" output="#"/>
+      <key code="18" action="char_0031"/>
+      <key code="19" action="char_0032"/>
+      <key code="20" action="char_0033"/>
+      <key code="21" action="char_0034"/>
+      <key code="23" action="char_0035"/>
+      <key code="22" action="char_0036"/>
+      <key code="26" action="char_0037"/>
+      <key code="28" action="char_0038"/>
+      <key code="25" action="char_0039"/>
+      <key code="29" action="char_0030"/>
+      <key code="27" output="&quot;"/>
+      <key code="24" action="dk_diaeresis"/>
+      <key code="12" action="char_0041"/>
+      <key code="13" action="char_005a"/>
+      <key code="14" action="char_0045"/>
+      <key code="15" action="char_0052"/>
+      <key code="17" action="char_0054"/>
+      <key code="16" action="char_0059"/>
+      <key code="32" action="char_0055"/>
+      <key code="34" action="char_0049"/>
+      <key code="31" action="char_004f"/>
+      <key code="35" action="char_0050"/>
+      <key code="33" output="–"/>
+      <key code="30" output="±"/>
+      <key code="0" output="Q"/>
+      <key code="1" action="char_0053"/>
+      <key code="2" action="char_0044"/>
+      <key code="3" action="char_0046"/>
+      <key code="5" action="char_0047"/>
+      <key code="4" action="char_0048"/>
+      <key code="38" action="char_004a"/>
+      <key code="40" action="char_004b"/>
+      <key code="37" action="char_004c"/>
+      <key code="41" action="char_004d"/>
+      <key code="39" output="\"/>
+      <key code="42" output="½"/>
+      <key code="10" action="char_003e"/>
+      <key code="6" action="char_0057"/>
+      <key code="7" action="char_0058"/>
+      <key code="8" action="char_0043"/>
+      <key code="9" action="char_0056"/>
+      <key code="11" action="char_0042"/>
+      <key code="45" action="char_004e"/>
+      <key code="46" output="?"/>
+      <key code="43" output="!"/>
+      <key code="47" output="…"/>
+      <key code="44" action="char_003d"/>
+      <key code="49" action="char_0020"/>
+    </keyMap>
+    <keyMap index="2">
+      <key code="50" action="dk_breve"/>
+      <key code="18" output="§"/>
+      <key code="19" action="dk_acute"/>
+      <key code="20" action="dk_grave"/>
+      <key code="21" output="&amp;"/>
+      <key code="23" output="["/>
+      <key code="22" output="]"/>
+      <key code="26" action="dk_macron"/>
+      <key code="28" output="_"/>
+      <key code="25" output="“"/>
+      <key code="29" output="”"/>
+      <key code="27" action="char_00b0"/>
+      <key code="24" action="dk_caron"/>
+      <key code="12" action="char_00e6"/>
+      <key code="13" output="£"/>
+      <key code="14" output="€"/>
+      <key code="15" action="char_00ae"/>
+      <key code="17" output="{"/>
+      <key code="16" output="}"/>
+      <key code="32" output="ù"/>
+      <key code="34" action="dk_dot-above"/>
+      <key code="31" output="œ"/>
+      <key code="35" action="char_0025"/>
+      <key code="33" output="−"/>
+      <key code="30" output="†"/>
+      <key code="0" output="θ"/>
+      <key code="1" output="ß"/>
+      <key code="2" output="$"/>
+      <key code="3" action="dk_currencies"/>
+      <key code="5" action="dk_greek"/>
+      <key code="4" action="dk_extended-latin"/>
+      <key code="40" action="dk_stroke"/>
+      <key code="37" action="char_007c"/>
+      <key code="41" action="char_221e"/>
+      <key code="39" output="÷"/>
+      <key code="42" output="×"/>
+      <key code="10" action="char_2a7d"/>
+      <key code="6" action="char_0292"/>
+      <key code="7" output="©"/>
+      <key code="8" action="char_00e7"/>
+      <key code="9" action="dk_cedilla"/>
+      <key code="11" action="dk_horizontal-stroke"/>
+      <key code="45" action="dk_tilde"/>
+      <key code="46" output="¿"/>
+      <key code="43" output="¡"/>
+      <key code="47" output="·"/>
+      <key code="44" action="char_2243"/>
+      <key code="49" action="char_00a0"/>
+    </keyMap>
+    <keyMap index="3">
+      <key code="50" action="dk_inverted-breve"/>
+      <key code="18" output="À"/>
+      <key code="19" output="É"/>
+      <key code="20" output="È"/>
+      <key code="21" output="Ê"/>
+      <key code="23" action="dk_double-acute"/>
+      <key code="22" action="dk_double-grave"/>
+      <key code="28" output="—"/>
+      <key code="25" output="‹"/>
+      <key code="29" output="›"/>
+      <key code="27" action="dk_ring-above"/>
+      <key code="12" action="char_00c6"/>
+      <key code="17" output="™"/>
+      <key code="32" output="Ù"/>
+      <key code="34" action="dk_dot-below"/>
+      <key code="31" output="Œ"/>
+      <key code="35" output="‰"/>
+      <key code="33" output="‑"/>
+      <key code="30" output="‡"/>
+      <key code="0" output="ϴ"/>
+      <key code="1" output="ẞ"/>
+      <key code="4" action="dk_macron"/>
+      <key code="39" output="√"/>
+      <key code="42" output="¼"/>
+      <key code="10" action="char_2a7e"/>
+      <key code="6" action="char_01b7"/>
+      <key code="8" action="char_00c7"/>
+      <key code="9" action="dk_ogonek"/>
+      <key code="43" action="dk_comma"/>
+      <key code="44" output="≠"/>
+      <key code="49" output=" "/>
+    </keyMap>
+    <keyMap index="4">
+      <key code="18" action="char_0031"/>
+      <key code="19" action="char_0032"/>
+      <key code="20" action="char_0033"/>
+      <key code="21" action="char_0034"/>
+      <key code="23" action="char_0035"/>
+      <key code="22" action="char_0036"/>
+      <key code="26" action="char_0037"/>
+      <key code="28" action="char_0038"/>
+      <key code="25" action="char_0039"/>
+      <key code="29" action="char_0030"/>
+      <key code="12" action="char_0041"/>
+      <key code="13" action="char_005a"/>
+      <key code="14" action="char_0045"/>
+      <key code="15" action="char_0052"/>
+      <key code="17" action="char_0054"/>
+      <key code="16" action="char_0059"/>
+      <key code="32" action="char_0055"/>
+      <key code="34" action="char_0049"/>
+      <key code="31" action="char_004f"/>
+      <key code="35" action="char_0050"/>
+      <key code="0" output="Q"/>
+      <key code="1" action="char_0053"/>
+      <key code="2" action="char_0044"/>
+      <key code="3" action="char_0046"/>
+      <key code="5" action="char_0047"/>
+      <key code="4" action="char_0048"/>
+      <key code="38" action="char_004a"/>
+      <key code="40" action="char_004b"/>
+      <key code="37" action="char_004c"/>
+      <key code="41" action="char_004d"/>
+      <key code="6" action="char_0057"/>
+      <key code="7" action="char_0058"/>
+      <key code="8" action="char_0043"/>
+      <key code="9" action="char_0056"/>
+      <key code="11" action="char_0042"/>
+      <key code="45" action="char_004e"/>
+    </keyMap>
+    <keyMap index="5">
+      <key code="18" output="à"/>
+      <key code="19" output="é"/>
+      <key code="20" output="è"/>
+      <key code="21" output="ê"/>
+      <key code="23" output="("/>
+      <key code="22" output=")"/>
+      <key code="26" action="char_2018"/>
+      <key code="28" action="char_2019"/>
+      <key code="25" action="char_00ab"/>
+      <key code="29" action="char_00bb"/>
+      <key code="12" action="char_0061"/>
+      <key code="13" action="char_007a"/>
+      <key code="14" action="char_0065"/>
+      <key code="15" action="char_0072"/>
+      <key code="17" action="char_0074"/>
+      <key code="16" action="char_0079"/>
+      <key code="32" action="char_0075"/>
+      <key code="34" action="char_0069"/>
+      <key code="31" action="char_006f"/>
+      <key code="35" action="char_0070"/>
+      <key code="0" output="q"/>
+      <key code="1" action="char_0073"/>
+      <key code="2" action="char_0064"/>
+      <key code="3" action="char_0066"/>
+      <key code="5" action="char_0067"/>
+      <key code="4" action="char_0068"/>
+      <key code="38" action="char_006a"/>
+      <key code="40" action="char_006b"/>
+      <key code="37" action="char_006c"/>
+      <key code="41" action="char_006d"/>
+      <key code="6" action="char_0077"/>
+      <key code="7" action="char_0078"/>
+      <key code="8" action="char_0063"/>
+      <key code="9" action="char_0076"/>
+      <key code="11" action="char_0062"/>
+      <key code="45" action="char_006e"/>
+    </keyMap>
+    <keyMap index="6">
+      <key code="18" output="À"/>
+      <key code="19" output="É"/>
+      <key code="20" output="È"/>
+      <key code="21" output="Ê"/>
+      <key code="12" action="char_00c6"/>
+      <key code="32" output="Ù"/>
+      <key code="31" output="Œ"/>
+      <key code="0" output="ϴ"/>
+      <key code="1" output="ẞ"/>
+      <key code="6" action="char_01b7"/>
+      <key code="8" action="char_00c7"/>
+    </keyMap>
+    <keyMap index="7">
+      <key code="18" output="§"/>
+      <key code="19" action="dk_acute"/>
+      <key code="20" action="dk_grave"/>
+      <key code="21" output="&amp;"/>
+      <key code="12" action="char_00e6"/>
+      <key code="32" output="ù"/>
+      <key code="31" output="œ"/>
+      <key code="0" output="θ"/>
+      <key code="1" output="ß"/>
+      <key code="6" action="char_0292"/>
+      <key code="8" action="char_00e7"/>
+    </keyMap>
+  </keyMapSet>
+  <actions>
+  <action id="char_0020">
+    <when state="none" output=" "/>
+    <when state="acute" output="´"/>
+    <when state="breve" output="˘"/>
+    <when state="caron" output="ˇ"/>
+    <when state="cedilla" output="¸"/>
+    <when state="circumflex" output="^"/>
+    <when state="comma" output=","/>
+    <when state="currencies" output="¤"/>
+    <when state="diaeresis" output="¨"/>
+    <when state="dot-above" output="˙"/>
+    <when state="dot-below" output="."/>
+    <when state="double-acute" output="˝"/>
+    <when state="double-grave" output="˵"/>
+    <when state="extended-latin" output="ſ"/>
+    <when state="grave" output="`"/>
+    <when state="greek" output="µ"/>
+    <when state="horizontal-stroke" output="-"/>
+    <when state="inverted-breve" output="°"/>
+    <when state="macron" output="ˍ"/>
+    <when state="ogonek" output="˛"/>
+    <when state="ring-above" output="˚"/>
+    <when state="stroke" output="/"/>
+    <when state="tilde" output="~"/>
+  </action>
+  <action id="char_0025">
+    <when state="none" output="%"/>
+    <when state="currencies" output="₰"/>
+  </action>
+  <action id="char_0027">
+    <when state="none" output="'"/>
+    <when state="extended-latin" output="ʼ"/>
+  </action>
+  <action id="char_002c">
+    <when state="none" output=","/>
+    <when state="comma" output=","/>
+  </action>
+  <action id="char_002d">
+    <when state="none" output="-"/>
+    <when state="horizontal-stroke" output="-"/>
+    <when state="tilde" output="≃"/>
+  </action>
+  <action id="char_002e">
+    <when state="none" output="."/>
+    <when state="dot-below" output="."/>
+  </action>
+  <action id="char_002f">
+    <when state="none" output="/"/>
+    <when state="stroke" output="/"/>
+  </action>
+  <action id="char_0030">
+    <when state="none" output="0"/>
+    <when state="caron" output="₀"/>
+    <when state="circumflex" output="⁰"/>
+    <when state="extended-latin" output="«"/>
+  </action>
+  <action id="char_0031">
+    <when state="none" output="1"/>
+    <when state="caron" output="₁"/>
+    <when state="circumflex" output="¹"/>
+  </action>
+  <action id="char_0032">
+    <when state="none" output="2"/>
+    <when state="caron" output="₂"/>
+    <when state="circumflex" output="²"/>
+  </action>
+  <action id="char_0033">
+    <when state="none" output="3"/>
+    <when state="caron" output="₃"/>
+    <when state="circumflex" output="³"/>
+  </action>
+  <action id="char_0034">
+    <when state="none" output="4"/>
+    <when state="caron" output="₄"/>
+    <when state="circumflex" output="⁴"/>
+  </action>
+  <action id="char_0035">
+    <when state="none" output="5"/>
+    <when state="caron" output="₅"/>
+    <when state="circumflex" output="⁵"/>
+  </action>
+  <action id="char_0036">
+    <when state="none" output="6"/>
+    <when state="caron" output="₆"/>
+    <when state="circumflex" output="⁶"/>
+  </action>
+  <action id="char_0037">
+    <when state="none" output="7"/>
+    <when state="caron" output="₇"/>
+    <when state="circumflex" output="⁷"/>
+    <when state="extended-latin" output="›"/>
+  </action>
+  <action id="char_0038">
+    <when state="none" output="8"/>
+    <when state="caron" output="₈"/>
+    <when state="circumflex" output="⁸"/>
+    <when state="extended-latin" output="‹"/>
+  </action>
+  <action id="char_0039">
+    <when state="none" output="9"/>
+    <when state="caron" output="₉"/>
+    <when state="circumflex" output="⁹"/>
+    <when state="extended-latin" output="»"/>
+  </action>
+  <action id="char_003c">
+    <when state="none" output="&lt;"/>
+    <when state="extended-latin" output="≤"/>
+    <when state="stroke" output="≮"/>
+    <when state="tilde" output="≲"/>
+  </action>
+  <action id="char_003d">
+    <when state="none" output="="/>
+    <when state="stroke" output="≠"/>
+    <when state="tilde" output="≈"/>
+  </action>
+  <action id="char_003e">
+    <when state="none" output="&gt;"/>
+    <when state="extended-latin" output="≥"/>
+    <when state="stroke" output="≯"/>
+    <when state="tilde" output="≳"/>
+  </action>
+  <action id="char_0041">
+    <when state="none" output="A"/>
+    <when state="acute" output="Á"/>
+    <when state="breve" output="Ă"/>
+    <when state="caron" output="Ǎ"/>
+    <when state="circumflex" output="Â"/>
+    <when state="currencies" output="₳"/>
+    <when state="diaeresis" output="Ä"/>
+    <when state="dot-above" output="Ȧ"/>
+    <when state="dot-below" output="Ạ"/>
+    <when state="double-grave" output="Ȁ"/>
+    <when state="grave" output="À"/>
+    <when state="greek" output="Α"/>
+    <when state="inverted-breve" output="Ȃ"/>
+    <when state="ogonek" output="Ą"/>
+    <when state="ring-above" output="Å"/>
+    <when state="stroke" output="Ⱥ"/>
+    <when state="tilde" output="Ã"/>
+  </action>
+  <action id="char_0042">
+    <when state="none" output="B"/>
+    <when state="currencies" output="฿"/>
+    <when state="dot-above" output="Ḃ"/>
+    <when state="dot-below" output="Ḅ"/>
+    <when state="greek" output="Β"/>
+    <when state="horizontal-stroke" output="Ƀ"/>
+    <when state="macron" output="Ḇ"/>
+  </action>
+  <action id="char_0043">
+    <when state="none" output="C"/>
+    <when state="acute" output="Ć"/>
+    <when state="caron" output="Č"/>
+    <when state="cedilla" output="Ç"/>
+    <when state="circumflex" output="Ĉ"/>
+    <when state="currencies" output="₵"/>
+    <when state="dot-above" output="Ċ"/>
+    <when state="greek" output="Ψ"/>
+    <when state="stroke" output="Ȼ"/>
+  </action>
+  <action id="char_0044">
+    <when state="none" output="D"/>
+    <when state="caron" output="Ď"/>
+    <when state="cedilla" output="Ḑ"/>
+    <when state="currencies" output="₯"/>
+    <when state="dot-above" output="Ḋ"/>
+    <when state="dot-below" output="Ḍ"/>
+    <when state="extended-latin" output="Ð"/>
+    <when state="greek" output="Δ"/>
+    <when state="horizontal-stroke" output="Đ"/>
+    <when state="macron" output="Ḏ"/>
+  </action>
+  <action id="char_0045">
+    <when state="none" output="E"/>
+    <when state="acute" output="É"/>
+    <when state="breve" output="Ĕ"/>
+    <when state="caron" output="Ě"/>
+    <when state="cedilla" output="Ȩ"/>
+    <when state="circumflex" output="Ê"/>
+    <when state="diaeresis" output="Ë"/>
+    <when state="dot-above" output="Ė"/>
+    <when state="dot-below" output="Ẹ"/>
+    <when state="double-grave" output="Ȅ"/>
+    <when state="extended-latin" output="Ə"/>
+    <when state="grave" output="È"/>
+    <when state="greek" output="Ε"/>
+    <when state="inverted-breve" output="Ȇ"/>
+    <when state="ogonek" output="Ę"/>
+    <when state="stroke" output="Ɇ"/>
+    <when state="tilde" output="Ẽ"/>
+  </action>
+  <action id="char_0046">
+    <when state="none" output="F"/>
+    <when state="currencies" output="₣"/>
+    <when state="dot-above" output="Ḟ"/>
+    <when state="greek" output="Φ"/>
+  </action>
+  <action id="char_0047">
+    <when state="none" output="G"/>
+    <when state="acute" output="Ǵ"/>
+    <when state="breve" output="Ğ"/>
+    <when state="caron" output="Ǧ"/>
+    <when state="cedilla" output="Ģ"/>
+    <when state="circumflex" output="Ĝ"/>
+    <when state="dot-above" output="Ġ"/>
+    <when state="extended-latin" output="Ŋ"/>
+    <when state="greek" output="Γ"/>
+    <when state="horizontal-stroke" output="Ǥ"/>
+  </action>
+  <action id="char_0048">
+    <when state="none" output="H"/>
+    <when state="caron" output="Ȟ"/>
+    <when state="cedilla" output="Ḩ"/>
+    <when state="circumflex" output="Ĥ"/>
+    <when state="diaeresis" output="Ḧ"/>
+    <when state="dot-above" output="Ḣ"/>
+    <when state="dot-below" output="Ḥ"/>
+    <when state="greek" output="Η"/>
+    <when state="horizontal-stroke" output="Ħ"/>
+  </action>
+  <action id="char_0049">
+    <when state="none" output="I"/>
+    <when state="acute" output="Í"/>
+    <when state="breve" output="Ĭ"/>
+    <when state="caron" output="Ǐ"/>
+    <when state="circumflex" output="Î"/>
+    <when state="diaeresis" output="Ï"/>
+    <when state="dot-above" output="İ"/>
+    <when state="dot-below" output="Ị"/>
+    <when state="double-grave" output="Ȉ"/>
+    <when state="extended-latin" output="İ"/>
+    <when state="grave" output="Ì"/>
+    <when state="greek" output="Ι"/>
+    <when state="horizontal-stroke" output="Ɨ"/>
+    <when state="inverted-breve" output="Ȋ"/>
+    <when state="ogonek" output="Į"/>
+    <when state="tilde" output="Ĩ"/>
+  </action>
+  <action id="char_004a">
+    <when state="none" output="J"/>
+    <when state="circumflex" output="Ĵ"/>
+    <when state="extended-latin" output="Ĳ"/>
+    <when state="greek" output="Ξ"/>
+    <when state="horizontal-stroke" output="Ɉ"/>
+  </action>
+  <action id="char_004b">
+    <when state="none" output="K"/>
+    <when state="acute" output="Ḱ"/>
+    <when state="caron" output="Ǩ"/>
+    <when state="cedilla" output="Ķ"/>
+    <when state="dot-below" output="Ḳ"/>
+    <when state="greek" output="Κ"/>
+    <when state="macron" output="Ḵ"/>
+  </action>
+  <action id="char_004c">
+    <when state="none" output="L"/>
+    <when state="acute" output="Ĺ"/>
+    <when state="caron" output="Ľ"/>
+    <when state="cedilla" output="Ļ"/>
+    <when state="currencies" output="₤"/>
+    <when state="dot-above" output="Ŀ"/>
+    <when state="dot-below" output="Ḷ"/>
+    <when state="greek" output="Λ"/>
+    <when state="horizontal-stroke" output="Ƚ"/>
+    <when state="macron" output="Ḻ"/>
+    <when state="stroke" output="Ł"/>
+  </action>
+  <action id="char_004d">
+    <when state="none" output="M"/>
+    <when state="acute" output="Ḿ"/>
+    <when state="currencies" output="ℳ"/>
+    <when state="dot-above" output="Ṁ"/>
+    <when state="dot-below" output="Ṃ"/>
+    <when state="greek" output="Μ"/>
+  </action>
+  <action id="char_004e">
+    <when state="none" output="N"/>
+    <when state="acute" output="Ń"/>
+    <when state="caron" output="Ň"/>
+    <when state="cedilla" output="Ņ"/>
+    <when state="dot-above" output="Ṅ"/>
+    <when state="dot-below" output="Ṇ"/>
+    <when state="grave" output="Ǹ"/>
+    <when state="greek" output="Ν"/>
+    <when state="macron" output="Ṉ"/>
+    <when state="tilde" output="Ñ"/>
+  </action>
+  <action id="char_004f">
+    <when state="none" output="O"/>
+    <when state="acute" output="Ó"/>
+    <when state="breve" output="Ŏ"/>
+    <when state="caron" output="Ǒ"/>
+    <when state="circumflex" output="Ô"/>
+    <when state="diaeresis" output="Ö"/>
+    <when state="dot-above" output="Ȯ"/>
+    <when state="dot-below" output="Ọ"/>
+    <when state="double-acute" output="Ő"/>
+    <when state="double-grave" output="Ȍ"/>
+    <when state="grave" output="Ò"/>
+    <when state="greek" output="Ο"/>
+    <when state="inverted-breve" output="Ȏ"/>
+    <when state="ogonek" output="Ǫ"/>
+    <when state="stroke" output="Ø"/>
+    <when state="tilde" output="Õ"/>
+  </action>
+  <action id="char_0050">
+    <when state="none" output="P"/>
+    <when state="acute" output="Ṕ"/>
+    <when state="currencies" output="₧"/>
+    <when state="dot-above" output="Ṗ"/>
+    <when state="greek" output="Π"/>
+  </action>
+  <action id="char_0052">
+    <when state="none" output="R"/>
+    <when state="acute" output="Ŕ"/>
+    <when state="caron" output="Ř"/>
+    <when state="cedilla" output="Ŗ"/>
+    <when state="currencies" output="₹"/>
+    <when state="dot-above" output="Ṙ"/>
+    <when state="dot-below" output="Ṛ"/>
+    <when state="double-grave" output="Ȑ"/>
+    <when state="greek" output="Ρ"/>
+    <when state="horizontal-stroke" output="Ɍ"/>
+    <when state="inverted-breve" output="Ȓ"/>
+    <when state="macron" output="Ṟ"/>
+  </action>
+  <action id="char_0053">
+    <when state="none" output="S"/>
+    <when state="acute" output="Ś"/>
+    <when state="caron" output="Š"/>
+    <when state="cedilla" output="Ş"/>
+    <when state="circumflex" output="Ŝ"/>
+    <when state="comma" output="Ș"/>
+    <when state="currencies" output="₷"/>
+    <when state="dot-above" output="Ṡ"/>
+    <when state="dot-below" output="Ṣ"/>
+    <when state="greek" output="Σ"/>
+  </action>
+  <action id="char_0054">
+    <when state="none" output="T"/>
+    <when state="caron" output="Ť"/>
+    <when state="cedilla" output="Ţ"/>
+    <when state="comma" output="Ț"/>
+    <when state="currencies" output="₮"/>
+    <when state="dot-above" output="Ṫ"/>
+    <when state="dot-below" output="Ṭ"/>
+    <when state="extended-latin" output="Þ"/>
+    <when state="greek" output="Τ"/>
+    <when state="horizontal-stroke" output="Ŧ"/>
+    <when state="macron" output="Ṯ"/>
+    <when state="stroke" output="Ⱦ"/>
+  </action>
+  <action id="char_0055">
+    <when state="none" output="U"/>
+    <when state="acute" output="Ú"/>
+    <when state="breve" output="Ŭ"/>
+    <when state="caron" output="Ǔ"/>
+    <when state="circumflex" output="Û"/>
+    <when state="diaeresis" output="Ü"/>
+    <when state="dot-below" output="Ụ"/>
+    <when state="double-acute" output="Ű"/>
+    <when state="double-grave" output="Ȕ"/>
+    <when state="grave" output="Ù"/>
+    <when state="greek" output="Θ"/>
+    <when state="horizontal-stroke" output="Ʉ"/>
+    <when state="inverted-breve" output="Ȗ"/>
+    <when state="ogonek" output="Ų"/>
+    <when state="ring-above" output="Ů"/>
+    <when state="tilde" output="Ũ"/>
+  </action>
+  <action id="char_0056">
+    <when state="none" output="V"/>
+    <when state="dot-below" output="Ṿ"/>
+    <when state="greek" output="Ω"/>
+    <when state="tilde" output="Ṽ"/>
+  </action>
+  <action id="char_0057">
+    <when state="none" output="W"/>
+    <when state="acute" output="Ẃ"/>
+    <when state="circumflex" output="Ŵ"/>
+    <when state="diaeresis" output="Ẅ"/>
+    <when state="dot-above" output="Ẇ"/>
+    <when state="dot-below" output="Ẉ"/>
+    <when state="grave" output="Ẁ"/>
+  </action>
+  <action id="char_0058">
+    <when state="none" output="X"/>
+    <when state="diaeresis" output="Ẍ"/>
+    <when state="dot-above" output="Ẋ"/>
+    <when state="greek" output="Χ"/>
+  </action>
+  <action id="char_0059">
+    <when state="none" output="Y"/>
+    <when state="acute" output="Ý"/>
+    <when state="circumflex" output="Ŷ"/>
+    <when state="diaeresis" output="Ÿ"/>
+    <when state="dot-above" output="Ẏ"/>
+    <when state="dot-below" output="Ỵ"/>
+    <when state="grave" output="Ỳ"/>
+    <when state="greek" output="Υ"/>
+    <when state="horizontal-stroke" output="Ɏ"/>
+    <when state="tilde" output="Ỹ"/>
+  </action>
+  <action id="char_005a">
+    <when state="none" output="Z"/>
+    <when state="acute" output="Ź"/>
+    <when state="caron" output="Ž"/>
+    <when state="circumflex" output="Ẑ"/>
+    <when state="dot-above" output="Ż"/>
+    <when state="dot-below" output="Ẓ"/>
+    <when state="greek" output="Ζ"/>
+    <when state="horizontal-stroke" output="Ƶ"/>
+    <when state="macron" output="Ẕ"/>
+  </action>
+  <action id="char_0061">
+    <when state="none" output="a"/>
+    <when state="acute" output="á"/>
+    <when state="breve" output="ă"/>
+    <when state="caron" output="ǎ"/>
+    <when state="circumflex" output="â"/>
+    <when state="diaeresis" output="ä"/>
+    <when state="dot-above" output="ȧ"/>
+    <when state="dot-below" output="ạ"/>
+    <when state="double-grave" output="ȁ"/>
+    <when state="extended-latin" output="ª"/>
+    <when state="grave" output="à"/>
+    <when state="greek" output="α"/>
+    <when state="inverted-breve" output="ȃ"/>
+    <when state="ogonek" output="ą"/>
+    <when state="ring-above" output="å"/>
+    <when state="tilde" output="ã"/>
+  </action>
+  <action id="char_0062">
+    <when state="none" output="b"/>
+    <when state="currencies" output="₿"/>
+    <when state="dot-above" output="ḃ"/>
+    <when state="dot-below" output="ḅ"/>
+    <when state="greek" output="β"/>
+    <when state="horizontal-stroke" output="ƀ"/>
+    <when state="macron" output="ḇ"/>
+  </action>
+  <action id="char_0063">
+    <when state="none" output="c"/>
+    <when state="acute" output="ć"/>
+    <when state="caron" output="č"/>
+    <when state="cedilla" output="ç"/>
+    <when state="circumflex" output="ĉ"/>
+    <when state="currencies" output="¢"/>
+    <when state="dot-above" output="ċ"/>
+    <when state="greek" output="ψ"/>
+    <when state="stroke" output="ȼ"/>
+  </action>
+  <action id="char_0064">
+    <when state="none" output="d"/>
+    <when state="caron" output="ď"/>
+    <when state="cedilla" output="ḑ"/>
+    <when state="currencies" output="₫"/>
+    <when state="dot-above" output="ḋ"/>
+    <when state="dot-below" output="ḍ"/>
+    <when state="extended-latin" output="ð"/>
+    <when state="greek" output="δ"/>
+    <when state="horizontal-stroke" output="đ"/>
+    <when state="macron" output="ḏ"/>
+  </action>
+  <action id="char_0065">
+    <when state="none" output="e"/>
+    <when state="acute" output="é"/>
+    <when state="breve" output="ĕ"/>
+    <when state="caron" output="ě"/>
+    <when state="cedilla" output="ȩ"/>
+    <when state="circumflex" output="ê"/>
+    <when state="currencies" output="₠"/>
+    <when state="diaeresis" output="ë"/>
+    <when state="dot-above" output="ė"/>
+    <when state="dot-below" output="ẹ"/>
+    <when state="double-grave" output="ȅ"/>
+    <when state="extended-latin" output="ə"/>
+    <when state="grave" output="è"/>
+    <when state="greek" output="ε"/>
+    <when state="inverted-breve" output="ȇ"/>
+    <when state="ogonek" output="ę"/>
+    <when state="stroke" output="ɇ"/>
+    <when state="tilde" output="ẽ"/>
+  </action>
+  <action id="char_0066">
+    <when state="none" output="f"/>
+    <when state="currencies" output="ƒ"/>
+    <when state="dot-above" output="ḟ"/>
+    <when state="greek" output="φ"/>
+  </action>
+  <action id="char_0067">
+    <when state="none" output="g"/>
+    <when state="acute" output="ǵ"/>
+    <when state="breve" output="ğ"/>
+    <when state="caron" output="ǧ"/>
+    <when state="cedilla" output="ģ"/>
+    <when state="circumflex" output="ĝ"/>
+    <when state="currencies" output="₲"/>
+    <when state="dot-above" output="ġ"/>
+    <when state="extended-latin" output="ŋ"/>
+    <when state="greek" output="γ"/>
+    <when state="horizontal-stroke" output="ǥ"/>
+  </action>
+  <action id="char_0068">
+    <when state="none" output="h"/>
+    <when state="caron" output="ȟ"/>
+    <when state="cedilla" output="ḩ"/>
+    <when state="circumflex" output="ĥ"/>
+    <when state="currencies" output="₴"/>
+    <when state="diaeresis" output="ḧ"/>
+    <when state="dot-above" output="ḣ"/>
+    <when state="dot-below" output="ḥ"/>
+    <when state="greek" output="η"/>
+    <when state="horizontal-stroke" output="ħ"/>
+    <when state="macron" output="ẖ"/>
+  </action>
+  <action id="char_0069">
+    <when state="none" output="i"/>
+    <when state="acute" output="í"/>
+    <when state="breve" output="ĭ"/>
+    <when state="caron" output="ǐ"/>
+    <when state="circumflex" output="î"/>
+    <when state="diaeresis" output="ï"/>
+    <when state="dot-above" output="ı"/>
+    <when state="dot-below" output="ị"/>
+    <when state="double-grave" output="ȉ"/>
+    <when state="extended-latin" output="ı"/>
+    <when state="grave" output="ì"/>
+    <when state="greek" output="ι"/>
+    <when state="inverted-breve" output="ȋ"/>
+    <when state="ogonek" output="į"/>
+    <when state="tilde" output="ĩ"/>
+  </action>
+  <action id="char_006a">
+    <when state="none" output="j"/>
+    <when state="caron" output="ǰ"/>
+    <when state="circumflex" output="ĵ"/>
+    <when state="extended-latin" output="ĳ"/>
+    <when state="greek" output="ξ"/>
+    <when state="horizontal-stroke" output="ɉ"/>
+  </action>
+  <action id="char_006b">
+    <when state="none" output="k"/>
+    <when state="acute" output="ḱ"/>
+    <when state="caron" output="ǩ"/>
+    <when state="cedilla" output="ķ"/>
+    <when state="currencies" output="₭"/>
+    <when state="dot-below" output="ḳ"/>
+    <when state="greek" output="κ"/>
+    <when state="macron" output="ḵ"/>
+  </action>
+  <action id="char_006c">
+    <when state="none" output="l"/>
+    <when state="acute" output="ĺ"/>
+    <when state="caron" output="ľ"/>
+    <when state="cedilla" output="ļ"/>
+    <when state="currencies" output="₺"/>
+    <when state="dot-above" output="ŀ"/>
+    <when state="dot-below" output="ḷ"/>
+    <when state="greek" output="λ"/>
+    <when state="horizontal-stroke" output="ƚ"/>
+    <when state="macron" output="ḻ"/>
+    <when state="stroke" output="ł"/>
+  </action>
+  <action id="char_006d">
+    <when state="none" output="m"/>
+    <when state="acute" output="ḿ"/>
+    <when state="currencies" output="₥"/>
+    <when state="dot-above" output="ṁ"/>
+    <when state="dot-below" output="ṃ"/>
+    <when state="greek" output="μ"/>
+  </action>
+  <action id="char_006e">
+    <when state="none" output="n"/>
+    <when state="acute" output="ń"/>
+    <when state="caron" output="ň"/>
+    <when state="cedilla" output="ņ"/>
+    <when state="currencies" output="₦"/>
+    <when state="dot-above" output="ṅ"/>
+    <when state="dot-below" output="ṇ"/>
+    <when state="grave" output="ǹ"/>
+    <when state="greek" output="ν"/>
+    <when state="macron" output="ṉ"/>
+    <when state="tilde" output="ñ"/>
+  </action>
+  <action id="char_006f">
+    <when state="none" output="o"/>
+    <when state="acute" output="ó"/>
+    <when state="breve" output="ŏ"/>
+    <when state="caron" output="ǒ"/>
+    <when state="circumflex" output="ô"/>
+    <when state="diaeresis" output="ö"/>
+    <when state="dot-above" output="ȯ"/>
+    <when state="dot-below" output="ọ"/>
+    <when state="double-acute" output="ő"/>
+    <when state="double-grave" output="ȍ"/>
+    <when state="extended-latin" output="º"/>
+    <when state="grave" output="ò"/>
+    <when state="greek" output="ο"/>
+    <when state="inverted-breve" output="ȏ"/>
+    <when state="ogonek" output="ǫ"/>
+    <when state="stroke" output="ø"/>
+    <when state="tilde" output="õ"/>
+  </action>
+  <action id="char_0070">
+    <when state="none" output="p"/>
+    <when state="acute" output="ṕ"/>
+    <when state="currencies" output="₱"/>
+    <when state="dot-above" output="ṗ"/>
+    <when state="greek" output="π"/>
+  </action>
+  <action id="char_0072">
+    <when state="none" output="r"/>
+    <when state="acute" output="ŕ"/>
+    <when state="caron" output="ř"/>
+    <when state="cedilla" output="ŗ"/>
+    <when state="currencies" output="₽"/>
+    <when state="dot-above" output="ṙ"/>
+    <when state="dot-below" output="ṛ"/>
+    <when state="double-grave" output="ȑ"/>
+    <when state="greek" output="ρ"/>
+    <when state="horizontal-stroke" output="ɍ"/>
+    <when state="inverted-breve" output="ȓ"/>
+    <when state="macron" output="ṟ"/>
+  </action>
+  <action id="char_0073">
+    <when state="none" output="s"/>
+    <when state="acute" output="ś"/>
+    <when state="caron" output="š"/>
+    <when state="cedilla" output="ş"/>
+    <when state="circumflex" output="ŝ"/>
+    <when state="comma" output="ș"/>
+    <when state="currencies" output="₪"/>
+    <when state="dot-above" output="ṡ"/>
+    <when state="dot-below" output="ṣ"/>
+    <when state="extended-latin" output="ſ"/>
+    <when state="greek" output="σ"/>
+  </action>
+  <action id="char_0074">
+    <when state="none" output="t"/>
+    <when state="caron" output="ť"/>
+    <when state="cedilla" output="ţ"/>
+    <when state="comma" output="ț"/>
+    <when state="currencies" output="₸"/>
+    <when state="diaeresis" output="ẗ"/>
+    <when state="dot-above" output="ṫ"/>
+    <when state="dot-below" output="ṭ"/>
+    <when state="extended-latin" output="þ"/>
+    <when state="greek" output="τ"/>
+    <when state="horizontal-stroke" output="ŧ"/>
+    <when state="macron" output="ṯ"/>
+  </action>
+  <action id="char_0075">
+    <when state="none" output="u"/>
+    <when state="acute" output="ú"/>
+    <when state="breve" output="ŭ"/>
+    <when state="caron" output="ǔ"/>
+    <when state="circumflex" output="û"/>
+    <when state="diaeresis" output="ü"/>
+    <when state="dot-below" output="ụ"/>
+    <when state="double-acute" output="ű"/>
+    <when state="double-grave" output="ȕ"/>
+    <when state="grave" output="ù"/>
+    <when state="greek" output="θ"/>
+    <when state="inverted-breve" output="ȗ"/>
+    <when state="ogonek" output="ų"/>
+    <when state="ring-above" output="ů"/>
+    <when state="tilde" output="ũ"/>
+  </action>
+  <action id="char_0076">
+    <when state="none" output="v"/>
+    <when state="dot-below" output="ṿ"/>
+    <when state="greek" output="ω"/>
+    <when state="tilde" output="ṽ"/>
+  </action>
+  <action id="char_0077">
+    <when state="none" output="w"/>
+    <when state="acute" output="ẃ"/>
+    <when state="circumflex" output="ŵ"/>
+    <when state="currencies" output="₩"/>
+    <when state="diaeresis" output="ẅ"/>
+    <when state="dot-above" output="ẇ"/>
+    <when state="dot-below" output="ẉ"/>
+    <when state="grave" output="ẁ"/>
+    <when state="greek" output="ς"/>
+    <when state="ring-above" output="ẘ"/>
+  </action>
+  <action id="char_0078">
+    <when state="none" output="x"/>
+    <when state="diaeresis" output="ẍ"/>
+    <when state="dot-above" output="ẋ"/>
+    <when state="greek" output="χ"/>
+  </action>
+  <action id="char_0079">
+    <when state="none" output="y"/>
+    <when state="acute" output="ý"/>
+    <when state="circumflex" output="ŷ"/>
+    <when state="currencies" output="¥"/>
+    <when state="diaeresis" output="ÿ"/>
+    <when state="dot-above" output="ẏ"/>
+    <when state="dot-below" output="ỵ"/>
+    <when state="grave" output="ỳ"/>
+    <when state="greek" output="υ"/>
+    <when state="horizontal-stroke" output="ɏ"/>
+    <when state="ring-above" output="ẙ"/>
+    <when state="tilde" output="ỹ"/>
+  </action>
+  <action id="char_007a">
+    <when state="none" output="z"/>
+    <when state="acute" output="ź"/>
+    <when state="caron" output="ž"/>
+    <when state="circumflex" output="ẑ"/>
+    <when state="dot-above" output="ż"/>
+    <when state="dot-below" output="ẓ"/>
+    <when state="greek" output="ζ"/>
+    <when state="horizontal-stroke" output="ƶ"/>
+    <when state="macron" output="ẕ"/>
+  </action>
+  <action id="char_007c">
+    <when state="none" output="|"/>
+    <when state="currencies" output="₾"/>
+  </action>
+  <action id="char_00a0">
+    <when state="none" output=" "/>
+    <when state="extended-latin" output=" "/>
+  </action>
+  <action id="char_00ab">
+    <when state="none" output="«"/>
+    <when state="extended-latin" output="„"/>
+  </action>
+  <action id="char_00ae">
+    <when state="none" output="®"/>
+    <when state="currencies" output="₨"/>
+  </action>
+  <action id="char_00b0">
+    <when state="none" output="°"/>
+    <when state="inverted-breve" output="°"/>
+  </action>
+  <action id="char_00bb">
+    <when state="none" output="»"/>
+    <when state="extended-latin" output="“"/>
+  </action>
+  <action id="char_00c6">
+    <when state="none" output="Æ"/>
+    <when state="acute" output="Ǽ"/>
+  </action>
+  <action id="char_00c7">
+    <when state="none" output="Ç"/>
+    <when state="currencies" output="₡"/>
+  </action>
+  <action id="char_00e6">
+    <when state="none" output="æ"/>
+    <when state="acute" output="ǽ"/>
+  </action>
+  <action id="char_00e7">
+    <when state="none" output="ç"/>
+    <when state="currencies" output="₢"/>
+  </action>
+  <action id="char_01b7">
+    <when state="none" output="Ʒ"/>
+    <when state="caron" output="Ǯ"/>
+  </action>
+  <action id="char_0292">
+    <when state="none" output="ʒ"/>
+    <when state="caron" output="ǯ"/>
+  </action>
+  <action id="char_2018">
+    <when state="none" output="‘"/>
+    <when state="extended-latin" output="‚"/>
+  </action>
+  <action id="char_2019">
+    <when state="none" output="’"/>
+    <when state="extended-latin" output="‘"/>
+  </action>
+  <action id="char_221e">
+    <when state="none" output="∞"/>
+    <when state="currencies" output="₼"/>
+  </action>
+  <action id="char_2243">
+    <when state="none" output="≃"/>
+    <when state="stroke" output="≄"/>
+  </action>
+  <action id="char_2a7d">
+    <when state="none" output="⩽"/>
+    <when state="stroke" output="≰"/>
+  </action>
+  <action id="char_2a7e">
+    <when state="none" output="⩾"/>
+    <when state="stroke" output="≱"/>
+  </action>
+  <action id="dk_acute">
+    <when state="none" next="acute"/>
+  </action>
+  <action id="dk_breve">
+    <when state="none" next="breve"/>
+  </action>
+  <action id="dk_caron">
+    <when state="none" next="caron"/>
+  </action>
+  <action id="dk_cedilla">
+    <when state="none" next="cedilla"/>
+  </action>
+  <action id="dk_circumflex">
+    <when state="none" next="circumflex"/>
+  </action>
+  <action id="dk_comma">
+    <when state="none" next="comma"/>
+  </action>
+  <action id="dk_currencies">
+    <when state="none" next="currencies"/>
+  </action>
+  <action id="dk_diaeresis">
+    <when state="none" next="diaeresis"/>
+  </action>
+  <action id="dk_dot-above">
+    <when state="none" next="dot-above"/>
+  </action>
+  <action id="dk_dot-below">
+    <when state="none" next="dot-below"/>
+  </action>
+  <action id="dk_double-acute">
+    <when state="none" next="double-acute"/>
+  </action>
+  <action id="dk_double-grave">
+    <when state="none" next="double-grave"/>
+  </action>
+  <action id="dk_extended-latin">
+    <when state="none" next="extended-latin"/>
+  </action>
+  <action id="dk_grave">
+    <when state="none" next="grave"/>
+  </action>
+  <action id="dk_greek">
+    <when state="none" next="greek"/>
+  </action>
+  <action id="dk_horizontal-stroke">
+    <when state="none" next="horizontal-stroke"/>
+  </action>
+  <action id="dk_inverted-breve">
+    <when state="none" next="inverted-breve"/>
+  </action>
+  <action id="dk_macron">
+    <when state="none" next="macron"/>
+  </action>
+  <action id="dk_ogonek">
+    <when state="none" next="ogonek"/>
+  </action>
+  <action id="dk_ring-above">
+    <when state="none" next="ring-above"/>
+  </action>
+  <action id="dk_stroke">
+    <when state="none" next="stroke"/>
+  </action>
+  <action id="dk_tilde">
+    <when state="none" next="tilde"/>
+  </action>
+  </actions>
+</keyboard>

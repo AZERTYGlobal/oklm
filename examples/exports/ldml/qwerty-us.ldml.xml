@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="en" conformsTo="45">
+  <version number="ANSI (US 104-key)"/>
+  <info name="QWERTY US"/>
+  <keys>
+    <key id="k_E00_1" output="`"/>
+    <key id="k_E00_2" output="~"/>
+    <key id="k_E01_1" output="1"/>
+    <key id="k_E01_2" output="!"/>
+    <key id="k_E02_1" output="2"/>
+    <key id="k_E02_2" output="@"/>
+    <key id="k_E03_1" output="3"/>
+    <key id="k_E03_2" output="#"/>
+    <key id="k_E04_1" output="4"/>
+    <key id="k_E04_2" output="$"/>
+    <key id="k_E05_1" output="5"/>
+    <key id="k_E05_2" output="%"/>
+    <key id="k_E06_1" output="6"/>
+    <key id="k_E06_2" output="^"/>
+    <key id="k_E07_1" output="7"/>
+    <key id="k_E07_2" output="&amp;"/>
+    <key id="k_E08_1" output="8"/>
+    <key id="k_E08_2" output="*"/>
+    <key id="k_E09_1" output="9"/>
+    <key id="k_E09_2" output="("/>
+    <key id="k_E10_1" output="0"/>
+    <key id="k_E10_2" output=")"/>
+    <key id="k_E11_1" output="-"/>
+    <key id="k_E11_2" output="_"/>
+    <key id="k_E12_1" output="="/>
+    <key id="k_E12_2" output="+"/>
+    <key id="k_D01_1" output="q"/>
+    <key id="k_D01_2" output="Q"/>
+    <key id="k_D01_5" output="Q"/>
+    <key id="k_D02_1" output="w"/>
+    <key id="k_D02_2" output="W"/>
+    <key id="k_D02_5" output="W"/>
+    <key id="k_D03_1" output="e"/>
+    <key id="k_D03_2" output="E"/>
+    <key id="k_D03_5" output="E"/>
+    <key id="k_D04_1" output="r"/>
+    <key id="k_D04_2" output="R"/>
+    <key id="k_D04_5" output="R"/>
+    <key id="k_D05_1" output="t"/>
+    <key id="k_D05_2" output="T"/>
+    <key id="k_D05_5" output="T"/>
+    <key id="k_D06_1" output="y"/>
+    <key id="k_D06_2" output="Y"/>
+    <key id="k_D06_5" output="Y"/>
+    <key id="k_D07_1" output="u"/>
+    <key id="k_D07_2" output="U"/>
+    <key id="k_D07_5" output="U"/>
+    <key id="k_D08_1" output="i"/>
+    <key id="k_D08_2" output="I"/>
+    <key id="k_D08_5" output="I"/>
+    <key id="k_D09_1" output="o"/>
+    <key id="k_D09_2" output="O"/>
+    <key id="k_D09_5" output="O"/>
+    <key id="k_D10_1" output="p"/>
+    <key id="k_D10_2" output="P"/>
+    <key id="k_D10_5" output="P"/>
+    <key id="k_D11_1" output="["/>
+    <key id="k_D11_2" output="{"/>
+    <key id="k_D12_1" output="]"/>
+    <key id="k_D12_2" output="}"/>
+    <key id="k_D13_1" output="\"/>
+    <key id="k_D13_2" output="|"/>
+    <key id="k_C01_1" output="a"/>
+    <key id="k_C01_2" output="A"/>
+    <key id="k_C01_5" output="A"/>
+    <key id="k_C02_1" output="s"/>
+    <key id="k_C02_2" output="S"/>
+    <key id="k_C02_5" output="S"/>
+    <key id="k_C03_1" output="d"/>
+    <key id="k_C03_2" output="D"/>
+    <key id="k_C03_5" output="D"/>
+    <key id="k_C04_1" output="f"/>
+    <key id="k_C04_2" output="F"/>
+    <key id="k_C04_5" output="F"/>
+    <key id="k_C05_1" output="g"/>
+    <key id="k_C05_2" output="G"/>
+    <key id="k_C05_5" output="G"/>
+    <key id="k_C06_1" output="h"/>
+    <key id="k_C06_2" output="H"/>
+    <key id="k_C06_5" output="H"/>
+    <key id="k_C07_1" output="j"/>
+    <key id="k_C07_2" output="J"/>
+    <key id="k_C07_5" output="J"/>
+    <key id="k_C08_1" output="k"/>
+    <key id="k_C08_2" output="K"/>
+    <key id="k_C08_5" output="K"/>
+    <key id="k_C09_1" output="l"/>
+    <key id="k_C09_2" output="L"/>
+    <key id="k_C09_5" output="L"/>
+    <key id="k_C10_1" output=";"/>
+    <key id="k_C10_2" output=":"/>
+    <key id="k_C11_1" output="'"/>
+    <key id="k_C11_2" output="&quot;"/>
+    <key id="k_B01_1" output="z"/>
+    <key id="k_B01_2" output="Z"/>
+    <key id="k_B01_5" output="Z"/>
+    <key id="k_B02_1" output="x"/>
+    <key id="k_B02_2" output="X"/>
+    <key id="k_B02_5" output="X"/>
+    <key id="k_B03_1" output="c"/>
+    <key id="k_B03_2" output="C"/>
+    <key id="k_B03_5" output="C"/>
+    <key id="k_B04_1" output="v"/>
+    <key id="k_B04_2" output="V"/>
+    <key id="k_B04_5" output="V"/>
+    <key id="k_B05_1" output="b"/>
+    <key id="k_B05_2" output="B"/>
+    <key id="k_B05_5" output="B"/>
+    <key id="k_B06_1" output="n"/>
+    <key id="k_B06_2" output="N"/>
+    <key id="k_B06_5" output="N"/>
+    <key id="k_B07_1" output="m"/>
+    <key id="k_B07_2" output="M"/>
+    <key id="k_B07_5" output="M"/>
+    <key id="k_B08_1" output=","/>
+    <key id="k_B08_2" output="&lt;"/>
+    <key id="k_B09_1" output="."/>
+    <key id="k_B09_2" output="&gt;"/>
+    <key id="k_B10_1" output="/"/>
+    <key id="k_B10_2" output="?"/>
+    <key id="k_A03_1" output=" "/>
+    <key id="k_A03_2" output=" "/>
+  </keys>
+  <forms>
+    <form id="qwerty-us-form">
+      <scanCodes codes="29 02 03 04 05 06 07 08 09 0A 0B 0C 0D"/>
+      <scanCodes codes="10 11 12 13 14 15 16 17 18 19 1A 1B 2B"/>
+      <scanCodes codes="1E 1F 20 21 22 23 24 25 26 27 28"/>
+      <scanCodes codes="2C 2D 2E 2F 30 31 32 33 34 35"/>
+      <scanCodes codes="39"/>
+    </form>
+  </forms>
+  <layers formId="qwerty-us-form">
+    <layer modifiers="none">
+      <row keys="k_E00_1 k_E01_1 k_E02_1 k_E03_1 k_E04_1 k_E05_1 k_E06_1 k_E07_1 k_E08_1 k_E09_1 k_E10_1 k_E11_1 k_E12_1"/>
+      <row keys="k_D01_1 k_D02_1 k_D03_1 k_D04_1 k_D05_1 k_D06_1 k_D07_1 k_D08_1 k_D09_1 k_D10_1 k_D11_1 k_D12_1 k_D13_1"/>
+      <row keys="k_C01_1 k_C02_1 k_C03_1 k_C04_1 k_C05_1 k_C06_1 k_C07_1 k_C08_1 k_C09_1 k_C10_1 k_C11_1"/>
+      <row keys="k_B01_1 k_B02_1 k_B03_1 k_B04_1 k_B05_1 k_B06_1 k_B07_1 k_B08_1 k_B09_1 k_B10_1"/>
+      <row keys="k_A03_1"/>
+    </layer>
+    <layer modifiers="shift">
+      <row keys="k_E00_2 k_E01_2 k_E02_2 k_E03_2 k_E04_2 k_E05_2 k_E06_2 k_E07_2 k_E08_2 k_E09_2 k_E10_2 k_E11_2 k_E12_2"/>
+      <row keys="k_D01_2 k_D02_2 k_D03_2 k_D04_2 k_D05_2 k_D06_2 k_D07_2 k_D08_2 k_D09_2 k_D10_2 k_D11_2 k_D12_2 k_D13_2"/>
+      <row keys="k_C01_2 k_C02_2 k_C03_2 k_C04_2 k_C05_2 k_C06_2 k_C07_2 k_C08_2 k_C09_2 k_C10_2 k_C11_2"/>
+      <row keys="k_B01_2 k_B02_2 k_B03_2 k_B04_2 k_B05_2 k_B06_2 k_B07_2 k_B08_2 k_B09_2 k_B10_2"/>
+      <row keys="k_A03_2"/>
+    </layer>
+    <layer modifiers="caps">
+      <row keys=""/>
+      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5"/>
+      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5"/>
+      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5 k_B07_5"/>
+      <row keys=""/>
+    </layer>
+  </layers>
+</keyboard3>

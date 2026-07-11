@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr" conformsTo="45">
+  <version number="NF Z71-300:2019 (AZERTY option)"/>
+  <info name="French (Standard, AZERTY)"/>
+  <keys>
+    <key id="k_E00_1" output="@"/>
+    <key id="k_E00_2" output="#"/>
+    <key id="k_E00_3" output="\m{breve}"/>
+    <key id="k_E00_4" output="\m{inverted-breve}"/>
+    <key id="k_E01_1" output="à"/>
+    <key id="k_E01_2" output="1"/>
+    <key id="k_E01_3" output="§"/>
+    <key id="k_E01_4" output="À"/>
+    <key id="k_E01_5" output="1"/>
+    <key id="k_E01_6" output="à"/>
+    <key id="k_E01_7" output="À"/>
+    <key id="k_E01_8" output="§"/>
+    <key id="k_E02_1" output="é"/>
+    <key id="k_E02_2" output="2"/>
+    <key id="k_E02_3" output="\m{acute}"/>
+    <key id="k_E02_4" output="É"/>
+    <key id="k_E02_5" output="2"/>
+    <key id="k_E02_6" output="é"/>
+    <key id="k_E02_7" output="É"/>
+    <key id="k_E02_8" output="\m{acute}"/>
+    <key id="k_E03_1" output="è"/>
+    <key id="k_E03_2" output="3"/>
+    <key id="k_E03_3" output="\m{grave}"/>
+    <key id="k_E03_4" output="È"/>
+    <key id="k_E03_5" output="3"/>
+    <key id="k_E03_6" output="è"/>
+    <key id="k_E03_7" output="È"/>
+    <key id="k_E03_8" output="\m{grave}"/>
+    <key id="k_E04_1" output="ê"/>
+    <key id="k_E04_2" output="4"/>
+    <key id="k_E04_3" output="&amp;"/>
+    <key id="k_E04_4" output="Ê"/>
+    <key id="k_E04_5" output="4"/>
+    <key id="k_E04_6" output="ê"/>
+    <key id="k_E04_7" output="Ê"/>
+    <key id="k_E04_8" output="&amp;"/>
+    <key id="k_E05_1" output="("/>
+    <key id="k_E05_2" output="5"/>
+    <key id="k_E05_3" output="["/>
+    <key id="k_E05_4" output="\m{double-acute}"/>
+    <key id="k_E05_5" output="5"/>
+    <key id="k_E05_6" output="("/>
+    <key id="k_E06_1" output=")"/>
+    <key id="k_E06_2" output="6"/>
+    <key id="k_E06_3" output="]"/>
+    <key id="k_E06_4" output="\m{double-grave}"/>
+    <key id="k_E06_5" output="6"/>
+    <key id="k_E06_6" output=")"/>
+    <key id="k_E07_1" output="‘"/>
+    <key id="k_E07_2" output="7"/>
+    <key id="k_E07_3" output="\m{macron}"/>
+    <key id="k_E07_5" output="7"/>
+    <key id="k_E07_6" output="‘"/>
+    <key id="k_E08_1" output="’"/>
+    <key id="k_E08_2" output="8"/>
+    <key id="k_E08_3" output="_"/>
+    <key id="k_E08_4" output="—"/>
+    <key id="k_E08_5" output="8"/>
+    <key id="k_E08_6" output="’"/>
+    <key id="k_E09_1" output="«"/>
+    <key id="k_E09_2" output="9"/>
+    <key id="k_E09_3" output="“"/>
+    <key id="k_E09_4" output="‹"/>
+    <key id="k_E09_5" output="9"/>
+    <key id="k_E09_6" output="«"/>
+    <key id="k_E10_1" output="»"/>
+    <key id="k_E10_2" output="0"/>
+    <key id="k_E10_3" output="”"/>
+    <key id="k_E10_4" output="›"/>
+    <key id="k_E10_5" output="0"/>
+    <key id="k_E10_6" output="»"/>
+    <key id="k_E11_1" output="'"/>
+    <key id="k_E11_2" output="&quot;"/>
+    <key id="k_E11_3" output="°"/>
+    <key id="k_E11_4" output="\m{ring-above}"/>
+    <key id="k_E12_1" output="\m{circumflex}"/>
+    <key id="k_E12_2" output="\m{diaeresis}"/>
+    <key id="k_E12_3" output="\m{caron}"/>
+    <key id="k_D01_1" output="a"/>
+    <key id="k_D01_2" output="A"/>
+    <key id="k_D01_3" output="æ"/>
+    <key id="k_D01_4" output="Æ"/>
+    <key id="k_D01_5" output="A"/>
+    <key id="k_D01_6" output="a"/>
+    <key id="k_D01_7" output="Æ"/>
+    <key id="k_D01_8" output="æ"/>
+    <key id="k_D02_1" output="z"/>
+    <key id="k_D02_2" output="Z"/>
+    <key id="k_D02_3" output="£"/>
+    <key id="k_D02_5" output="Z"/>
+    <key id="k_D02_6" output="z"/>
+    <key id="k_D03_1" output="e"/>
+    <key id="k_D03_2" output="E"/>
+    <key id="k_D03_3" output="€"/>
+    <key id="k_D03_5" output="E"/>
+    <key id="k_D03_6" output="e"/>
+    <key id="k_D04_1" output="r"/>
+    <key id="k_D04_2" output="R"/>
+    <key id="k_D04_3" output="®"/>
+    <key id="k_D04_5" output="R"/>
+    <key id="k_D04_6" output="r"/>
+    <key id="k_D05_1" output="t"/>
+    <key id="k_D05_2" output="T"/>
+    <key id="k_D05_3" output="{"/>
+    <key id="k_D05_4" output="™"/>
+    <key id="k_D05_5" output="T"/>
+    <key id="k_D05_6" output="t"/>
+    <key id="k_D06_1" output="y"/>
+    <key id="k_D06_2" output="Y"/>
+    <key id="k_D06_3" output="}"/>
+    <key id="k_D06_5" output="Y"/>
+    <key id="k_D06_6" output="y"/>
+    <key id="k_D07_1" output="u"/>
+    <key id="k_D07_2" output="U"/>
+    <key id="k_D07_3" output="ù"/>
+    <key id="k_D07_4" output="Ù"/>
+    <key id="k_D07_5" output="U"/>
+    <key id="k_D07_6" output="u"/>
+    <key id="k_D07_7" output="Ù"/>
+    <key id="k_D07_8" output="ù"/>
+    <key id="k_D08_1" output="i"/>
+    <key id="k_D08_2" output="I"/>
+    <key id="k_D08_3" output="\m{dot-above}"/>
+    <key id="k_D08_4" output="\m{dot-below}"/>
+    <key id="k_D08_5" output="I"/>
+    <key id="k_D08_6" output="i"/>
+    <key id="k_D09_1" output="o"/>
+    <key id="k_D09_2" output="O"/>
+    <key id="k_D09_3" output="œ"/>
+    <key id="k_D09_4" output="Œ"/>
+    <key id="k_D09_5" output="O"/>
+    <key id="k_D09_6" output="o"/>
+    <key id="k_D09_7" output="Œ"/>
+    <key id="k_D09_8" output="œ"/>
+    <key id="k_D10_1" output="p"/>
+    <key id="k_D10_2" output="P"/>
+    <key id="k_D10_3" output="%"/>
+    <key id="k_D10_4" output="‰"/>
+    <key id="k_D10_5" output="P"/>
+    <key id="k_D10_6" output="p"/>
+    <key id="k_D11_1" output="-"/>
+    <key id="k_D11_2" output="–"/>
+    <key id="k_D11_3" output="−"/>
+    <key id="k_D11_4" output="‑"/>
+    <key id="k_D12_1" output="+"/>
+    <key id="k_D12_2" output="±"/>
+    <key id="k_D12_3" output="†"/>
+    <key id="k_D12_4" output="‡"/>
+    <key id="k_C01_1" output="q"/>
+    <key id="k_C01_2" output="Q"/>
+    <key id="k_C01_3" output="θ"/>
+    <key id="k_C01_4" output="ϴ"/>
+    <key id="k_C01_5" output="Q"/>
+    <key id="k_C01_6" output="q"/>
+    <key id="k_C01_7" output="ϴ"/>
+    <key id="k_C01_8" output="θ"/>
+    <key id="k_C02_1" output="s"/>
+    <key id="k_C02_2" output="S"/>
+    <key id="k_C02_3" output="ß"/>
+    <key id="k_C02_4" output="ẞ"/>
+    <key id="k_C02_5" output="S"/>
+    <key id="k_C02_6" output="s"/>
+    <key id="k_C02_7" output="ẞ"/>
+    <key id="k_C02_8" output="ß"/>
+    <key id="k_C03_1" output="d"/>
+    <key id="k_C03_2" output="D"/>
+    <key id="k_C03_3" output="$"/>
+    <key id="k_C03_5" output="D"/>
+    <key id="k_C03_6" output="d"/>
+    <key id="k_C04_1" output="f"/>
+    <key id="k_C04_2" output="F"/>
+    <key id="k_C04_3" output="\m{currencies}"/>
+    <key id="k_C04_5" output="F"/>
+    <key id="k_C04_6" output="f"/>
+    <key id="k_C05_1" output="g"/>
+    <key id="k_C05_2" output="G"/>
+    <key id="k_C05_3" output="\m{greek}"/>
+    <key id="k_C05_5" output="G"/>
+    <key id="k_C05_6" output="g"/>
+    <key id="k_C06_1" output="h"/>
+    <key id="k_C06_2" output="H"/>
+    <key id="k_C06_3" output="\m{extended-latin}"/>
+    <key id="k_C06_4" output="\m{macron}"/>
+    <key id="k_C06_5" output="H"/>
+    <key id="k_C06_6" output="h"/>
+    <key id="k_C07_1" output="j"/>
+    <key id="k_C07_2" output="J"/>
+    <key id="k_C07_5" output="J"/>
+    <key id="k_C07_6" output="j"/>
+    <key id="k_C08_1" output="k"/>
+    <key id="k_C08_2" output="K"/>
+    <key id="k_C08_3" output="\m{stroke}"/>
+    <key id="k_C08_5" output="K"/>
+    <key id="k_C08_6" output="k"/>
+    <key id="k_C09_1" output="l"/>
+    <key id="k_C09_2" output="L"/>
+    <key id="k_C09_3" output="|"/>
+    <key id="k_C09_5" output="L"/>
+    <key id="k_C09_6" output="l"/>
+    <key id="k_C10_1" output="m"/>
+    <key id="k_C10_2" output="M"/>
+    <key id="k_C10_3" output="∞"/>
+    <key id="k_C10_5" output="M"/>
+    <key id="k_C10_6" output="m"/>
+    <key id="k_C11_1" output="/"/>
+    <key id="k_C11_2" output="\"/>
+    <key id="k_C11_3" output="÷"/>
+    <key id="k_C11_4" output="√"/>
+    <key id="k_C12_1" output="*"/>
+    <key id="k_C12_2" output="½"/>
+    <key id="k_C12_3" output="×"/>
+    <key id="k_C12_4" output="¼"/>
+    <key id="k_B00_1" output="&lt;"/>
+    <key id="k_B00_2" output="&gt;"/>
+    <key id="k_B00_3" output="⩽"/>
+    <key id="k_B00_4" output="⩾"/>
+    <key id="k_B01_1" output="w"/>
+    <key id="k_B01_2" output="W"/>
+    <key id="k_B01_3" output="ʒ"/>
+    <key id="k_B01_4" output="Ʒ"/>
+    <key id="k_B01_5" output="W"/>
+    <key id="k_B01_6" output="w"/>
+    <key id="k_B01_7" output="Ʒ"/>
+    <key id="k_B01_8" output="ʒ"/>
+    <key id="k_B02_1" output="x"/>
+    <key id="k_B02_2" output="X"/>
+    <key id="k_B02_3" output="©"/>
+    <key id="k_B02_5" output="X"/>
+    <key id="k_B02_6" output="x"/>
+    <key id="k_B03_1" output="c"/>
+    <key id="k_B03_2" output="C"/>
+    <key id="k_B03_3" output="ç"/>
+    <key id="k_B03_4" output="Ç"/>
+    <key id="k_B03_5" output="C"/>
+    <key id="k_B03_6" output="c"/>
+    <key id="k_B03_7" output="Ç"/>
+    <key id="k_B03_8" output="ç"/>
+    <key id="k_B04_1" output="v"/>
+    <key id="k_B04_2" output="V"/>
+    <key id="k_B04_3" output="\m{cedilla}"/>
+    <key id="k_B04_4" output="\m{ogonek}"/>
+    <key id="k_B04_5" output="V"/>
+    <key id="k_B04_6" output="v"/>
+    <key id="k_B05_1" output="b"/>
+    <key id="k_B05_2" output="B"/>
+    <key id="k_B05_3" output="\m{horizontal-stroke}"/>
+    <key id="k_B05_5" output="B"/>
+    <key id="k_B05_6" output="b"/>
+    <key id="k_B06_1" output="n"/>
+    <key id="k_B06_2" output="N"/>
+    <key id="k_B06_3" output="\m{tilde}"/>
+    <key id="k_B06_5" output="N"/>
+    <key id="k_B06_6" output="n"/>
+    <key id="k_B07_1" output="."/>
+    <key id="k_B07_2" output="?"/>
+    <key id="k_B07_3" output="¿"/>
+    <key id="k_B08_1" output=","/>
+    <key id="k_B08_2" output="!"/>
+    <key id="k_B08_3" output="¡"/>
+    <key id="k_B08_4" output="\m{comma}"/>
+    <key id="k_B09_1" output=":"/>
+    <key id="k_B09_2" output="…"/>
+    <key id="k_B09_3" output="·"/>
+    <key id="k_B10_1" output=";"/>
+    <key id="k_B10_2" output="="/>
+    <key id="k_B10_3" output="≃"/>
+    <key id="k_B10_4" output="≠"/>
+    <key id="k_A03_1" output=" "/>
+    <key id="k_A03_2" output=" "/>
+    <key id="k_A03_3" output=" "/>
+    <key id="k_A03_4" output=" "/>
+  </keys>
+  <forms>
+    <form id="azerty-afnor-form">
+      <scanCodes codes="29 02 03 04 05 06 07 08 09 0A 0B 0C 0D"/>
+      <scanCodes codes="10 11 12 13 14 15 16 17 18 19 1A 1B"/>
+      <scanCodes codes="1E 1F 20 21 22 23 24 25 26 27 28 2B"/>
+      <scanCodes codes="56 2C 2D 2E 2F 30 31 32 33 34 35"/>
+      <scanCodes codes="39"/>
+    </form>
+  </forms>
+  <layers formId="azerty-afnor-form">
+    <layer modifiers="none">
+      <row keys="k_E00_1 k_E01_1 k_E02_1 k_E03_1 k_E04_1 k_E05_1 k_E06_1 k_E07_1 k_E08_1 k_E09_1 k_E10_1 k_E11_1 k_E12_1"/>
+      <row keys="k_D01_1 k_D02_1 k_D03_1 k_D04_1 k_D05_1 k_D06_1 k_D07_1 k_D08_1 k_D09_1 k_D10_1 k_D11_1 k_D12_1"/>
+      <row keys="k_C01_1 k_C02_1 k_C03_1 k_C04_1 k_C05_1 k_C06_1 k_C07_1 k_C08_1 k_C09_1 k_C10_1 k_C11_1 k_C12_1"/>
+      <row keys="k_B00_1 k_B01_1 k_B02_1 k_B03_1 k_B04_1 k_B05_1 k_B06_1 k_B07_1 k_B08_1 k_B09_1 k_B10_1"/>
+      <row keys="k_A03_1"/>
+    </layer>
+    <layer modifiers="shift">
+      <row keys="k_E00_2 k_E01_2 k_E02_2 k_E03_2 k_E04_2 k_E05_2 k_E06_2 k_E07_2 k_E08_2 k_E09_2 k_E10_2 k_E11_2 k_E12_2"/>
+      <row keys="k_D01_2 k_D02_2 k_D03_2 k_D04_2 k_D05_2 k_D06_2 k_D07_2 k_D08_2 k_D09_2 k_D10_2 k_D11_2 k_D12_2"/>
+      <row keys="k_C01_2 k_C02_2 k_C03_2 k_C04_2 k_C05_2 k_C06_2 k_C07_2 k_C08_2 k_C09_2 k_C10_2 k_C11_2 k_C12_2"/>
+      <row keys="k_B00_2 k_B01_2 k_B02_2 k_B03_2 k_B04_2 k_B05_2 k_B06_2 k_B07_2 k_B08_2 k_B09_2 k_B10_2"/>
+      <row keys="k_A03_2"/>
+    </layer>
+    <layer modifiers="altR">
+      <row keys="k_E00_3 k_E01_3 k_E02_3 k_E03_3 k_E04_3 k_E05_3 k_E06_3 k_E07_3 k_E08_3 k_E09_3 k_E10_3 k_E11_3 k_E12_3"/>
+      <row keys="k_D01_3 k_D02_3 k_D03_3 k_D04_3 k_D05_3 k_D06_3 k_D07_3 k_D08_3 k_D09_3 k_D10_3 k_D11_3 k_D12_3"/>
+      <row keys="k_C01_3 k_C02_3 k_C03_3 k_C04_3 k_C05_3 k_C06_3 k_C08_3 k_C09_3 k_C10_3 k_C11_3 k_C12_3"/>
+      <row keys="k_B00_3 k_B01_3 k_B02_3 k_B03_3 k_B04_3 k_B05_3 k_B06_3 k_B07_3 k_B08_3 k_B09_3 k_B10_3"/>
+      <row keys="k_A03_3"/>
+    </layer>
+    <layer modifiers="altR shift">
+      <row keys="k_E00_4 k_E01_4 k_E02_4 k_E03_4 k_E04_4 k_E05_4 k_E06_4 k_E08_4 k_E09_4 k_E10_4 k_E11_4"/>
+      <row keys="k_D01_4 k_D05_4 k_D07_4 k_D08_4 k_D09_4 k_D10_4 k_D11_4 k_D12_4"/>
+      <row keys="k_C01_4 k_C02_4 k_C06_4 k_C11_4 k_C12_4"/>
+      <row keys="k_B00_4 k_B01_4 k_B03_4 k_B04_4 k_B08_4 k_B10_4"/>
+      <row keys="k_A03_4"/>
+    </layer>
+    <layer modifiers="caps">
+      <row keys="k_E01_5 k_E02_5 k_E03_5 k_E04_5 k_E05_5 k_E06_5 k_E07_5 k_E08_5 k_E09_5 k_E10_5"/>
+      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5"/>
+      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5 k_C10_5"/>
+      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5"/>
+      <row keys=""/>
+    </layer>
+    <layer modifiers="caps shift">
+      <row keys="k_E01_6 k_E02_6 k_E03_6 k_E04_6 k_E05_6 k_E06_6 k_E07_6 k_E08_6 k_E09_6 k_E10_6"/>
+      <row keys="k_D01_6 k_D02_6 k_D03_6 k_D04_6 k_D05_6 k_D06_6 k_D07_6 k_D08_6 k_D09_6 k_D10_6"/>
+      <row keys="k_C01_6 k_C02_6 k_C03_6 k_C04_6 k_C05_6 k_C06_6 k_C07_6 k_C08_6 k_C09_6 k_C10_6"/>
+      <row keys="k_B01_6 k_B02_6 k_B03_6 k_B04_6 k_B05_6 k_B06_6"/>
+      <row keys=""/>
+    </layer>
+    <layer modifiers="caps altR">
+      <row keys="k_E01_7 k_E02_7 k_E03_7 k_E04_7"/>
+      <row keys="k_D01_7 k_D07_7 k_D09_7"/>
+      <row keys="k_C01_7 k_C02_7"/>
+      <row keys="k_B01_7 k_B03_7"/>
+      <row keys=""/>
+    </layer>
+    <layer modifiers="caps altR shift">
+      <row keys="k_E01_8 k_E02_8 k_E03_8 k_E04_8"/>
+      <row keys="k_D01_8 k_D07_8 k_D09_8"/>
+      <row keys="k_C01_8 k_C02_8"/>
+      <row keys="k_B01_8 k_B03_8"/>
+      <row keys=""/>
+    </layer>
+  </layers>
+  <transforms type="simple">
+    <transformGroup>
+      <transform from="\m{acute}a" to="á"/>
+      <transform from="\m{acute}A" to="Á"/>
+      <transform from="\m{acute}c" to="ć"/>
+      <transform from="\m{acute}C" to="Ć"/>
+      <transform from="\m{acute}e" to="é"/>
+      <transform from="\m{acute}E" to="É"/>
+      <transform from="\m{acute}g" to="ǵ"/>
+      <transform from="\m{acute}G" to="Ǵ"/>
+      <transform from="\m{acute}i" to="í"/>
+      <transform from="\m{acute}I" to="Í"/>
+      <transform from="\m{acute}k" to="ḱ"/>
+      <transform from="\m{acute}K" to="Ḱ"/>
+      <transform from="\m{acute}l" to="ĺ"/>
+      <transform from="\m{acute}L" to="Ĺ"/>
+      <transform from="\m{acute}m" to="ḿ"/>
+      <transform from="\m{acute}M" to="Ḿ"/>
+      <transform from="\m{acute}n" to="ń"/>
+      <transform from="\m{acute}N" to="Ń"/>
+      <transform from="\m{acute}o" to="ó"/>
+      <transform from="\m{acute}O" to="Ó"/>
+      <transform from="\m{acute}p" to="ṕ"/>
+      <transform from="\m{acute}P" to="Ṕ"/>
+      <transform from="\m{acute}r" to="ŕ"/>
+      <transform from="\m{acute}R" to="Ŕ"/>
+      <transform from="\m{acute}s" to="ś"/>
+      <transform from="\m{acute}S" to="Ś"/>
+      <transform from="\m{acute}u" to="ú"/>
+      <transform from="\m{acute}U" to="Ú"/>
+      <transform from="\m{acute}w" to="ẃ"/>
+      <transform from="\m{acute}W" to="Ẃ"/>
+      <transform from="\m{acute}y" to="ý"/>
+      <transform from="\m{acute}Y" to="Ý"/>
+      <transform from="\m{acute}z" to="ź"/>
+      <transform from="\m{acute}Z" to="Ź"/>
+      <transform from="\m{acute}æ" to="ǽ"/>
+      <transform from="\m{acute}Æ" to="Ǽ"/>
+      <transform from="\m{acute} " to="´"/>
+      <transform from="\m{breve}a" to="ă"/>
+      <transform from="\m{breve}A" to="Ă"/>
+      <transform from="\m{breve}e" to="ĕ"/>
+      <transform from="\m{breve}E" to="Ĕ"/>
+      <transform from="\m{breve}g" to="ğ"/>
+      <transform from="\m{breve}G" to="Ğ"/>
+      <transform from="\m{breve}i" to="ĭ"/>
+      <transform from="\m{breve}I" to="Ĭ"/>
+      <transform from="\m{breve}o" to="ŏ"/>
+      <transform from="\m{breve}O" to="Ŏ"/>
+      <transform from="\m{breve}u" to="ŭ"/>
+      <transform from="\m{breve}U" to="Ŭ"/>
+      <transform from="\m{breve} " to="˘"/>
+      <transform from="\m{caron}a" to="ǎ"/>
+      <transform from="\m{caron}A" to="Ǎ"/>
+      <transform from="\m{caron}c" to="č"/>
+      <transform from="\m{caron}C" to="Č"/>
+      <transform from="\m{caron}d" to="ď"/>
+      <transform from="\m{caron}D" to="Ď"/>
+      <transform from="\m{caron}e" to="ě"/>
+      <transform from="\m{caron}E" to="Ě"/>
+      <transform from="\m{caron}g" to="ǧ"/>
+      <transform from="\m{caron}G" to="Ǧ"/>
+      <transform from="\m{caron}h" to="ȟ"/>
+      <transform from="\m{caron}H" to="Ȟ"/>
+      <transform from="\m{caron}i" to="ǐ"/>
+      <transform from="\m{caron}I" to="Ǐ"/>
+      <transform from="\m{caron}j" to="ǰ"/>
+      <transform from="\m{caron}k" to="ǩ"/>
+      <transform from="\m{caron}K" to="Ǩ"/>
+      <transform from="\m{caron}l" to="ľ"/>
+      <transform from="\m{caron}L" to="Ľ"/>
+      <transform from="\m{caron}n" to="ň"/>
+      <transform from="\m{caron}N" to="Ň"/>
+      <transform from="\m{caron}o" to="ǒ"/>
+      <transform from="\m{caron}O" to="Ǒ"/>
+      <transform from="\m{caron}r" to="ř"/>
+      <transform from="\m{caron}R" to="Ř"/>
+      <transform from="\m{caron}s" to="š"/>
+      <transform from="\m{caron}S" to="Š"/>
+      <transform from="\m{caron}t" to="ť"/>
+      <transform from="\m{caron}T" to="Ť"/>
+      <transform from="\m{caron}u" to="ǔ"/>
+      <transform from="\m{caron}U" to="Ǔ"/>
+      <transform from="\m{caron}z" to="ž"/>
+      <transform from="\m{caron}Z" to="Ž"/>
+      <transform from="\m{caron}0" to="₀"/>
+      <transform from="\m{caron}1" to="₁"/>
+      <transform from="\m{caron}2" to="₂"/>
+      <transform from="\m{caron}3" to="₃"/>
+      <transform from="\m{caron}4" to="₄"/>
+      <transform from="\m{caron}5" to="₅"/>
+      <transform from="\m{caron}6" to="₆"/>
+      <transform from="\m{caron}7" to="₇"/>
+      <transform from="\m{caron}8" to="₈"/>
+      <transform from="\m{caron}9" to="₉"/>
+      <transform from="\m{caron}Ʒ" to="Ǯ"/>
+      <transform from="\m{caron}ʒ" to="ǯ"/>
+      <transform from="\m{caron} " to="ˇ"/>
+      <transform from="\m{cedilla}c" to="ç"/>
+      <transform from="\m{cedilla}C" to="Ç"/>
+      <transform from="\m{cedilla}d" to="ḑ"/>
+      <transform from="\m{cedilla}D" to="Ḑ"/>
+      <transform from="\m{cedilla}e" to="ȩ"/>
+      <transform from="\m{cedilla}E" to="Ȩ"/>
+      <transform from="\m{cedilla}g" to="ģ"/>
+      <transform from="\m{cedilla}G" to="Ģ"/>
+      <transform from="\m{cedilla}h" to="ḩ"/>
+      <transform from="\m{cedilla}H" to="Ḩ"/>
+      <transform from="\m{cedilla}k" to="ķ"/>
+      <transform from="\m{cedilla}K" to="Ķ"/>
+      <transform from="\m{cedilla}l" to="ļ"/>
+      <transform from="\m{cedilla}L" to="Ļ"/>
+      <transform from="\m{cedilla}n" to="ņ"/>
+      <transform from="\m{cedilla}N" to="Ņ"/>
+      <transform from="\m{cedilla}r" to="ŗ"/>
+      <transform from="\m{cedilla}R" to="Ŗ"/>
+      <transform from="\m{cedilla}s" to="ş"/>
+      <transform from="\m{cedilla}S" to="Ş"/>
+      <transform from="\m{cedilla}t" to="ţ"/>
+      <transform from="\m{cedilla}T" to="Ţ"/>
+      <transform from="\m{cedilla} " to="¸"/>
+      <transform from="\m{circumflex}a" to="â"/>
+      <transform from="\m{circumflex}A" to="Â"/>
+      <transform from="\m{circumflex}c" to="ĉ"/>
+      <transform from="\m{circumflex}C" to="Ĉ"/>
+      <transform from="\m{circumflex}e" to="ê"/>
+      <transform from="\m{circumflex}E" to="Ê"/>
+      <transform from="\m{circumflex}g" to="ĝ"/>
+      <transform from="\m{circumflex}G" to="Ĝ"/>
+      <transform from="\m{circumflex}h" to="ĥ"/>
+      <transform from="\m{circumflex}H" to="Ĥ"/>
+      <transform from="\m{circumflex}i" to="î"/>
+      <transform from="\m{circumflex}I" to="Î"/>
+      <transform from="\m{circumflex}j" to="ĵ"/>
+      <transform from="\m{circumflex}J" to="Ĵ"/>
+      <transform from="\m{circumflex}o" to="ô"/>
+      <transform from="\m{circumflex}O" to="Ô"/>
+      <transform from="\m{circumflex}s" to="ŝ"/>
+      <transform from="\m{circumflex}S" to="Ŝ"/>
+      <transform from="\m{circumflex}u" to="û"/>
+      <transform from="\m{circumflex}U" to="Û"/>
+      <transform from="\m{circumflex}w" to="ŵ"/>
+      <transform from="\m{circumflex}W" to="Ŵ"/>
+      <transform from="\m{circumflex}y" to="ŷ"/>
+      <transform from="\m{circumflex}Y" to="Ŷ"/>
+      <transform from="\m{circumflex}z" to="ẑ"/>
+      <transform from="\m{circumflex}Z" to="Ẑ"/>
+      <transform from="\m{circumflex}0" to="⁰"/>
+      <transform from="\m{circumflex}1" to="¹"/>
+      <transform from="\m{circumflex}2" to="²"/>
+      <transform from="\m{circumflex}3" to="³"/>
+      <transform from="\m{circumflex}4" to="⁴"/>
+      <transform from="\m{circumflex}5" to="⁵"/>
+      <transform from="\m{circumflex}6" to="⁶"/>
+      <transform from="\m{circumflex}7" to="⁷"/>
+      <transform from="\m{circumflex}8" to="⁸"/>
+      <transform from="\m{circumflex}9" to="⁹"/>
+      <transform from="\m{circumflex} " to="^"/>
+      <transform from="\m{comma}s" to="ș"/>
+      <transform from="\m{comma}S" to="Ș"/>
+      <transform from="\m{comma}t" to="ț"/>
+      <transform from="\m{comma}T" to="Ț"/>
+      <transform from="\m{comma}," to=","/>
+      <transform from="\m{comma} " to=","/>
+      <transform from="\m{currencies}A" to="₳"/>
+      <transform from="\m{currencies}b" to="₿"/>
+      <transform from="\m{currencies}B" to="฿"/>
+      <transform from="\m{currencies}c" to="¢"/>
+      <transform from="\m{currencies}C" to="₵"/>
+      <transform from="\m{currencies}d" to="₫"/>
+      <transform from="\m{currencies}D" to="₯"/>
+      <transform from="\m{currencies}e" to="₠"/>
+      <transform from="\m{currencies}f" to="ƒ"/>
+      <transform from="\m{currencies}F" to="₣"/>
+      <transform from="\m{currencies}g" to="₲"/>
+      <transform from="\m{currencies}h" to="₴"/>
+      <transform from="\m{currencies}k" to="₭"/>
+      <transform from="\m{currencies}l" to="₺"/>
+      <transform from="\m{currencies}L" to="₤"/>
+      <transform from="\m{currencies}m" to="₥"/>
+      <transform from="\m{currencies}M" to="ℳ"/>
+      <transform from="\m{currencies}n" to="₦"/>
+      <transform from="\m{currencies}p" to="₱"/>
+      <transform from="\m{currencies}P" to="₧"/>
+      <transform from="\m{currencies}r" to="₽"/>
+      <transform from="\m{currencies}R" to="₹"/>
+      <transform from="\m{currencies}s" to="₪"/>
+      <transform from="\m{currencies}S" to="₷"/>
+      <transform from="\m{currencies}t" to="₸"/>
+      <transform from="\m{currencies}T" to="₮"/>
+      <transform from="\m{currencies}w" to="₩"/>
+      <transform from="\m{currencies}y" to="¥"/>
+      <transform from="\m{currencies}ç" to="₢"/>
+      <transform from="\m{currencies}Ç" to="₡"/>
+      <transform from="\m{currencies}%" to="₰"/>
+      <transform from="\m{currencies}|" to="₾"/>
+      <transform from="\m{currencies}®" to="₨"/>
+      <transform from="\m{currencies}∞" to="₼"/>
+      <transform from="\m{currencies} " to="¤"/>
+      <transform from="\m{diaeresis}a" to="ä"/>
+      <transform from="\m{diaeresis}A" to="Ä"/>
+      <transform from="\m{diaeresis}e" to="ë"/>
+      <transform from="\m{diaeresis}E" to="Ë"/>
+      <transform from="\m{diaeresis}h" to="ḧ"/>
+      <transform from="\m{diaeresis}H" to="Ḧ"/>
+      <transform from="\m{diaeresis}i" to="ï"/>
+      <transform from="\m{diaeresis}I" to="Ï"/>
+      <transform from="\m{diaeresis}o" to="ö"/>
+      <transform from="\m{diaeresis}O" to="Ö"/>
+      <transform from="\m{diaeresis}t" to="ẗ"/>
+      <transform from="\m{diaeresis}u" to="ü"/>
+      <transform from="\m{diaeresis}U" to="Ü"/>
+      <transform from="\m{diaeresis}w" to="ẅ"/>
+      <transform from="\m{diaeresis}W" to="Ẅ"/>
+      <transform from="\m{diaeresis}x" to="ẍ"/>
+      <transform from="\m{diaeresis}X" to="Ẍ"/>
+      <transform from="\m{diaeresis}y" to="ÿ"/>
+      <transform from="\m{diaeresis}Y" to="Ÿ"/>
+      <transform from="\m{diaeresis} " to="¨"/>
+      <transform from="\m{dot-above}a" to="ȧ"/>
+      <transform from="\m{dot-above}A" to="Ȧ"/>
+      <transform from="\m{dot-above}b" to="ḃ"/>
+      <transform from="\m{dot-above}B" to="Ḃ"/>
+      <transform from="\m{dot-above}c" to="ċ"/>
+      <transform from="\m{dot-above}C" to="Ċ"/>
+      <transform from="\m{dot-above}d" to="ḋ"/>
+      <transform from="\m{dot-above}D" to="Ḋ"/>
+      <transform from="\m{dot-above}e" to="ė"/>
+      <transform from="\m{dot-above}E" to="Ė"/>
+      <transform from="\m{dot-above}f" to="ḟ"/>
+      <transform from="\m{dot-above}F" to="Ḟ"/>
+      <transform from="\m{dot-above}g" to="ġ"/>
+      <transform from="\m{dot-above}G" to="Ġ"/>
+      <transform from="\m{dot-above}h" to="ḣ"/>
+      <transform from="\m{dot-above}H" to="Ḣ"/>
+      <transform from="\m{dot-above}i" to="ı"/>
+      <transform from="\m{dot-above}I" to="İ"/>
+      <transform from="\m{dot-above}l" to="ŀ"/>
+      <transform from="\m{dot-above}L" to="Ŀ"/>
+      <transform from="\m{dot-above}m" to="ṁ"/>
+      <transform from="\m{dot-above}M" to="Ṁ"/>
+      <transform from="\m{dot-above}n" to="ṅ"/>
+      <transform from="\m{dot-above}N" to="Ṅ"/>
+      <transform from="\m{dot-above}o" to="ȯ"/>
+      <transform from="\m{dot-above}O" to="Ȯ"/>
+      <transform from="\m{dot-above}p" to="ṗ"/>
+      <transform from="\m{dot-above}P" to="Ṗ"/>
+      <transform from="\m{dot-above}r" to="ṙ"/>
+      <transform from="\m{dot-above}R" to="Ṙ"/>
+      <transform from="\m{dot-above}s" to="ṡ"/>
+      <transform from="\m{dot-above}S" to="Ṡ"/>
+      <transform from="\m{dot-above}t" to="ṫ"/>
+      <transform from="\m{dot-above}T" to="Ṫ"/>
+      <transform from="\m{dot-above}w" to="ẇ"/>
+      <transform from="\m{dot-above}W" to="Ẇ"/>
+      <transform from="\m{dot-above}x" to="ẋ"/>
+      <transform from="\m{dot-above}X" to="Ẋ"/>
+      <transform from="\m{dot-above}y" to="ẏ"/>
+      <transform from="\m{dot-above}Y" to="Ẏ"/>
+      <transform from="\m{dot-above}z" to="ż"/>
+      <transform from="\m{dot-above}Z" to="Ż"/>
+      <transform from="\m{dot-above} " to="˙"/>
+      <transform from="\m{dot-below}a" to="ạ"/>
+      <transform from="\m{dot-below}A" to="Ạ"/>
+      <transform from="\m{dot-below}b" to="ḅ"/>
+      <transform from="\m{dot-below}B" to="Ḅ"/>
+      <transform from="\m{dot-below}d" to="ḍ"/>
+      <transform from="\m{dot-below}D" to="Ḍ"/>
+      <transform from="\m{dot-below}e" to="ẹ"/>
+      <transform from="\m{dot-below}E" to="Ẹ"/>
+      <transform from="\m{dot-below}h" to="ḥ"/>
+      <transform from="\m{dot-below}H" to="Ḥ"/>
+      <transform from="\m{dot-below}i" to="ị"/>
+      <transform from="\m{dot-below}I" to="Ị"/>
+      <transform from="\m{dot-below}k" to="ḳ"/>
+      <transform from="\m{dot-below}K" to="Ḳ"/>
+      <transform from="\m{dot-below}l" to="ḷ"/>
+      <transform from="\m{dot-below}L" to="Ḷ"/>
+      <transform from="\m{dot-below}m" to="ṃ"/>
+      <transform from="\m{dot-below}M" to="Ṃ"/>
+      <transform from="\m{dot-below}n" to="ṇ"/>
+      <transform from="\m{dot-below}N" to="Ṇ"/>
+      <transform from="\m{dot-below}o" to="ọ"/>
+      <transform from="\m{dot-below}O" to="Ọ"/>
+      <transform from="\m{dot-below}r" to="ṛ"/>
+      <transform from="\m{dot-below}R" to="Ṛ"/>
+      <transform from="\m{dot-below}s" to="ṣ"/>
+      <transform from="\m{dot-below}S" to="Ṣ"/>
+      <transform from="\m{dot-below}t" to="ṭ"/>
+      <transform from="\m{dot-below}T" to="Ṭ"/>
+      <transform from="\m{dot-below}u" to="ụ"/>
+      <transform from="\m{dot-below}U" to="Ụ"/>
+      <transform from="\m{dot-below}v" to="ṿ"/>
+      <transform from="\m{dot-below}V" to="Ṿ"/>
+      <transform from="\m{dot-below}w" to="ẉ"/>
+      <transform from="\m{dot-below}W" to="Ẉ"/>
+      <transform from="\m{dot-below}y" to="ỵ"/>
+      <transform from="\m{dot-below}Y" to="Ỵ"/>
+      <transform from="\m{dot-below}z" to="ẓ"/>
+      <transform from="\m{dot-below}Z" to="Ẓ"/>
+      <transform from="\m{dot-below}." to="."/>
+      <transform from="\m{dot-below} " to="."/>
+      <transform from="\m{double-acute}o" to="ő"/>
+      <transform from="\m{double-acute}O" to="Ő"/>
+      <transform from="\m{double-acute}u" to="ű"/>
+      <transform from="\m{double-acute}U" to="Ű"/>
+      <transform from="\m{double-acute} " to="˝"/>
+      <transform from="\m{double-grave}a" to="ȁ"/>
+      <transform from="\m{double-grave}A" to="Ȁ"/>
+      <transform from="\m{double-grave}e" to="ȅ"/>
+      <transform from="\m{double-grave}E" to="Ȅ"/>
+      <transform from="\m{double-grave}i" to="ȉ"/>
+      <transform from="\m{double-grave}I" to="Ȉ"/>
+      <transform from="\m{double-grave}o" to="ȍ"/>
+      <transform from="\m{double-grave}O" to="Ȍ"/>
+      <transform from="\m{double-grave}r" to="ȑ"/>
+      <transform from="\m{double-grave}R" to="Ȑ"/>
+      <transform from="\m{double-grave}u" to="ȕ"/>
+      <transform from="\m{double-grave}U" to="Ȕ"/>
+      <transform from="\m{double-grave} " to="˵"/>
+      <transform from="\m{extended-latin}a" to="ª"/>
+      <transform from="\m{extended-latin}d" to="ð"/>
+      <transform from="\m{extended-latin}D" to="Ð"/>
+      <transform from="\m{extended-latin}e" to="ə"/>
+      <transform from="\m{extended-latin}E" to="Ə"/>
+      <transform from="\m{extended-latin}g" to="ŋ"/>
+      <transform from="\m{extended-latin}G" to="Ŋ"/>
+      <transform from="\m{extended-latin}i" to="ı"/>
+      <transform from="\m{extended-latin}I" to="İ"/>
+      <transform from="\m{extended-latin}j" to="ĳ"/>
+      <transform from="\m{extended-latin}J" to="Ĳ"/>
+      <transform from="\m{extended-latin}o" to="º"/>
+      <transform from="\m{extended-latin}s" to="ſ"/>
+      <transform from="\m{extended-latin}t" to="þ"/>
+      <transform from="\m{extended-latin}T" to="Þ"/>
+      <transform from="\m{extended-latin}0" to="«"/>
+      <transform from="\m{extended-latin}7" to="›"/>
+      <transform from="\m{extended-latin}8" to="‹"/>
+      <transform from="\m{extended-latin}9" to="»"/>
+      <transform from="\m{extended-latin}'" to="ʼ"/>
+      <transform from="\m{extended-latin}&lt;" to="≤"/>
+      <transform from="\m{extended-latin}&gt;" to="≥"/>
+      <transform from="\m{extended-latin} " to=" "/>
+      <transform from="\m{extended-latin}«" to="„"/>
+      <transform from="\m{extended-latin}»" to="“"/>
+      <transform from="\m{extended-latin}‘" to="‚"/>
+      <transform from="\m{extended-latin}’" to="‘"/>
+      <transform from="\m{extended-latin} " to="ſ"/>
+      <transform from="\m{grave}a" to="à"/>
+      <transform from="\m{grave}A" to="À"/>
+      <transform from="\m{grave}e" to="è"/>
+      <transform from="\m{grave}E" to="È"/>
+      <transform from="\m{grave}i" to="ì"/>
+      <transform from="\m{grave}I" to="Ì"/>
+      <transform from="\m{grave}n" to="ǹ"/>
+      <transform from="\m{grave}N" to="Ǹ"/>
+      <transform from="\m{grave}o" to="ò"/>
+      <transform from="\m{grave}O" to="Ò"/>
+      <transform from="\m{grave}u" to="ù"/>
+      <transform from="\m{grave}U" to="Ù"/>
+      <transform from="\m{grave}w" to="ẁ"/>
+      <transform from="\m{grave}W" to="Ẁ"/>
+      <transform from="\m{grave}y" to="ỳ"/>
+      <transform from="\m{grave}Y" to="Ỳ"/>
+      <transform from="\m{grave} " to="`"/>
+      <transform from="\m{greek}a" to="α"/>
+      <transform from="\m{greek}A" to="Α"/>
+      <transform from="\m{greek}b" to="β"/>
+      <transform from="\m{greek}B" to="Β"/>
+      <transform from="\m{greek}c" to="ψ"/>
+      <transform from="\m{greek}C" to="Ψ"/>
+      <transform from="\m{greek}d" to="δ"/>
+      <transform from="\m{greek}D" to="Δ"/>
+      <transform from="\m{greek}e" to="ε"/>
+      <transform from="\m{greek}E" to="Ε"/>
+      <transform from="\m{greek}f" to="φ"/>
+      <transform from="\m{greek}F" to="Φ"/>
+      <transform from="\m{greek}g" to="γ"/>
+      <transform from="\m{greek}G" to="Γ"/>
+      <transform from="\m{greek}h" to="η"/>
+      <transform from="\m{greek}H" to="Η"/>
+      <transform from="\m{greek}i" to="ι"/>
+      <transform from="\m{greek}I" to="Ι"/>
+      <transform from="\m{greek}j" to="ξ"/>
+      <transform from="\m{greek}J" to="Ξ"/>
+      <transform from="\m{greek}k" to="κ"/>
+      <transform from="\m{greek}K" to="Κ"/>
+      <transform from="\m{greek}l" to="λ"/>
+      <transform from="\m{greek}L" to="Λ"/>
+      <transform from="\m{greek}m" to="μ"/>
+      <transform from="\m{greek}M" to="Μ"/>
+      <transform from="\m{greek}n" to="ν"/>
+      <transform from="\m{greek}N" to="Ν"/>
+      <transform from="\m{greek}o" to="ο"/>
+      <transform from="\m{greek}O" to="Ο"/>
+      <transform from="\m{greek}p" to="π"/>
+      <transform from="\m{greek}P" to="Π"/>
+      <transform from="\m{greek}r" to="ρ"/>
+      <transform from="\m{greek}R" to="Ρ"/>
+      <transform from="\m{greek}s" to="σ"/>
+      <transform from="\m{greek}S" to="Σ"/>
+      <transform from="\m{greek}t" to="τ"/>
+      <transform from="\m{greek}T" to="Τ"/>
+      <transform from="\m{greek}u" to="θ"/>
+      <transform from="\m{greek}U" to="Θ"/>
+      <transform from="\m{greek}v" to="ω"/>
+      <transform from="\m{greek}V" to="Ω"/>
+      <transform from="\m{greek}w" to="ς"/>
+      <transform from="\m{greek}x" to="χ"/>
+      <transform from="\m{greek}X" to="Χ"/>
+      <transform from="\m{greek}y" to="υ"/>
+      <transform from="\m{greek}Y" to="Υ"/>
+      <transform from="\m{greek}z" to="ζ"/>
+      <transform from="\m{greek}Z" to="Ζ"/>
+      <transform from="\m{greek} " to="µ"/>
+      <transform from="\m{horizontal-stroke}b" to="ƀ"/>
+      <transform from="\m{horizontal-stroke}B" to="Ƀ"/>
+      <transform from="\m{horizontal-stroke}d" to="đ"/>
+      <transform from="\m{horizontal-stroke}D" to="Đ"/>
+      <transform from="\m{horizontal-stroke}g" to="ǥ"/>
+      <transform from="\m{horizontal-stroke}G" to="Ǥ"/>
+      <transform from="\m{horizontal-stroke}h" to="ħ"/>
+      <transform from="\m{horizontal-stroke}H" to="Ħ"/>
+      <transform from="\m{horizontal-stroke}I" to="Ɨ"/>
+      <transform from="\m{horizontal-stroke}j" to="ɉ"/>
+      <transform from="\m{horizontal-stroke}J" to="Ɉ"/>
+      <transform from="\m{horizontal-stroke}l" to="ƚ"/>
+      <transform from="\m{horizontal-stroke}L" to="Ƚ"/>
+      <transform from="\m{horizontal-stroke}r" to="ɍ"/>
+      <transform from="\m{horizontal-stroke}R" to="Ɍ"/>
+      <transform from="\m{horizontal-stroke}t" to="ŧ"/>
+      <transform from="\m{horizontal-stroke}T" to="Ŧ"/>
+      <transform from="\m{horizontal-stroke}U" to="Ʉ"/>
+      <transform from="\m{horizontal-stroke}y" to="ɏ"/>
+      <transform from="\m{horizontal-stroke}Y" to="Ɏ"/>
+      <transform from="\m{horizontal-stroke}z" to="ƶ"/>
+      <transform from="\m{horizontal-stroke}Z" to="Ƶ"/>
+      <transform from="\m{horizontal-stroke}-" to="-"/>
+      <transform from="\m{horizontal-stroke} " to="-"/>
+      <transform from="\m{inverted-breve}a" to="ȃ"/>
+      <transform from="\m{inverted-breve}A" to="Ȃ"/>
+      <transform from="\m{inverted-breve}e" to="ȇ"/>
+      <transform from="\m{inverted-breve}E" to="Ȇ"/>
+      <transform from="\m{inverted-breve}i" to="ȋ"/>
+      <transform from="\m{inverted-breve}I" to="Ȋ"/>
+      <transform from="\m{inverted-breve}o" to="ȏ"/>
+      <transform from="\m{inverted-breve}O" to="Ȏ"/>
+      <transform from="\m{inverted-breve}r" to="ȓ"/>
+      <transform from="\m{inverted-breve}R" to="Ȓ"/>
+      <transform from="\m{inverted-breve}u" to="ȗ"/>
+      <transform from="\m{inverted-breve}U" to="Ȗ"/>
+      <transform from="\m{inverted-breve}°" to="°"/>
+      <transform from="\m{inverted-breve} " to="°"/>
+      <transform from="\m{macron}b" to="ḇ"/>
+      <transform from="\m{macron}B" to="Ḇ"/>
+      <transform from="\m{macron}d" to="ḏ"/>
+      <transform from="\m{macron}D" to="Ḏ"/>
+      <transform from="\m{macron}h" to="ẖ"/>
+      <transform from="\m{macron}k" to="ḵ"/>
+      <transform from="\m{macron}K" to="Ḵ"/>
+      <transform from="\m{macron}l" to="ḻ"/>
+      <transform from="\m{macron}L" to="Ḻ"/>
+      <transform from="\m{macron}n" to="ṉ"/>
+      <transform from="\m{macron}N" to="Ṉ"/>
+      <transform from="\m{macron}r" to="ṟ"/>
+      <transform from="\m{macron}R" to="Ṟ"/>
+      <transform from="\m{macron}t" to="ṯ"/>
+      <transform from="\m{macron}T" to="Ṯ"/>
+      <transform from="\m{macron}z" to="ẕ"/>
+      <transform from="\m{macron}Z" to="Ẕ"/>
+      <transform from="\m{macron} " to="ˍ"/>
+      <transform from="\m{ogonek}a" to="ą"/>
+      <transform from="\m{ogonek}A" to="Ą"/>
+      <transform from="\m{ogonek}e" to="ę"/>
+      <transform from="\m{ogonek}E" to="Ę"/>
+      <transform from="\m{ogonek}i" to="į"/>
+      <transform from="\m{ogonek}I" to="Į"/>
+      <transform from="\m{ogonek}o" to="ǫ"/>
+      <transform from="\m{ogonek}O" to="Ǫ"/>
+      <transform from="\m{ogonek}u" to="ų"/>
+      <transform from="\m{ogonek}U" to="Ų"/>
+      <transform from="\m{ogonek} " to="˛"/>
+      <transform from="\m{ring-above}a" to="å"/>
+      <transform from="\m{ring-above}A" to="Å"/>
+      <transform from="\m{ring-above}u" to="ů"/>
+      <transform from="\m{ring-above}U" to="Ů"/>
+      <transform from="\m{ring-above}w" to="ẘ"/>
+      <transform from="\m{ring-above}y" to="ẙ"/>
+      <transform from="\m{ring-above} " to="˚"/>
+      <transform from="\m{stroke}A" to="Ⱥ"/>
+      <transform from="\m{stroke}c" to="ȼ"/>
+      <transform from="\m{stroke}C" to="Ȼ"/>
+      <transform from="\m{stroke}e" to="ɇ"/>
+      <transform from="\m{stroke}E" to="Ɇ"/>
+      <transform from="\m{stroke}l" to="ł"/>
+      <transform from="\m{stroke}L" to="Ł"/>
+      <transform from="\m{stroke}o" to="ø"/>
+      <transform from="\m{stroke}O" to="Ø"/>
+      <transform from="\m{stroke}T" to="Ⱦ"/>
+      <transform from="\m{stroke}/" to="/"/>
+      <transform from="\m{stroke}&lt;" to="≮"/>
+      <transform from="\m{stroke}=" to="≠"/>
+      <transform from="\m{stroke}&gt;" to="≯"/>
+      <transform from="\m{stroke}≃" to="≄"/>
+      <transform from="\m{stroke}⩽" to="≰"/>
+      <transform from="\m{stroke}⩾" to="≱"/>
+      <transform from="\m{stroke} " to="/"/>
+      <transform from="\m{tilde}a" to="ã"/>
+      <transform from="\m{tilde}A" to="Ã"/>
+      <transform from="\m{tilde}e" to="ẽ"/>
+      <transform from="\m{tilde}E" to="Ẽ"/>
+      <transform from="\m{tilde}i" to="ĩ"/>
+      <transform from="\m{tilde}I" to="Ĩ"/>
+      <transform from="\m{tilde}n" to="ñ"/>
+      <transform from="\m{tilde}N" to="Ñ"/>
+      <transform from="\m{tilde}o" to="õ"/>
+      <transform from="\m{tilde}O" to="Õ"/>
+      <transform from="\m{tilde}u" to="ũ"/>
+      <transform from="\m{tilde}U" to="Ũ"/>
+      <transform from="\m{tilde}v" to="ṽ"/>
+      <transform from="\m{tilde}V" to="Ṽ"/>
+      <transform from="\m{tilde}y" to="ỹ"/>
+      <transform from="\m{tilde}Y" to="Ỹ"/>
+      <transform from="\m{tilde}-" to="≃"/>
+      <transform from="\m{tilde}&lt;" to="≲"/>
+      <transform from="\m{tilde}=" to="≈"/>
+      <transform from="\m{tilde}&gt;" to="≳"/>
+      <transform from="\m{tilde} " to="~"/>
+    </transformGroup>
+  </transforms>
+</keyboard3>

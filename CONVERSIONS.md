@@ -134,6 +134,42 @@ This should preserve LDML-compatible mapping semantics as closely as possible.
 
 If OKLM enriches the file with non-LDML metadata, that metadata should not affect the regenerated LDML output unless explicitly mapped.
 
+## Other Export Targets
+
+Beyond the bidirectional LDML conversion above, OKLM v1 ships two additional
+**one-way** exporters: `OKLM -> xkb` and `OKLM -> keylayout` (macOS). Unlike
+LDML, import from xkb or Apple keylayout files back into OKLM is out of
+scope for v1.
+
+Both exporters follow the same reporting discipline as LDML: every export
+produces a `*.report.json` validating against
+[`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json)
+(directions `oklm-to-xkb` and `oklm-to-keylayout`, schema 0.2), and nothing
+is silently discarded.
+
+Known, explicitly reported approximations:
+
+- only ISO/IEC 9995 levels 1-4 export to xkb (standard key types support at
+  most four shift levels per key); levels 5-8 (CapsLock-conditioned) are
+  handled by the X server via key type and locale rules, not per-key
+  declarations, and are always skipped. LDML and keylayout can export levels
+  5-8 when `levelSelectors` resolves them to a combination of
+  Level2Shift/Level3Shift/CapsLock;
+- Level3Shift exports as xkb/LDML `altR` or macOS `anyOption`; the actual
+  physical binding (AltGr vs Ctrl+Alt vs macOS Option) stays platform-specific;
+- OKLM `deadKeys[].compositions` are not re-emitted as XCompose rules for
+  xkb: dead keys map to `dead_*` keysyms where one exists, and the actual
+  composition result is delegated to the system's own Compose
+  configuration, which may differ from the OKLM table. macOS keylayout, by
+  contrast, encodes the full composition table natively via its
+  `<actions>`/`<terminators>` state machine;
+- the exporters run from `tools/export.py` (see `tools/exporters/`) and are
+  covered by golden-file tests in `examples/exports/` (`tools/tests/run_tests.py`).
+
+See `tools/exporters/ldml.py`, `tools/exporters/xkb.py` and
+`tools/exporters/keylayout.py` for the full, current list of scope notes and
+approximations (kept in the module docstring, next to the code it documents).
+
 ## Extension Blocks
 
 OKLM may include an extension block for source-specific data:
@@ -173,4 +209,4 @@ OKLM is not a rival format. It becomes:
 
 ---
 
-*Last updated: 2026-07-10*
+*Last updated: 2026-07-11*

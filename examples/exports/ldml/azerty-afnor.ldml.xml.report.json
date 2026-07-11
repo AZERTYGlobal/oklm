@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-ldml",
+  "source": {
+    "format": "oklm",
+    "file": "azerty-afnor.oklm.json",
+    "version": "0.1"
+  },
+  "target": {
+    "format": "ldml-keyboard-3"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "locales",
+    "keys",
+    "keys[].levels",
+    "levelSelectors",
+    "deadKeys"
+  ],
+  "skippedFields": [
+    {
+      "path": "layoutId",
+      "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "authors",
+      "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "license",
+      "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "locales",
+      "detail": "only the primary locale 'fr' is exported; LDML keyboard3 declares one locale"
+    },
+    {
+      "path": "levelSelectors.Level3Shift",
+      "detail": "exported as LDML modifier component 'altR' (AltGr); actual physical binding (AltGr vs Ctrl+Alt vs macOS Option) is platform-specific per SPEC.md"
+    }
+  ],
+  "warnings": [],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.1"
+  },
+  "roundTripConfidence": "medium"
+}

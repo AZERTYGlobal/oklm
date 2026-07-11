@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-xkb",
+  "source": {
+    "format": "oklm",
+    "file": "qwerty-us.oklm.json",
+    "version": "0.1"
+  },
+  "target": {
+    "format": "xkb-symbols"
+  },
+  "compatibilityLevel": "lossy-metadata",
+  "mappedFields": [
+    "keys",
+    "keys[].levels"
+  ],
+  "skippedFields": [
+    {
+      "path": "keys[].levels.5",
+      "reason": "xkb key symbol lists support at most 4 shift levels per key (FOUR_LEVEL key types); CapsLock-conditioned levels are handled by the X server via key type and locale ctype rules, not per-key declarations"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    },
+    {
+      "path": "layoutId",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "authors",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "license",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "locales",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "levelSelectors",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    }
+  ],
+  "lossyMappings": [],
+  "warnings": [],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.1"
+  },
+  "roundTripConfidence": "medium"
+}

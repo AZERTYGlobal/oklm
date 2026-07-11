@@ -19,6 +19,11 @@ Target: after AZERTY Global final release.
 - Study Unicode CLDR/LDML Keyboard mapping and define whether OKLM is a superset, bridge or exporter layer.
 - Specify OKLM -> LDML and LDML -> OKLM conversion reports.
 - Create a minimal AZERTY Global example manifest.
+- Done ahead of schedule (2026-07-11): shipped one-way v1 exporters
+  `OKLM -> LDML`, `OKLM -> xkb` and `OKLM -> keylayout` (`tools/export.py`),
+  conversion report schema bumped to 0.2 to cover the two new directions.
+  LDML/xkb/keylayout *import* and the LDML round-trip's `ldml-to-oklm`
+  direction remain open for Phase 5.
 - Validate static maps and character index generation.
 - Document protected-source workflow for reference layouts.
 - Define the first conformance checks that would matter to OS, hardware and app vendors.
@@ -65,4 +70,4 @@ Target: 2027+.
 
 ---
 
-*Last updated: 2026-06-03*
+*Last updated: 2026-07-11*

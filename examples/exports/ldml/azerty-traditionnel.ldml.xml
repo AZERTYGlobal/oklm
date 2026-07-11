@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr" conformsTo="45">
+  <version number="1.0"/>
+  <info name="AZERTY Traditionnel Windows"/>
+  <keys>
+    <key id="k_E00_1" output="²"/>
+    <key id="k_E00_5" output="²"/>
+    <key id="k_E01_1" output="&amp;"/>
+    <key id="k_E01_2" output="1"/>
+    <key id="k_E01_5" output="1"/>
+    <key id="k_E01_6" output="&amp;"/>
+    <key id="k_E02_1" output="é"/>
+    <key id="k_E02_2" output="2"/>
+    <key id="k_E02_3" output="\m{tilde}"/>
+    <key id="k_E02_5" output="2"/>
+    <key id="k_E02_6" output="é"/>
+    <key id="k_E03_1" output="&quot;"/>
+    <key id="k_E03_2" output="3"/>
+    <key id="k_E03_3" output="#"/>
+    <key id="k_E03_5" output="3"/>
+    <key id="k_E03_6" output="&quot;"/>
+    <key id="k_E04_1" output="'"/>
+    <key id="k_E04_2" output="4"/>
+    <key id="k_E04_3" output="{"/>
+    <key id="k_E04_5" output="4"/>
+    <key id="k_E04_6" output="'"/>
+    <key id="k_E05_1" output="("/>
+    <key id="k_E05_2" output="5"/>
+    <key id="k_E05_3" output="["/>
+    <key id="k_E05_5" output="5"/>
+    <key id="k_E05_6" output="("/>
+    <key id="k_E06_1" output="-"/>
+    <key id="k_E06_2" output="6"/>
+    <key id="k_E06_3" output="|"/>
+    <key id="k_E06_5" output="6"/>
+    <key id="k_E06_6" output="-"/>
+    <key id="k_E07_1" output="è"/>
+    <key id="k_E07_2" output="7"/>
+    <key id="k_E07_3" output="\m{grave}"/>
+    <key id="k_E07_5" output="7"/>
+    <key id="k_E07_6" output="è"/>
+    <key id="k_E08_1" output="_"/>
+    <key id="k_E08_2" output="8"/>
+    <key id="k_E08_3" output="\"/>
+    <key id="k_E08_5" output="8"/>
+    <key id="k_E08_6" output="_"/>
+    <key id="k_E09_1" output="ç"/>
+    <key id="k_E09_2" output="9"/>
+    <key id="k_E09_3" output="^"/>
+    <key id="k_E09_5" output="9"/>
+    <key id="k_E09_6" output="ç"/>
+    <key id="k_E10_1" output="à"/>
+    <key id="k_E10_2" output="0"/>
+    <key id="k_E10_3" output="@"/>
+    <key id="k_E10_5" output="0"/>
+    <key id="k_E10_6" output="à"/>
+    <key id="k_E11_1" output=")"/>
+    <key id="k_E11_2" output="°"/>
+    <key id="k_E11_3" output="]"/>
+    <key id="k_E11_5" output="°"/>
+    <key id="k_E11_6" output=")"/>
+    <key id="k_E12_1" output="="/>
+    <key id="k_E12_2" output="+"/>
+    <key id="k_E12_3" output="}"/>
+    <key id="k_E12_5" output="+"/>
+    <key id="k_E12_6" output="="/>
+    <key id="k_D01_1" output="a"/>
+    <key id="k_D01_2" output="A"/>
+    <key id="k_D01_5" output="A"/>
+    <key id="k_D01_6" output="a"/>
+    <key id="k_D02_1" output="z"/>
+    <key id="k_D02_2" output="Z"/>
+    <key id="k_D02_5" output="Z"/>
+    <key id="k_D02_6" output="z"/>
+    <key id="k_D03_1" output="e"/>
+    <key id="k_D03_2" output="E"/>
+    <key id="k_D03_3" output="€"/>
+    <key id="k_D03_5" output="E"/>
+    <key id="k_D03_6" output="e"/>
+    <key id="k_D04_1" output="r"/>
+    <key id="k_D04_2" output="R"/>
+    <key id="k_D04_5" output="R"/>
+    <key id="k_D04_6" output="r"/>
+    <key id="k_D05_1" output="t"/>
+    <key id="k_D05_2" output="T"/>
+    <key id="k_D05_5" output="T"/>
+    <key id="k_D05_6" output="t"/>
+    <key id="k_D06_1" output="y"/>
+    <key id="k_D06_2" output="Y"/>
+    <key id="k_D06_5" output="Y"/>
+    <key id="k_D06_6" output="y"/>
+    <key id="k_D07_1" output="u"/>
+    <key id="k_D07_2" output="U"/>
+    <key id="k_D07_5" output="U"/>
+    <key id="k_D07_6" output="u"/>
+    <key id="k_D08_1" output="i"/>
+    <key id="k_D08_2" output="I"/>
+    <key id="k_D08_5" output="I"/>
+    <key id="k_D08_6" output="i"/>
+    <key id="k_D09_1" output="o"/>
+    <key id="k_D09_2" output="O"/>
+    <key id="k_D09_5" output="O"/>
+    <key id="k_D09_6" output="o"/>
+    <key id="k_D10_1" output="p"/>
+    <key id="k_D10_2" output="P"/>
+    <key id="k_D10_5" output="P"/>
+    <key id="k_D10_6" output="p"/>
+    <key id="k_D11_1" output="\m{circumflex}"/>
+    <key id="k_D11_2" output="\m{diaeresis}"/>
+    <key id="k_D11_5" output="\m{diaeresis}"/>
+    <key id="k_D11_6" output="\m{circumflex}"/>
+    <key id="k_D12_1" output="$"/>
+    <key id="k_D12_2" output="£"/>
+    <key id="k_D12_3" output="¤"/>
+    <key id="k_D12_5" output="£"/>
+    <key id="k_D12_6" output="$"/>
+    <key id="k_C01_1" output="q"/>
+    <key id="k_C01_2" output="Q"/>
+    <key id="k_C01_5" output="Q"/>
+    <key id="k_C01_6" output="q"/>
+    <key id="k_C02_1" output="s"/>
+    <key id="k_C02_2" output="S"/>
+    <key id="k_C02_5" output="S"/>
+    <key id="k_C02_6" output="s"/>
+    <key id="k_C03_1" output="d"/>
+    <key id="k_C03_2" output="D"/>
+    <key id="k_C03_5" output="D"/>
+    <key id="k_C03_6" output="d"/>
+    <key id="k_C04_1" output="f"/>
+    <key id="k_C04_2" output="F"/>
+    <key id="k_C04_5" output="F"/>
+    <key id="k_C04_6" output="f"/>
+    <key id="k_C05_1" output="g"/>
+    <key id="k_C05_2" output="G"/>
+    <key id="k_C05_5" output="G"/>
+    <key id="k_C05_6" output="g"/>
+    <key id="k_C06_1" output="h"/>
+    <key id="k_C06_2" output="H"/>
+    <key id="k_C06_5" output="H"/>
+    <key id="k_C06_6" output="h"/>
+    <key id="k_C07_1" output="j"/>
+    <key id="k_C07_2" output="J"/>
+    <key id="k_C07_5" output="J"/>
+    <key id="k_C07_6" output="j"/>
+    <key id="k_C08_1" output="k"/>
+    <key id="k_C08_2" output="K"/>
+    <key id="k_C08_5" output="K"/>
+    <key id="k_C08_6" output="k"/>
+    <key id="k_C09_1" output="l"/>
+    <key id="k_C09_2" output="L"/>
+    <key id="k_C09_5" output="L"/>
+    <key id="k_C09_6" output="l"/>
+    <key id="k_C10_1" output="m"/>
+    <key id="k_C10_2" output="M"/>
+    <key id="k_C10_5" output="M"/>
+    <key id="k_C10_6" output="m"/>
+    <key id="k_C11_1" output="ù"/>
+    <key id="k_C11_2" output="%"/>
+    <key id="k_C11_5" output="%"/>
+    <key id="k_C11_6" output="ù"/>
+    <key id="k_C12_1" output="*"/>
+    <key id="k_C12_2" output="µ"/>
+    <key id="k_C12_5" output="µ"/>
+    <key id="k_C12_6" output="*"/>
+    <key id="k_B00_1" output="&lt;"/>
+    <key id="k_B00_2" output="&gt;"/>
+    <key id="k_B01_1" output="w"/>
+    <key id="k_B01_2" output="W"/>
+    <key id="k_B01_5" output="W"/>
+    <key id="k_B01_6" output="w"/>
+    <key id="k_B02_1" output="x"/>
+    <key id="k_B02_2" output="X"/>
+    <key id="k_B02_5" output="X"/>
+    <key id="k_B02_6" output="x"/>
+    <key id="k_B03_1" output="c"/>
+    <key id="k_B03_2" output="C"/>
+    <key id="k_B03_5" output="C"/>
+    <key id="k_B03_6" output="c"/>
+    <key id="k_B04_1" output="v"/>
+    <key id="k_B04_2" output="V"/>
+    <key id="k_B04_5" output="V"/>
+    <key id="k_B04_6" output="v"/>
+    <key id="k_B05_1" output="b"/>
+    <key id="k_B05_2" output="B"/>
+    <key id="k_B05_5" output="B"/>
+    <key id="k_B05_6" output="b"/>
+    <key id="k_B06_1" output="n"/>
+    <key id="k_B06_2" output="N"/>
+    <key id="k_B06_5" output="N"/>
+    <key id="k_B06_6" output="n"/>
+    <key id="k_B07_1" output=","/>
+    <key id="k_B07_2" output="?"/>
+    <key id="k_B07_5" output="?"/>
+    <key id="k_B07_6" output=","/>
+    <key id="k_B08_1" output=";"/>
+    <key id="k_B08_2" output="."/>
+    <key id="k_B08_5" output="."/>
+    <key id="k_B08_6" output=";"/>
+    <key id="k_B09_1" output=":"/>
+    <key id="k_B09_2" output="/"/>
+    <key id="k_B09_5" output="/"/>
+    <key id="k_B09_6" output=":"/>
+    <key id="k_B10_1" output="!"/>
+    <key id="k_B10_2" output="§"/>
+    <key id="k_B10_5" output="§"/>
+    <key id="k_B10_6" output="!"/>
+    <key id="k_A03_1" output=" "/>
+    <key id="k_A03_2" output=" "/>
+  </keys>
+  <forms>
+    <form id="azerty-traditionnel-form">
+      <scanCodes codes="29 02 03 04 05 06 07 08 09 0A 0B 0C 0D"/>
+      <scanCodes codes="10 11 12 13 14 15 16 17 18 19 1A 1B"/>
+      <scanCodes codes="1E 1F 20 21 22 23 24 25 26 27 28 2B"/>
+      <scanCodes codes="56 2C 2D 2E 2F 30 31 32 33 34 35"/>
+      <scanCodes codes="39"/>
+    </form>
+  </forms>
+  <layers formId="azerty-traditionnel-form">
+    <layer modifiers="none">
+      <row keys="k_E00_1 k_E01_1 k_E02_1 k_E03_1 k_E04_1 k_E05_1 k_E06_1 k_E07_1 k_E08_1 k_E09_1 k_E10_1 k_E11_1 k_E12_1"/>
+      <row keys="k_D01_1 k_D02_1 k_D03_1 k_D04_1 k_D05_1 k_D06_1 k_D07_1 k_D08_1 k_D09_1 k_D10_1 k_D11_1 k_D12_1"/>
+      <row keys="k_C01_1 k_C02_1 k_C03_1 k_C04_1 k_C05_1 k_C06_1 k_C07_1 k_C08_1 k_C09_1 k_C10_1 k_C11_1 k_C12_1"/>
+      <row keys="k_B00_1 k_B01_1 k_B02_1 k_B03_1 k_B04_1 k_B05_1 k_B06_1 k_B07_1 k_B08_1 k_B09_1 k_B10_1"/>
+      <row keys="k_A03_1"/>
+    </layer>
+    <layer modifiers="shift">
+      <row keys="k_E01_2 k_E02_2 k_E03_2 k_E04_2 k_E05_2 k_E06_2 k_E07_2 k_E08_2 k_E09_2 k_E10_2 k_E11_2 k_E12_2"/>
+      <row keys="k_D01_2 k_D02_2 k_D03_2 k_D04_2 k_D05_2 k_D06_2 k_D07_2 k_D08_2 k_D09_2 k_D10_2 k_D11_2 k_D12_2"/>
+      <row keys="k_C01_2 k_C02_2 k_C03_2 k_C04_2 k_C05_2 k_C06_2 k_C07_2 k_C08_2 k_C09_2 k_C10_2 k_C11_2 k_C12_2"/>
+      <row keys="k_B00_2 k_B01_2 k_B02_2 k_B03_2 k_B04_2 k_B05_2 k_B06_2 k_B07_2 k_B08_2 k_B09_2 k_B10_2"/>
+      <row keys="k_A03_2"/>
+    </layer>
+    <layer modifiers="altR">
+      <row keys="k_E02_3 k_E03_3 k_E04_3 k_E05_3 k_E06_3 k_E07_3 k_E08_3 k_E09_3 k_E10_3 k_E11_3 k_E12_3"/>
+      <row keys="k_D03_3 k_D12_3"/>
+      <row keys=""/>
+      <row keys=""/>
+      <row keys=""/>
+    </layer>
+    <layer modifiers="caps">
+      <row keys="k_E00_5 k_E01_5 k_E02_5 k_E03_5 k_E04_5 k_E05_5 k_E06_5 k_E07_5 k_E08_5 k_E09_5 k_E10_5 k_E11_5 k_E12_5"/>
+      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5 k_D11_5 k_D12_5"/>
+      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5 k_C10_5 k_C11_5 k_C12_5"/>
+      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5 k_B07_5 k_B08_5 k_B09_5 k_B10_5"/>
+      <row keys=""/>
+    </layer>
+    <layer modifiers="caps shift">
+      <row keys="k_E01_6 k_E02_6 k_E03_6 k_E04_6 k_E05_6 k_E06_6 k_E07_6 k_E08_6 k_E09_6 k_E10_6 k_E11_6 k_E12_6"/>
+      <row keys="k_D01_6 k_D02_6 k_D03_6 k_D04_6 k_D05_6 k_D06_6 k_D07_6 k_D08_6 k_D09_6 k_D10_6 k_D11_6 k_D12_6"/>
+      <row keys="k_C01_6 k_C02_6 k_C03_6 k_C04_6 k_C05_6 k_C06_6 k_C07_6 k_C08_6 k_C09_6 k_C10_6 k_C11_6 k_C12_6"/>
+      <row keys="k_B01_6 k_B02_6 k_B03_6 k_B04_6 k_B05_6 k_B06_6 k_B07_6 k_B08_6 k_B09_6 k_B10_6"/>
+      <row keys=""/>
+    </layer>
+  </layers>
+  <transforms type="simple">
+    <transformGroup>
+      <transform from="\m{circumflex}a" to="â"/>
+      <transform from="\m{circumflex}A" to="Â"/>
+      <transform from="\m{circumflex}e" to="ê"/>
+      <transform from="\m{circumflex}E" to="Ê"/>
+      <transform from="\m{circumflex}i" to="î"/>
+      <transform from="\m{circumflex}I" to="Î"/>
+      <transform from="\m{circumflex}o" to="ô"/>
+      <transform from="\m{circumflex}O" to="Ô"/>
+      <transform from="\m{circumflex}u" to="û"/>
+      <transform from="\m{circumflex}U" to="Û"/>
+      <transform from="\m{circumflex} " to="^"/>
+      <transform from="\m{diaeresis}a" to="ä"/>
+      <transform from="\m{diaeresis}A" to="Ä"/>
+      <transform from="\m{diaeresis}e" to="ë"/>
+      <transform from="\m{diaeresis}E" to="Ë"/>
+      <transform from="\m{diaeresis}i" to="ï"/>
+      <transform from="\m{diaeresis}I" to="Ï"/>
+      <transform from="\m{diaeresis}o" to="ö"/>
+      <transform from="\m{diaeresis}O" to="Ö"/>
+      <transform from="\m{diaeresis}u" to="ü"/>
+      <transform from="\m{diaeresis}U" to="Ü"/>
+      <transform from="\m{diaeresis}y" to="ÿ"/>
+      <transform from="\m{diaeresis} " to="¨"/>
+      <transform from="\m{grave}a" to="à"/>
+      <transform from="\m{grave}A" to="À"/>
+      <transform from="\m{grave}e" to="è"/>
+      <transform from="\m{grave}E" to="È"/>
+      <transform from="\m{grave}i" to="ì"/>
+      <transform from="\m{grave}I" to="Ì"/>
+      <transform from="\m{grave}o" to="ò"/>
+      <transform from="\m{grave}O" to="Ò"/>
+      <transform from="\m{grave}u" to="ù"/>
+      <transform from="\m{grave}U" to="Ù"/>
+      <transform from="\m{grave} " to="`"/>
+      <transform from="\m{tilde}a" to="ã"/>
+      <transform from="\m{tilde}A" to="Ã"/>
+      <transform from="\m{tilde}n" to="ñ"/>
+      <transform from="\m{tilde}N" to="Ñ"/>
+      <transform from="\m{tilde}o" to="õ"/>
+      <transform from="\m{tilde}O" to="Õ"/>
+      <transform from="\m{tilde} " to="~"/>
+    </transformGroup>
+  </transforms>
+</keyboard3>
