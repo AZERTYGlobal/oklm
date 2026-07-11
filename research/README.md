@@ -37,40 +37,28 @@
 - 🟢 **Confirmée** : triangulation (≥ 2-3 moteurs) ou source primaire vérifiée → intégrable à `SPEC.md`.
 - 🔴 **À arbitrer** : tension avec `SPEC.md` ou décision de périmètre projet (humain requis).
 
-## État d'avancement (au 2026-06-07)
+## État d'avancement (au 2026-07-11)
+
+**Campagne en pause, à reprendre** (décision Antoine 2026-07-11).
 
 | Prompt | Sujet | Statut |
 |---|---|---|
-| 1 | Pipeline & codes de touches | ✅ triangulé (3 moteurs) |
-| 9 | Formats d'échange & authoring (LDML) | ✅ triangulé (3 moteurs) |
-| 11 | Normes de jure (ISO 9995…) | ✅ triangulé (3 moteurs) |
-| **10** | IME & scripts complexes | ⏳ **lot en cours** |
-| **16** | Géométrie physique (KLE/info.json/VIA) | ⏳ **lot en cours** |
-| 6 | Firmware (QMK/ZMK) | ⬜ à faire — **tranche D10** |
-| 12 | Conception du format + conformance | ⬜ à faire |
-| 2, 3, 4, 5 | OS desktop (Win/macOS/Linux/autres) | ⬜ à faire (exporteurs) |
-| 7, 8, 15 | Mobile / embarqué / web | ⬜ à faire |
-| 13, 14 | Gouvernance / besoins industrie | ⬜ à faire |
+| 1 | Pipeline & codes de touches | ✅ triangulé (≥ 2-3 moteurs) |
+| 9 | Formats d'échange & authoring (LDML) | ✅ triangulé (≥ 2-3 moteurs) |
+| 10 | IME & scripts complexes | ✅ triangulé (≥ 2-3 moteurs) |
+| 11 | Normes de jure (ISO 9995…) | ✅ triangulé (≥ 2-3 moteurs) |
+| 16 | Géométrie physique (KLE/info.json/VIA) | ✅ triangulé (≥ 2-3 moteurs) |
+| 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15 | Reste de la carte (11 prompts) | ⬜ restants |
 
-Décisions consignées : **D1–D14** (voir le journal). Synthèse rapide :
-- **D1** ✅ identifiant de touche = **numéro ISO/IEC 9995-1** (`D01`…) canonique + `hid` obligatoire + alias XKB.
-- **D2/D3** ✅ modèle ISO `(group, level)` verbatim.
-- **D4** ✅ dead keys/compositions séparées du mapping.
-- **D5** ✅ géométrie en alias, position en numéro ISO.
-- **D7** 🔴 déléguer le cœur texte à **LDML Keyboard 3.0** (cible **UTS #35 Part 7 v48.2**, racine `keyboard3`) — ne pas réinventer transforms/reorder/markers.
-- **D8** ✅ couche méta « envelope » (légendes dynamiques, pédagogie, IA scopée, a11y).
-- **D9** ✅ architecture en couches (core → LDML / extended / metadata).
-- **D10** 🔴 **firmware séparé** (namespace d'extension) — **arbitrage de périmètre à confirmer via le prompt 6**.
-- **D11** ✅ frame keys (Fn, numpad…) hors LDML → extension OKLM.
-- **D12** ✅ publier les « frontières de redondance ».
-- **D13** ✅ déclaration de conformance (ISO 9995 part-based + national).
-- **D14** ✅ réutiliser la terminologie ISO 9995.
+Décisions consignées : **D1–D30** (journal et `SPEC.md` alignés — voir le journal pour le détail
+prompt par prompt).
+
+Livré par ailleurs pendant la campagne : draft OKLM 0.1, exporteurs v1 (LDML/xkb/keylayout),
+schéma de rapport 0.2, site oklm.org.
 
 ## Points ouverts à traiter ensuite
-- **D10** : décision de périmètre firmware → la fermer avec le **prompt 6**.
-- **Migrations `SPEC.md`** : ✅ appliquées le 2026-07-10 (D1, D2/D14, D7, D11, D13, D23) — voir
-  [`../schemas/Zones instables v0.1.md`](../schemas/Zones%20instables%20v0.1.md) pour le détail
-  et l'état de validation (15/15 tests).
+- Reprendre la campagne sur les **11 prompts restants** (2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15).
+- Nouvelles décisions à numéroter **à partir de D31**.
 
 ## Langue
 
@@ -79,4 +67,4 @@ du dépôt sont en anglais.
 
 ---
 
-*Dernière mise à jour : 2026-07-10*
+*Dernière mise à jour : 2026-07-11*
