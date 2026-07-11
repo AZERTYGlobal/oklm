@@ -228,6 +228,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
     <nav class="top">
       <a href="#demo">Demo</a>
       <a href="#principles">Principles</a>
+      <a href="#exporters">Exporters</a>
       <a href="#examples">Examples</a>
       <a href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Spec</a>
       <a class="gh" href="https://github.com/AZERTYGlobal/oklm">GitHub ↗</a>
@@ -246,7 +247,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
           <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
           <a class="btn" href="#demo">Try the demo ↓</a>
         </div>
-        <p class="chip">Draft 0.1 — schemas, six example layouts and a validator</p>
+        <p class="chip">Draft 0.1 — schemas, six example layouts, a validator and one-way exporters</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="hero-row"><span class="hk">O</span><span class="hk">K</span></div>
@@ -322,6 +323,23 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
     </div>
   </section>
 
+  <section id="exporters">
+    <div class="wrap">
+      <p class="kicker">Exporters</p>
+      <h2>Three export targets, honest reports</h2>
+      <p class="sub">The v1 exporters convert a manifest to Unicode LDML Keyboard, Linux XKB or macOS keylayout. Every export writes the target file plus a machine-readable conversion report — validated against its own JSON Schema — declaring exactly what was mapped, skipped or approximated. Nothing is silently discarded.</p>
+      <pre class="snippet"><code>$ python tools/export.py <span class="tok-k">--target</span> <span class="tok-s">ldml</span> layout.oklm.json
+layout.ldml.xml
+layout.ldml.xml.report.json   <span class="tok-k"># mapped · skipped · approximated</span></code></pre>
+      <div class="grid2" style="margin-top:1rem">
+        <div class="card"><span class="num">LDML</span><h3>Unicode LDML Keyboard 3.0</h3><p>CLDR/UTS #35 Part 7 <code>keyboard3</code> XML — the standards-oriented interchange export.</p></div>
+        <div class="card"><span class="num">XKB</span><h3>Linux xkb_symbols</h3><p>A standalone <code>xkb_symbols</code> block covering ISO/IEC 9995 levels 1–4; the report states the scope limits.</p></div>
+        <div class="card"><span class="num">KEYLAYOUT</span><h3>macOS .keylayout</h3><p>An Apple <code>.keylayout</code> file with dead keys mapped to terminator states.</p></div>
+      </div>
+      <p class="sub" style="margin:1.4rem 0 0">Reference exports for all six example layouts are committed in <a href="https://github.com/AZERTYGlobal/oklm/tree/main/examples/exports"><code>examples/exports/</code></a> and covered by regression, determinism and schema tests.</p>
+    </div>
+  </section>
+
   <section id="examples">
     <div class="wrap">
       <p class="kicker">Proof of concept</p>
@@ -347,7 +365,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
     <div class="wrap">
       <p class="kicker">Status</p>
       <h2>A public draft, in the open</h2>
-      <p class="sub">OKLM is not yet a published standard. Available today: the draft 0.1 manifest schema, a conversion-report schema, six example layouts and a reference validator. Next: LDML Keyboard exporters and importers with loss reports. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
+      <p class="sub">OKLM is not yet a published standard. Available today: the draft 0.1 manifest schema, a conversion-report schema (draft 0.2), six example layouts, a reference validator and one-way exporters to LDML Keyboard, XKB and macOS keylayout — each with a loss report. Next: importers (LDML → OKLM) to close the round trip. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
     </div>
   </section>
 </main>
