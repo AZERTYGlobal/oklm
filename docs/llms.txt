@@ -1,0 +1,31 @@
+# OKLM — Open Keyboard Layout Model
+
+> An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.
+
+OKLM is a public draft (0.1), not yet a published or adopted standard. It does not compete with Unicode CLDR/LDML Keyboard: LDML Keyboard is the standards-oriented interchange export; OKLM is the source model and tooling layer around it. Canonical format: JSON, extension `.oklm.json`. Licenses: EUPL 1.2 (schemas, validators, tools) and CC BY 4.0 (documentation).
+
+## Documentation
+
+- [README](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/README.md): project overview and goals
+- [SPEC](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/SPEC.md): manifest specification, draft 0.1
+- [CONVERSIONS](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CONVERSIONS.md): conversion rules and conversion reports
+- [CLDR-LDML](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CLDR-LDML.md): relationship with Unicode CLDR/LDML Keyboard
+- [GOVERNANCE](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/GOVERNANCE.md): project governance
+- [ROADMAP](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/ROADMAP.md): planned milestones
+- [INDUSTRY-ADOPTION](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/INDUSTRY-ADOPTION.md): adoption targets across the keyboard ecosystem
+
+## Schemas and examples
+
+- [Manifest JSON Schema](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/schemas/oklm-manifest.schema.json): OKLM manifest 0.1
+- [Conversion report JSON Schema](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/schemas/oklm-conversion-report.schema.json): conversion report 0.2
+- [Example manifests](https://github.com/AZERTYGlobal/oklm/tree/main/examples): AZERTY Global (full and minimal), AZERTY AFNOR, BÉPO, traditional AZERTY, QWERTY US
+- Live manifests served on this site, for example: https://oklm.org/manifests/azerty-global.oklm.json
+
+## Exporters
+
+One-way exporters with conversion reports are available in [tools/](https://github.com/AZERTYGlobal/oklm/tree/main/tools): OKLM to LDML Keyboard 3.0, OKLM to xkb (levels 1-4), OKLM to macOS keylayout. Reference exports are committed under [examples/exports/](https://github.com/AZERTYGlobal/oklm/tree/main/examples/exports).
+
+## Website
+
+- [oklm.org](https://oklm.org/): interactive demo rendered from the real manifests, exporters overview, project status
+- Related project: [AZERTY Global](https://azerty.global/), the French keyboard layout that motivated OKLM

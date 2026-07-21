@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Content Signals (https://contentsignals.org/)
+# OKLM is an open specification: search, AI input and AI training are welcome.
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
+
+# AI crawlers — explicitly allowed
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://oklm.org/sitemap.xml
