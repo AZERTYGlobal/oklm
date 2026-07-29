@@ -160,7 +160,7 @@ determinism, and schema validity.
 Current public repository structure:
 
 ```text
-Open Keyboard Layout Model/
+oklm/
 ├── README.md
 ├── SPEC.md
 ├── CLDR-LDML.md
@@ -168,8 +168,10 @@ Open Keyboard Layout Model/
 ├── INDUSTRY-ADOPTION.md
 ├── ROADMAP.md
 ├── GOVERNANCE.md
+├── docs/         # oklm.org site (GitHub Pages)
 ├── examples/     # six example manifests (5 complete layouts + minimal subset)
 │   └── exports/  # committed reference exports (ldml/xkb/keylayout) for each example
+├── research/     # deep-research journal (in French)
 ├── schemas/      # manifest + conversion-report JSON Schemas (manifest 0.1, report 0.2)
 ├── tools/        # export.py CLI + exporters/ (ldml, xkb, keylayout) + tests/
 └── validators/   # reference validation script
@@ -203,4 +205,4 @@ Layout data described *with* OKLM keeps its own license, declared in the manifes
 
 ---
 
-*Last updated: 2026-07-11*
+*Last updated: 2026-07-30*
