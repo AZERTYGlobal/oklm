@@ -2,3 +2,14 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+
+# Internal working material kept locally, deliberately out of the public repo
+# (consolidated here on 2026-07-30, when the private mirror folder was retired)
+
+# Raw deep-research PDFs — the Markdown transcripts in research/results/ are the
+# published form; the PDFs are Gemini source exports kept for provenance only.
+research/results/*.pdf
+
+# Internal tools tied to the azerty.global site, not part of the public toolchain.
+tools/convert_site_to_oklm.py
+tools/verify_oklm_against_site.py
