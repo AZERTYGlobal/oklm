@@ -20,6 +20,7 @@
 | 10 — IME & saisie des scripts complexes | Perplexity + ChatGPT + Gemini | 2026-06-07 | 🟢 recoupé (triangulation 3 moteurs) | [Perplexity](results/Prompt%2010%20-%20IME%20and%20complex-script%20input%20%28Perplexity%29.md) · [ChatGPT](results/Prompt%2010%20-%20IME%20and%20complex-script%20input%20%28ChatGPT%29.md) · [Gemini](results/Prompt%2010%20-%20IME%20and%20complex-script%20input%20%28Gemini%29.md) |
 | 11 — Normes de jure (ISO 9995…) | Perplexity + ChatGPT + Gemini | 2026-06-07 | 🟢 recoupé (triangulation 3 moteurs) | [Perplexity](results/Prompt%2011%20-%20De%20jure%20keyboard%20standards%20%28Perplexity%29.md) · [ChatGPT](results/Prompt%2011%20-%20De%20jure%20keyboard%20standards%20%28ChatGPT%29.md) · [Gemini](results/Prompt%2011%20-%20De%20jure%20keyboard%20standards%20%28Gemini%29.md) |
 | 16 — Géométrie physique des claviers | Perplexity + ChatGPT + Gemini | 2026-06-07 | 🟢 recoupé (triangulation 3 moteurs) | [Perplexity](results/Prompt%2016%20-%20Physical%20keyboard%20geometry%20description%20formats%20%28Perplexity%29.md) · [ChatGPT](results/Prompt%2016%20-%20Physical%20keyboard%20geometry%20description%20formats%20%28ChatGPT%29.md) · [Gemini](results/Prompt%2016%20-%20Physical%20keyboard%20geometry%20description%20formats%20%28Gemini%29.md) |
+| 12 — Conception du format & conformance | ChatGPT + Claude + Gemini | 2026-09-02 | 🟢 recoupé (triangulation 3 moteurs) | [ChatGPT](results/Prompt%2012%20-%20Format%20design%20%26%20conformance%20%28ChatGPT%29.md) · [Claude](results/Prompt%2012%20-%20Format%20design%20%26%20conformance%20%28Claude%29.md) · [Gemini](results/Prompt%2012%20-%20Format%20design%20%26%20conformance%20%28Gemini%29.md) |
 
 ---
 
@@ -561,6 +562,236 @@ point de comparaison lors de la prochaine itération de la spec.
 - La mention Perplexity de `ks` côté QMK est conservée dans le brut mais annotée ici comme non
   confirmée par les sources primaires vérifiées.
 
+## Prompt 12 — Conception d'un format durable + régime de conformance
+
+> Sources : ChatGPT Deep Research + Claude Research + Gemini Deep Research, 2026-09-02 (Perplexity
+> non utilisé : pas d'abonnement ; trois moteurs suffisent au seuil de triangulation). Statut :
+> 🟢 **confirmé par triangulation (3 moteurs)** sur le fond ; quatre points 🔴 à arbitrer parce
+> qu'ils changent la **structure** du schéma v0.1 (le prompt 12 était annoncé comme la seule vraie
+> dépendance structurelle, `schemas/Zones instables v0.1.md` § 1).
+>
+> Orientation convergente des trois moteurs : **la durabilité vient des règles d'évolution, pas de
+> l'astuce du schéma** — SemVer pour la spec, `schemaVersion` dans le fichier, évolution additive,
+> « ignorer l'inconnu » + déclaration explicite de ce qui est requis, extensions namespacées avec
+> registre, suite de tests livrée avec la spec et non après. Le modèle nommé partout : **glTF 2.0**
+> (`extensionsUsed` / `extensionsRequired`, préfixes KHR_/EXT_/vendeur, validateur de référence).
+> Contre-exemples convergents : USB HID (compact mais opaque, `hid-quirks.c`), SVG (profils Tiny /
+> Basic / Full, attribut `version` purement indicatif), et dans notre domaine **KLE** (tableau
+> positionnel non-JSON, parseurs tiers incompatibles) et **VIA v2 → v3** (`additionalProperties:
+> false` + pas de version dans le fichier = rupture).
+
+### Décisions retenues
+
+- **D31 — Deux versions, deux rôles.** 🟢 (3 moteurs ; `minVersion` arbitré le 2026-09-02 : **non**)
+  La **spécification** suit SemVer 2.0.0 (`MAJOR.MINOR.PATCH`) ; le **fichier** porte
+  `schemaVersion` en **chaîne `MAJOR.MINOR`** (ChatGPT, Claude ; Gemini voulait un entier :
+  minorité, et `"1.10"` en nombre serait détruit). Un PATCH de spec ne change jamais le sens d'un
+  fichier conforme. `schemaVersion` doit avoir une **sémantique de traitement définie** (Claude :
+  l'attribut `version` de SVG, purement indicatif, a fini déprécié) : algorithme de lecture =
+  refuser un MAJOR inconnu, puis vérifier `featuresRequired` / `extensionsRequired`, puis ignorer
+  le reste de l'inconnu (D32, D33).
+  → **Tension schéma v0.1** : `schemaVersion` est un `const "0.1"` — devient un motif
+  `^[0-9]+\.[0-9]+$` (ou une énumération des versions publiées) en v0.2.
+  → ✅ `minVersion` optionnel à la glTF (Claude seul) : **refusé par Antoine le 2026-09-02** —
+  `featuresRequired` / `extensionsRequired` suffisent, un seul moteur le proposait.
+
+- **D32 — Évolution additive et règle de l'inconnu.** 🟢 (3 moteurs ; arbitré le 2026-09-02 : **ouvrir + lint strict**)
+  Dans un MAJOR, seules des **additions optionnelles** ; les champs, tokens d'énumération, unités
+  et identifiants ne changent jamais de sens. **Un processeur DOIT ignorer un champ inconnu non
+  déclaré requis** ; un validateur AVERTIT au lieu de rejeter. **Ignorer ≠ préserver** (ChatGPT,
+  Gemini) : un éditeur / convertisseur aller-retour DOIT **préserver** les champs et extensions
+  inconnus à la réécriture, sauf conversion déclarée lossy.
+  → 🔴 **Tension structurelle majeure** : le schéma v0.1 pose `additionalProperties: false` à la
+  racine et sur la plupart des objets (ChatGPT et Claude : c'est précisément ce qui a cassé VIA
+  v2 → v3 et interdit toute compatibilité ascendante). Ouvrir le schéma normatif et déplacer la
+  détection de fautes de frappe dans un **mode lint du validateur** (`--strict-authoring`,
+  avertissement `W_UNKNOWN_MEMBER`). Conséquence sur D14 : « un manifeste utilisant `layers` est
+  rejeté par le schéma » devient « rejeté par le validateur » (règle sémantique, plus une clôture
+  de schéma). **Arbitrage d'Antoine du 2026-09-02 : ouvrir le schéma normatif (racine et objets)
+  et ajouter un mode `--strict` au validateur qui signale les membres inconnus en avertissement ;
+  le rejet de `layers` devient une règle sémantique du validateur.** À implémenter en v0.2 (C5).
+
+- **D33 — Détection de capacités : `extensionsUsed` / `extensionsRequired` / `featuresRequired`.** 🟢 (3 moteurs)
+  Trois tableaux de chaînes au niveau racine, **définis dès la v0.2 même vides** (ChatGPT : les
+  retrofitter après coup est bien plus dur). `extensionsRequired ⊂ extensionsUsed`. Un ajout
+  futur qui **change le traitement correct** doit porter un identifiant dans `featuresRequired` ;
+  un processeur qui ne le connaît pas répond « fichier valide, **non supporté** », jamais
+  « fichier invalide ». Recoupe le rapport de conversion : `compatibilityLevel` doit distinguer
+  `unsupported` de `failed`.
+
+- **D34 — Extensions namespacées à trois niveaux + registre.** 🟢 (3 moteurs ; arbitré le 2026-09-02 : **`OKLM_` / `EXT_` / `<VENDEUR>_`**)
+  Tout ce qui est hors cœur vit dans `extensions` (racine **et** par objet) sous des clés
+  préfixées : `OKLM_` (réservé, ratifié par le projet), `EXT_` (multi-implémentations), `<VENDEUR>_`
+  (préfixe enregistré par simple issue/PR, sans validation sémantique — glTF `Prefixes.md`,
+  OpenType tags privés). Registre machine-lisible : `extensions/PREFIXES.md` + `EXTENSIONS.md`
+  (propriétaire, statut, version, dépendances, remplacement) ; une extension n'est promue
+  qu'avec **schéma + fixtures + support du validateur** (Claude, Gemini). Un identifiant
+  d'extension n'est **jamais réutilisé**.
+  → 🔴 **Tension schéma v0.1** : les namespaces réservés `frame-keys`, `firmware`, `geometry`,
+  `ldml` sont en kebab-case sans préfixe — à renommer `OKLM_frameKeys`, `OKLM_firmware`,
+  `OKLM_geometry`, `OKLM_ldml` en v0.2 (rupture acceptable avant 1.0, GOVERNANCE.md).
+  **Arbitrage d'Antoine du 2026-09-02 : renommage confirmé, registre `extensions/PREFIXES.md` par PR.**
+
+- **D35 — Pas de second fourre-tout : `metadata` garde le rôle d'enveloppe, pas d'`extras`.** 🟢 (arbitré le 2026-09-02 : **`metadata` seul**)
+  Claude et Gemini ajoutent un `extras` libre sans validation ; ChatGPT le refuse (« un seul
+  sous-arbre à préserver, pas d'heuristique »). OKLM a déjà `metadata` (D8), enveloppe non
+  normative strippée à l'export LDML : ajouter `extras` créerait **deux notations pour un même
+  concept**, contraire à D38. Proposition : `metadata` reste l'unique enveloppe libre, documentée
+  comme telle dans SPEC.md ; pas d'`extras`. **Arbitrage d'Antoine du 2026-09-02 : `metadata` seul.**
+
+- **D36 — Dialecte : JSON Schema 2020-12 épinglé, sous-ensemble conservateur.** 🟢 (2 moteurs + pratique actuelle)
+  ChatGPT et Claude : 2020-12 (glTF 2.0 et OpenAPI 3.1 s'y sont alignés ; le projet JSON Schema
+  vise désormais une version stable, pas de nouveau draft). Gemini préfère Draft 7 pour
+  l'outillage C/embarqué : minorité, gardée comme option « traduction Draft 7 publiée à la
+  demande ». Règle : `$schema` et `$id` explicites dans chaque schéma (déjà le cas), vocabulaire
+  limité à `type/properties/required/items/$ref/$defs/enum/const/pattern/min-max/allOf/anyOf`,
+  **ni `$dynamicRef` ni `unevaluatedProperties`**, discriminateur explicite plutôt que `oneOf`
+  par présence/absence de propriétés. `format` n'est qu'une annotation : la validation BCP 47 se
+  fait dans le validateur, jamais par `"format": "bcp47"`.
+
+- **D37 — Dépréciation : déprécier, ne jamais retirer ni réaffecter.** 🟢 (3 moteurs)
+  Modèle Unicode / CLDR (« un caractère encodé n'est jamais déplacé ni retiré ») et UTS #35 Part 7
+  (« conformsTo=45 reste conforme à 46 sans autre changement »). `"deprecated": true` dans le
+  schéma (annotation, pas échec) ; importeurs acceptent le champ pour toute la durée du MAJOR ;
+  validateurs avertissent avec le remplacement ; exporteurs ne l'émettent plus par défaut ; retrait
+  seulement à un MAJOR, avec outil de migration ; nom **jamais réaffecté**.
+
+- **D38 — Forme du fichier source : ordre canonique éditorial, JSON strict, une notation par concept.** 🟢 (3 moteurs, 1 divergence)
+  Ordre des clés **éditorial et documenté** (version → identité → métadonnées humaines → contenu
+  → déclarations de capacités → extensions), imposé aux exporteurs, jamais porteur de sens pour
+  les lecteurs (déjà la règle de SPEC.md : suivre l'ordre du schéma). **RFC 8785 (JCS) réservé au
+  hachage / signature**, jamais comme ordre d'édition (ChatGPT, Claude ; Gemini voulait JCS partout :
+  minorité). Profil de présentation : UTF-8 sans BOM, indentation 2 espaces, LF, saut de ligne
+  final, **une propriété par ligne**, **caractères non-ASCII bruts, jamais de `\uXXXX` gratuit**
+  (Claude : « `é`, pas `\u00e9` » — décisif pour un format de clavier), pas de commentaires ni
+  virgules finales (JSON RFC 8259 strict, pas de JSONC en interchange). **Noms de membres
+  dupliqués = fichier invalide**, détecté **avant** le parseur JSON ordinaire (ChatGPT, Gemini).
+  Une seule notation par concept ; identifiants chaînes lisibles (déjà : numéros ISO 9995-1), pas
+  d'index positionnels, pas de blobs base64 ni de champs empaquetés. Profondeur ≤ 4 (Gemini).
+  → 🟡 Nuance sur la notation compacte OKLM (`"a"` vs `{ "deadKey": id }` vs `{ "modifier": n }`) :
+  ce sont trois **concepts** différents, pas une même valeur sous deux formes — compatible avec
+  D38, mais ChatGPT recommande un discriminateur explicite (`kind`) pour les variantes objet.
+  À évaluer à la v0.2, sans urgence.
+
+- **D39 — Internationalisation du format : UTF-8, NFC ciblé, BCP 47.** 🟢 (3 moteurs)
+  UTF-8 obligatoire, BOM interdit en production, toléré avec avertissement en lecture, UTF-8
+  malformé rejeté. **NFC recommandé pour les métadonnées humaines** (noms, descriptions), jamais
+  de NFKC, et **aucune normalisation silencieuse des charges sémantiques** (ChatGPT) : pour OKLM,
+  les sorties de touches, marqueurs et tables de composition se comparent en séquences de points
+  de code **telles quelles** (CLDR travaille en NFD en interne — le documenter, ne pas le copier).
+  Chaînes localisées : **objet indexé par étiquette BCP 47** (Claude, Gemini) plutôt qu'une union
+  chaîne | objet ; forme retenue à la ChatGPT pour garder un type fixe : `name` reste une chaîne
+  de repli, `nameLocalized` / `descriptionLocalized` sont des objets `{ "fr": …, "en-GB": … }`.
+  Clés en BCP 47 syntaxiquement valides (RFC 5646), comparaison insensible à la casse, algorithme
+  de repli spécifié (exact → parent déclaré → valeur non localisée). Déclarer la version Unicode
+  minimale supposée.
+
+- **D40 — Conformance : BCP 14, rôles séparés, deux profils dont un épinglé.** 🟢 (3 moteurs)
+  RFC 2119 + RFC 8174, boilerplate verbatim, mots-clés en capitales seulement. **Rôles**
+  distincts avec leur propre liste de MUST : fichier, importeur, exporteur, validateur, et
+  **éditeur / aller-retour** (préservation de l'inconnu obligatoire pour ce rôle seulement).
+  **Profils : deux, pas plus** (Claude, Gemini : SVG Tiny/Basic/Full a fragmenté l'écosystème) —
+  `Core` et `Full-X.Y` **épinglé à un `schemaVersion`** (ChatGPT : un « Full » flottant devient
+  faux à chaque ajout). Les extensions se revendiquent individuellement par identifiant. Une
+  implémentation dit « Importeur Core 0.2–0.3, Exporteur 0.3, préservation : oui », jamais
+  « supporte OKLM ».
+  → 🟡 Identifiants stables de exigences (`CORE-FILE-001`…) reliant texte normatif, fixtures et
+  diagnostics (ChatGPT seul) : peu coûteux, à adopter à la réécriture de SPEC.md.
+
+- **D41 — Suite de conformance neutre, livrée avec la spec.** 🟢 (3 moteurs)
+  Modèle JSON-Schema-Test-Suite : `tests/conformance/manifest.json` + fixtures atomiques
+  (une exigence par fichier), lisibles avec un simple parseur JSON, jamais dans le langage de
+  test d'une implémentation. Familles minimales (ChatGPT) : minimal valide, maximal valide,
+  historique (un fichier par mineure publiée), type erroné, requis manquant, **membre dupliqué**,
+  encodage (UTF-8 cassé, BOM), référence sémantique impossible (dead key non définie), **membre
+  inconnu (valide + avertissement)**, mineure future (traitable), MAJOR futur (non supporté),
+  extension inconnue optionnelle / requise, `featuresRequired` inconnu, BCP 47 canonique /
+  déprécié / malformé, NFC vs NFD, champ déprécié, **préservation** de l'inconnu à l'édition,
+  aller-retour. Corpus **distinct** des exemples réels (`examples/`, rôle de goldens et de
+  documentation — modèle glTF-Sample-Assets). Chaque version de la suite reste rejouable
+  (immutabilité CLDR).
+  → État OKLM : `tools/tests/run_tests.py` est une suite Python interne (déterminisme, goldens,
+  rapport valide) ; `validators/validate_v0_1.py` porte 15 cas — c'est l'embryon, pas la suite
+  neutre.
+
+- **D42 — Validateur de référence : rapport JSON, codes stables, sévérités, pointeurs.** 🟢 (3 moteurs)
+  Pipeline étagé : octets → JSON (doublons) → schéma → sémantique → capacités / extensions →
+  registre → lint. Sortie JSON versionnée par un schéma publié (modèle glTF-Validator) :
+  `{ valid, processable, schemaVersion, diagnostics: [{ code, severity, pointer, requirement }] }`.
+  Quatre sévérités : `ERROR` (non conforme), `UNSUPPORTED` (conforme, capacité manquante),
+  `WARNING` (déprécié / suspect), `INFO` (présentation). Codes stables `E_DUPLICATE_MEMBER`,
+  `U_REQUIRED_EXTENSION`, `W_UNKNOWN_MEMBER`, `W_DEPRECATED_MEMBER`, `W_NONCANONICAL_BCP47`,
+  `W_NON_NFC_METADATA`… Le validateur **n'est pas la spec** : un désaccord validateur / texte est
+  un bug à trancher publiquement (Claude : risque de capture façon OpenType/Windows).
+  → État OKLM : `validators/validate.py` rend du texte et un code de sortie ; le schéma de
+  rapport de conversion existe déjà (0.2) et peut servir de gabarit au rapport de validation.
+
+- **D43 — Aller-retour : trois égalités, pas une.** 🟢 (3 moteurs)
+  (1) import → export → import : **égalité sémantique** (jamais octet à octet : l'ordre des
+  membres et les espaces ne sont pas sémantiques) ; (2) éditeur : les données inconnues avant
+  édition = après édition, au niveau du modèle JSON ; (3) exporteur déterministe :
+  `canon(parse(canon(x))) == canon(x)` (idempotence de la forme canonique, octet à octet). Le
+  rapport de conversion porte la confiance d'aller-retour (déjà `roundTripConfidence`). Recoupe
+  la porte 3 du projet (aller-retour mesuré) et la leçon KLE → QMK (`kle2json` perd la rotation).
+
+- **D44 — Publication immuable et porte des deux implémentations.** 🟢 (2 moteurs + porte 4 du projet)
+  Chaque version publiée est un lot **immuable** : spec X.Y.Z + schémas X.Y + registre
+  d'extensions + suite de conformance + validateur + notes de migration + sommes de contrôle ;
+  `schema-0.2.json` publié ne change plus jamais (CLDR : « une version publiée est gelée »). Une
+  fonctionnalité passe d'expérimentale à stable seulement quand ses tests passent dans **deux
+  implémentations indépendantes** ne partageant pas le même parseur (critère de sortie W3C CR ;
+  harnais comparatif à la Bowtie quand il y aura deux implémentations). C'est exactement la porte 4
+  d'OKLM, décidée le 2026-08-02 : le prompt 12 la confirme sans la déplacer.
+
+### Résolutions issues du recoupement (triangulation 3 moteurs)
+
+- ✅ **Type de `schemaVersion`** = chaîne `MAJOR.MINOR` (ChatGPT + Claude ; Gemini entier, minorité).
+- ✅ **Dialecte** = 2020-12 épinglé, sous-ensemble conservateur (ChatGPT + Claude ; Gemini Draft 7,
+  gardé comme traduction optionnelle).
+- ✅ **Ordre des clés** = éditorial pour la source, JCS pour signer (ChatGPT + Claude ; Gemini
+  JCS partout, minorité).
+- ✅ **Profils** = deux, `Full` épinglé à une version (synthèse Claude/Gemini « deux max » +
+  ChatGPT « épingler »).
+- ✅ **`additionalProperties: false`** à ouvrir (D32) — **arbitré le 2026-09-02 : ouvrir + lint strict** ;
+  le rejet de `layers` (D14) passe au validateur.
+- ✅ **Préfixes des namespaces d'extension** (D34) — **arbitré le 2026-09-02 : `OKLM_` / `EXT_` / `<VENDEUR>_`**,
+  renommage des quatre namespaces réservés en v0.2.
+- ✅ **`extras`** : 2 moteurs pour, 1 contre, et OKLM a déjà `metadata` (D35) — **arbitré le 2026-09-02 : `metadata` seul**.
+- ✅ **`minVersion`** (Claude seul) : **refusé le 2026-09-02**. 🟡 **`kind` discriminateur** (ChatGPT seul)
+  et **identifiants d'exigences** (ChatGPT seul) : à trancher à la v0.2, non bloquants.
+
+### Tensions avec `SPEC.md` et le schéma v0.1
+
+1. Racine et objets fermés par `additionalProperties: false` (D32) — la promesse « un manifeste
+   avec `layers` est rejeté par le schéma » (§ Terminology) devient une règle du validateur.
+2. `schemaVersion` en `const "0.1"` (D31) — motif ou énumération.
+3. Aucun `extensionsUsed` / `extensionsRequired` / `featuresRequired` (D33) — trois tableaux à
+   ajouter, vides autorisés.
+4. Namespaces d'extension `frame-keys`, `firmware`, `geometry`, `ldml` sans préfixe (D34).
+5. `name` et `description` en chaînes seules, sans forme localisée (D39).
+6. Aucun rapport JSON de validation, aucune suite de conformance neutre (D41, D42) — la suite
+   Python et les 15 cas sont internes.
+7. Aucune politique de dépréciation écrite (D37) — GOVERNANCE.md dit seulement « breaking changes
+   allowed before 1.0 ».
+
+### Points confirmés le 2026-09-02 (QCM d'Antoine) — entrée de la v0.2, chantier C5
+
+- Schéma **ouvert** (D32) : le mode `--strict` de `validators/validate.py` est un **prérequis** de la
+  v0.2, sinon les fautes de frappe passent en silence.
+- Préfixe réservé **`OKLM_`** (D34) ; aucune extension tierce n'existe au 2026-09-02.
+- **`metadata` seul**, pas d'`extras` (D35).
+- **Pas de `minVersion`** (D31).
+- Restent ouverts pour la v0.2 : discriminateur `kind` et identifiants d'exigences (🟡, ChatGPT seul).
+
+### Artefacts d'archive
+
+- ChatGPT : marqueurs de citation internes `citeturn…` non résolus, conservés tels quels dans le brut.
+- Gemini : citations numérotées en exposant renvoyant à la liste de fin ; trois images de formules
+  en base64 en pied de fichier (pipeline d'aller-retour), inutiles au contenu.
+- Claude : rapport structuré TL;DR / Key Findings / Details / Deliverables, sans artefact.
+
 ---
 
-*Dernière mise à jour : 2026-06-07*
+---
+
+*Dernière mise à jour : 2026-09-02*

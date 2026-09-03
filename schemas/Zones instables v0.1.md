@@ -44,6 +44,14 @@ pas seulement l'enrichir. Pourront bouger :
   du schéma lui-même (`schemaVersion` est un `const "0.1"` en attendant) ;
 - la politique d'enregistrement des namespaces d'`extensions`.
 
+**Prompt 12 traité le 2026-09-02** (D31–D44 du journal, triangulation ChatGPT + Claude + Gemini).
+Ce qui bouge effectivement en v0.2 (arbitré par Antoine le 2026-09-02, pas de `minVersion`, pas d'`extras`) : `schemaVersion` passe de `const` à
+motif (D31) ; `additionalProperties: false` s'ouvre au profit d'un mode lint du validateur (D32) ;
+trois tableaux `extensionsUsed` / `extensionsRequired` / `featuresRequired` entrent à la racine
+(D33) ; les namespaces réservés prennent le préfixe `OKLM_` (D34) ; formes localisées
+`nameLocalized` / `descriptionLocalized` (D39). Le bloc `conformance` et la notation compacte ne
+sont pas remis en cause. Détail et tensions : journal, section « Prompt 12 ».
+
 ### 2. Prompt 6 — Firmware (fermeture de D10 🔴)
 
 D10 (mapping physique firmware dans un namespace d'extension séparé) reste un

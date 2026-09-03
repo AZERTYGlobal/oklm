@@ -29,7 +29,7 @@
 5. **Consigner** dans `Décisions de conception — deep research.md` :
    - ajouter/mettre à jour la ligne de **provenance** (table en tête) ;
    - ajouter une **section `## Prompt N`** avec les décisions, en numérotant `Dxx` **à la suite**
-     (dernier utilisé : **D14**) ;
+     (dernier utilisé : **D44**) ;
    - lister les **points à confirmer** et les **tensions avec `SPEC.md`**.
 
 ### Légende des statuts de décision
@@ -37,9 +37,11 @@
 - 🟢 **Confirmée** : triangulation (≥ 2-3 moteurs) ou source primaire vérifiée → intégrable à `SPEC.md`.
 - 🔴 **À arbitrer** : tension avec `SPEC.md` ou décision de périmètre projet (humain requis).
 
-## État d'avancement (au 2026-07-11)
+## État d'avancement (au 2026-09-02)
 
-**Campagne en pause, à reprendre** (décision Antoine 2026-07-11).
+**Campagne reprise le 2026-09-02** (roadmap OKLM, décision 7) : prompt 12 traité ; blocs B puis C
+à partir d'octobre 2026, une session de triangulation par bloc. Perplexity n'est plus utilisé
+(pas d'abonnement) : les trois moteurs sont ChatGPT, Claude et Gemini.
 
 | Prompt | Sujet | Statut |
 |---|---|---|
@@ -48,17 +50,20 @@
 | 10 | IME & scripts complexes | ✅ triangulé (≥ 2-3 moteurs) |
 | 11 | Normes de jure (ISO 9995…) | ✅ triangulé (≥ 2-3 moteurs) |
 | 16 | Géométrie physique (KLE/info.json/VIA) | ✅ triangulé (≥ 2-3 moteurs) |
-| 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15 | Reste de la carte (11 prompts) | ⬜ restants |
+| 12 | Conception du format + conformance | ✅ triangulé (3 moteurs, 2026-09-02) — D31–D44, 4 points 🔴 |
+| 2, 3, 4, 5, 6, 7, 8, 13, 14, 15 | Reste de la carte (10 prompts) | ⬜ restants (octobre 2026, blocs B puis C) |
 
-Décisions consignées : **D1–D30** (journal et `SPEC.md` alignés — voir le journal pour le détail
-prompt par prompt).
+Décisions consignées : **D1–D44**. D1–D30 : journal et `SPEC.md` alignés. **D31–D44 (prompt 12) ne
+sont pas migrées** : quatre d'entre elles changent la structure du schéma et ont été **arbitrées par
+Antoine le 2026-09-02** (D32 schéma ouvert + lint strict, D34 préfixes `OKLM_`/`EXT_`/vendeur,
+D35 `metadata` seul, D31 sans `minVersion`) ; elles entrent en v0.2 (chantier C5 de la roadmap).
 
 Livré par ailleurs pendant la campagne : draft OKLM 0.1, exporteurs v1 (LDML/xkb/keylayout),
 schéma de rapport 0.2, site oklm.org.
 
 ## Points ouverts à traiter ensuite
-- Reprendre la campagne sur les **11 prompts restants** (2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15).
-- Nouvelles décisions à numéroter **à partir de D31**.
+- Reprendre la campagne sur les **10 prompts restants** (2, 3, 4, 5, 6, 7, 8, 13, 14, 15) par blocs.
+- Nouvelles décisions à numéroter **à partir de D45**.
 
 ## Langue
 
@@ -67,4 +72,4 @@ du dépôt sont en anglais.
 
 ---
 
-*Dernière mise à jour : 2026-07-11*
+*Dernière mise à jour : 2026-09-02*
