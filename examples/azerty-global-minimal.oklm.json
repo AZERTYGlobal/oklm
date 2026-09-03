@@ -100,9 +100,9 @@
   ],
   "conformance": [
     {
-      "reference": "ISO/IEC 9995-1:2009",
+      "reference": "ISO/IEC 9995-1:2026",
       "scope": "Key reference grid used for canonical key identifiers.",
-      "notes": "Illustrative claim for this example file only; the full layout declares its own conformance list."
+      "notes": "Key reference grid unchanged since the 2009 edition; the 2026 text was not read when this claim was updated (2026-09-03). ISO/IEC 9995-1:2026 (4th edition, 2026-01-16) cancels and replaces ISO/IEC 9995-1:2009. Illustrative claim for this example file only; the full layout declares its own conformance list."
     }
   ],
   "exports": [

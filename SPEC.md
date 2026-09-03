@@ -149,7 +149,7 @@ Cancellation behavior (Escape, unrelated key, focus change) differs across platf
 
 ### Conformance Declaration
 
-A manifest may claim conformance to normative references through the `conformance` array (D13). A global "ISO 9995 compliant" claim is invalid: each claim names one reference with edition (e.g. `ISO/IEC 9995-1:2009`, `AFNOR NF Z71-300:2019`) and states its scope. Partial conformance is allowed and must be scoped.
+A manifest may claim conformance to normative references through the `conformance` array (D13). A global "ISO 9995 compliant" claim is invalid: each claim names one reference with edition (e.g. `ISO/IEC 9995-1:2026`, `AFNOR NF Z71-300:2019`) and states its scope. Partial conformance is allowed and must be scoped.
 
 LDML alignment is not an ISO conformance claim; it is declared separately on the LDML export target (`exports[].options.conformsTo`, a whole number ≥ 45 per UTS #35 Part 7).
 
