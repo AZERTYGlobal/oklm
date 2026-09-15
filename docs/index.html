@@ -247,7 +247,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
           <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
           <a class="btn" href="#demo">Try the demo ↓</a>
         </div>
-        <p class="chip">Draft 0.1 — schemas, six example layouts, a validator and one-way exporters</p>
+        <p class="chip">Draft 0.1 — a bridge to LDML Keyboard: schemas, six example layouts, a validator, one-way exporters with loss reports</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="hero-row"><span class="hk">O</span><span class="hk">K</span></div>
@@ -365,7 +365,7 @@ layout.ldml.xml.report.json   <span class="tok-k"># mapped · skipped · approxi
     <div class="wrap">
       <p class="kicker">Status</p>
       <h2>A public draft, in the open</h2>
-      <p class="sub">OKLM is not yet a published standard. Available today: the draft 0.1 manifest schema, a conversion-report schema (draft 0.2), six example layouts, a reference validator and one-way exporters to LDML Keyboard, XKB and macOS keylayout — each with a loss report. Next: importers (LDML → OKLM) to close the round trip. Reference layouts: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global.</p>
+      <p class="sub">OKLM is not yet a published standard, and it does not compete with Unicode CLDR/LDML Keyboard: it is a source model and tooling layer that exports to it. Available today: the draft 0.1 manifest schema, a conversion-report schema (draft 0.2), six example layouts, a reference validator and one-way exporters to LDML Keyboard, XKB and macOS keylayout — each with a loss report. Progress is measured by four gates, not dates: the gap review against LDML 48.2, ISO/IEC 9995-1:2026, W3C KeyboardEvent.code and HID Usage Tables 1.7 is done (its <a href="https://github.com/AZERTYGlobal/oklm/blob/main/CLDR-LDML.md#known-gaps-against-ldml-keyboard-482">known gaps</a> are public), the checks run green on a clean machine; the LDML → OKLM round trip and independent use are open. First users: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global, whose website will read its layout from the manifest next. Full order of work: <a href="https://github.com/AZERTYGlobal/oklm/blob/main/ROADMAP.md">ROADMAP</a>.</p>
     </div>
   </section>
 </main>

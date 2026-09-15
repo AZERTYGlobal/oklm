@@ -114,6 +114,7 @@ point de comparaison lors de la prochaine itération de la spec.
   d'édition 2026 (ils citent « ISO/IEC 9995 » sans millésime, ou la version 2009). Traiter le
   « :2026 » de Perplexity comme **probable hallucination** ; retenir l'édition **2009** sauf
   preuve d'une édition plus récente sur iso.org.
+- ❌ **Démenti le 2026-09-03 (consigné le 2026-09-15)** : ISO/IEC 9995-1:2026 **existe** — 4ᵉ édition, publiée le 2026-01-16, 16 pages, « This fourth edition cancels and replaces the third edition (ISO/IEC 9995-1:2009) » (avant-propos, aperçu ANSI ; fiche IEC 111520). Perplexity avait raison, le vote 2 moteurs contre 1 avait tort : une absence chez deux moteurs n'est pas une preuve d'absence. Les 6 exemples et `SPEC.md` sont passés à `:2026` le 2026-09-03 (commit `c2325a5`) ; `iso.org` répond 403 aux fetchs, seul l'aperçu public a été lu (avant-propos, sommaire), aucune clause. Revue d'écarts P1 du 2026-09-03 : « Level 4 is allowed, albeit not recommended » ; la série 9995 a été révisée en 2025-2026 sauf -5, -8, -12.
 - ⚠️ **Version des HID Usage Tables** : les 3 moteurs divergent — Perplexity « 1.21 »,
   ChatGPT « 1.4 (2023-01-26) », Gemini cite l'URL `hut1_5.pdf` (→ 1.5). Le « 1.21 » est
   **obsolète** ; version courante = **≥ 1.4 (probablement 1.5)**. À verrouiller sur usb.org

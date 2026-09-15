@@ -1,73 +1,85 @@
 # Roadmap
 
-## Phase 0 - Product Framing
+OKLM moves by **gates, not dates**. A gate is a verifiable state of the
+project; it is either passed, with the evidence named, or open. Work items
+have an order and dependencies, never a target month. This replaced the
+dated phase plan of June 2026 on 2026-09-15 (see "Retired plan" below).
 
-Target: June 2026.
+## Role, first
 
-- Create public product folder.
-- Define scope and non-goals.
-- Draft manifest vocabulary.
-- Define the OKLM / CLDR-LDML boundary.
-- Identify reference layouts.
-- Decide public repository name.
+OKLM is a **bridge and tooling layer**, not a rival to Unicode CLDR/LDML
+Keyboard (see [CLDR-LDML.md](CLDR-LDML.md)). Its first users are the two
+layouts it was built for: [AZERTY Global](https://azerty.global) and
+QWERTY Global. External use is welcome but is not solicited before gate 4:
+a format that has not yet served its own authors has nothing to sell.
 
-## Phase 1 - Draft Schema
+## The four gates
 
-Target: after AZERTY Global final release.
+| Gate | What must be true | State |
+|---|---|---|
+| **1 — Gap review** | The 0.1 manifest schema has been compared field by field with LDML Keyboard (UTS #35 Part 7, version 48.2), ISO/IEC 9995-1:2026, W3C UI Events `KeyboardEvent.code` (Recommendation, 2025-04-22) and USB HID Usage Tables 1.7, and the gaps are written down. The schema itself stays untouched by the review. | **Passed 2026-09-03.** Findings summarised in [CLDR-LDML.md § Known gaps](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482). ISO/IEC 9995-1:2026 was read from its public preview only (foreword, contents, abstract); the ISO-related findings carry that caveat. |
+| **2 — Reproducible checks** | The validator, the schema test suite and the exporter golden tests run green on a clean machine, and the 18 committed reference exports are byte-identical when regenerated. | **Passed 2026-09-02.** `validators/validate_v0_1.py` 15/15, `tools/tests/run_tests.py` 18 deterministic exports matching their goldens, 6 example manifests valid. |
+| **3 — Round trip** | An LDML Keyboard → OKLM importer exists, with its own conversion report, and the OKLM → LDML → OKLM round trip is measured on the six example manifests and on at least one third-party CLDR keyboard. | Open. Only the OKLM → LDML direction exists today. |
+| **4 — Independent use** | Two implementations or usages of OKLM that this project did not write. | Open. Observed, not planned: nothing on this roadmap produces it directly. |
 
-- Write JSON Schema draft.
-- Study Unicode CLDR/LDML Keyboard mapping and define whether OKLM is a superset, bridge or exporter layer.
-- Specify OKLM -> LDML and LDML -> OKLM conversion reports.
-- Create a minimal AZERTY Global example manifest.
-- Done ahead of schedule (2026-07-11): shipped one-way v1 exporters
-  `OKLM -> LDML`, `OKLM -> xkb` and `OKLM -> keylayout` (`tools/export.py`),
-  conversion report schema bumped to 0.2 to cover the two new directions.
-  LDML/xkb/keylayout *import* and the LDML round-trip's `ldml-to-oklm`
-  direction remain open for Phase 5.
-- Validate static maps and character index generation.
-- Document protected-source workflow for reference layouts.
-- Define the first conformance checks that would matter to OS, hardware and app vendors.
+## Work items, in order
 
-## Phase 2 - Dynamic Legends
+Each item lists what it depends on. None has a date.
 
-Target: S2 2026.
+1. **Public documents at the bridge role** — this file, `README.md`,
+   `SPEC.md`, `GOVERNANCE.md`, `CLDR-LDML.md`, `INDUSTRY-ADOPTION.md` and
+   the oklm.org site say the same thing about role, gates and known gaps.
+   *Done 2026-09-15.*
+2. **AZERTY Global website reads its layout from OKLM** — the manifest
+   `azerty-global.oklm.json` becomes the canonical description; the data
+   files the website's keyboard component reads are generated from it at
+   build time, and the generated files are proven byte-identical to the
+   current ones before the switch. Depends on gates 1 and 2.
+3. **QWERTY Global manifest** — a shared US ANSI chassis plus local modules
+   (French, Italian first). Design question to settle first: modules as
+   `groups` inside one manifest (reserved in 0.1, not yet exported by any
+   v1 exporter) or as separate manifests sharing the chassis. Depends on
+   item 2, whose build chain it reuses.
+4. **Schema 0.2** — one revision, not several. Already decided: the
+   normative schema opens (`additionalProperties` no longer `false`
+   everywhere) and a `--strict` validator mode takes over the rejection of
+   unknown members; extension namespaces take the prefixes `OKLM_`, `EXT_`
+   and `<VENDOR>_` with a public prefix registry; three capability arrays at
+   the root (`featuresRequired`, `extensionsRequired`, and their optional
+   counterpart) replace any `minVersion`; `metadata` stays the only
+   free-form envelope. The revision also absorbs the gate 1 findings and
+   what items 2 and 3 taught about real use. Depends on gate 1 and items
+   2 and 3.
+5. **Stream Deck profile export** — characters and shortcuts of a layout as
+   an Elgato `.streamDeckProfile`, with a conversion report. First
+   potential consumer outside an operating system. Depends on item 4.
+6. **Windows `.klc` export** — completes the OS trio (LDML, xkb, keylayout
+   already exist); the output must compile in MSKLC. Depends on item 4.
+7. **LDML Keyboard importer** — `ldml-to-oklm` with its report; round trip
+   measured. This is gate 3. Depends on item 4.
 
-- Define dynamic legend fields.
-- Create icon/label export format.
-- Prototype Stream Deck-style profile data.
-- Prototype accessibility labels.
-- Evaluate Corsair/Elgato, Logitech, Flux and Nemeio export paths.
-- Document hardware/OEM use cases: printed legends, keycaps, stickers, dynamic labels and regional packs.
+What is deliberately **not** on this list: a kalamine bridge, a firmware
+(QMK/ZMK) exporter, dynamic-legend device profiles other than Stream Deck,
+and a "candidate standard" release. They may come back once gate 4 is
+passed and a second author has a say.
 
-## Phase 3 - OS and AI-Key Integration
+## Research still feeding the schema
 
-Target: late 2026 / early 2027.
+Sixteen deep-research prompts were written in June 2026 to survey the
+ecosystem (formats, OS pipelines, dynamic keys, standards). Six are
+triangulated across three engines and consigned as decisions D1–D44 in
+[`research/`](research/); ten remain, to be run in blocks before schema 0.2.
+The journal is in French.
 
-- Map manifest actions to OS companion apps.
-- Evaluate Windows Copilot hardware key provider integration.
-- Define OS-neutral command ids before binding anything to a specific AI key.
-- Define "character assistant" metadata.
-- Generate local assistant knowledge files.
+## Retired plan
 
-## Phase 4 - QWERTY Global Modules
-
-Target: 2027.
-
-- Add QWERTY Global base manifest.
-- Add French, Italian, German and Spanish modules.
-- Demonstrate one physical QWERTY chassis with multiple local modules.
-- Prepare public examples for makers and keyboard vendors.
-
-## Phase 5 - Public Standard Candidate
-
-Target: 2027+.
-
-- Publish version 0.9 as candidate spec.
-- Create conformance tests.
-- Ship at least one OKLM -> LDML converter and one LDML -> OKLM importer.
-- Invite feedback from layout authors, keyboard communities, open-source OS maintainers, app vendors, remote desktop tools, dynamic-key vendors and hardware manufacturers.
-- Prepare 1.0 after at least two independent implementations or exporters.
+The roadmap published from June to September 2026 had five dated phases
+(product framing in June 2026, draft schema after the AZERTY Global
+release, dynamic legends in the second half of 2026, OS and AI-key
+integration in late 2026, QWERTY Global modules in 2027, candidate standard
+2027+). Phases 0 and 1 happened; the dates of the rest were wishes. They
+are replaced by the gates above and are kept in the git history only.
 
 ---
 
-*Last updated: 2026-07-11*
+*Last updated: 2026-09-15*

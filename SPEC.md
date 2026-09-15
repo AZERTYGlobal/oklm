@@ -2,11 +2,13 @@
 
 ## Version
 
-Draft 0.1.
+Draft 0.1, **frozen**. The next revision is 0.2, the only one planned before 1.0; its structural choices and the order of work are in [ROADMAP.md](ROADMAP.md).
 
 Normative machine-readable definitions live in [`schemas/oklm-manifest.schema.json`](schemas/oklm-manifest.schema.json) and [`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json). This document explains the model; when prose and schema disagree, the schema wins for draft 0.1.
 
-Design decisions referenced as D1..D30 are recorded in [`research/Décisions de conception — deep research.md`](research/Décisions%20de%20conception%20—%20deep%20research.md).
+OKLM is a bridge and tooling layer around Unicode CLDR/LDML Keyboard, not a competing interchange format. The 0.1 schema was compared field by field with LDML Keyboard 48.2, ISO/IEC 9995-1:2026, W3C `KeyboardEvent.code` (2025) and USB HID Usage Tables 1.7 on 2026-09-03; the schema was not changed, and the gaps are listed in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482). Where this document below notes an ISO/IEC 9995-1:2026 statement, it relies on the standard's public preview (foreword and contents), not on its clause text.
+
+Design decisions referenced as D1..D44 are recorded in [`research/Décisions de conception — deep research.md`](research/Décisions%20de%20conception%20—%20deep%20research.md).
 
 ## Design Goals
 
@@ -51,7 +53,7 @@ Non-goal:
 
 OKLM uses ISO/IEC 9995 terminology verbatim (D14):
 
-- **Level**: shift state within a group. Level 1 is the unshifted state, level 2 is Level2Shift (commonly "Shift"), level 3 is Level3Shift (commonly "AltGr"), level 4 combines levels 2 and 3. Levels 5-8 are optional.
+- **Level**: shift state within a group. Level 1 is the unshifted state, level 2 is Level2Shift (commonly "Shift"), level 3 is Level3Shift (commonly "AltGr"), level 4 combines levels 2 and 3. ISO/IEC 9995-1:2026 defines up to four levels (its foreword allows level 4 "albeit not recommended"). **Levels 5-8 are an OKLM extension beyond ISO**, kept for layouts that condition extra levels on CapsLock (AZERTY Global, AFNOR, BÉPO); whether they stay in the core or move to an extension is a schema 0.2 question.
 - **Group**: a complete alternative keymap on the same physical keys (e.g. a second script). Groups are a distinct axis from levels (D3).
 - **Key number**: canonical physical key position per ISO/IEC 9995-1 (e.g. `D01`, `C00`, `B00`, `E01`).
 
@@ -109,7 +111,7 @@ Fields:
 - `xkb`: optional XKB key name alias for Linux export (e.g. `AD01`, `LSGT`, `SPCE`).
 - `code`: optional W3C UI Events `KeyboardEvent.code` cross-reference (D24) — e.g. `KeyQ`, `IntlBackslash`.
 - `name`: optional human-readable label for documentation.
-- `levels`: outputs by ISO level for group 1 (see Output below). A level with no output is omitted.
+- `levels`: outputs by ISO level for group 1 (see Output below). A level with no output is omitted. Intended meaning: the key produces nothing at that level. LDML Keyboard expresses this differently (a keystroke with no matching layer is ignored, unless a layer `other` exists), and the v1 LDML exporter currently drops such a key from the layer's row instead of emitting a gap; see the known gaps in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482).
 - `groups`: optional additional ISO groups, starting at `"2"` (group 1 is `levels`).
 - `categories`: optional semantic tags (e.g. `letter`, `digit`, `punctuation`, `french`).
 
@@ -119,7 +121,7 @@ Frame keys — function row, navigation, numpad, media, `Fn`, anything outside H
 
 ### Level Selectors
 
-Optional declaration of how levels 2-8 are selected, using ISO/IEC 9995 functional qualifier names (D2): `Level2Shift`, `Level3Shift`, `Level5Shift`, `CapsLock`, `NumLock`. Modifiers are named by function, never by the physical key that activates them. Platform bindings (AltGr vs Ctrl+Alt, macOS Option) are export concerns.
+Optional declaration of how levels 2-8 are selected, by functional qualifier name (D2): `Level2Shift`, `Level3Shift`, `Level5Shift`, `CapsLock`, `NumLock`. `Level2Shift` and `Level3Shift` follow the ISO/IEC 9995 naming pattern; `Level5Shift`, `CapsLock` and `NumLock` are OKLM names with no ISO counterpart (ISO stops at four levels, and the numeric section is out of the LDML-aligned core). Modifiers are named by function, never by the physical key that activates them. Platform bindings (AltGr vs Ctrl+Alt, macOS Option) are export concerns; on LDML export only `Level2Shift`, `Level3Shift` and `CapsLock` have a modifier component (`shift`, `altR`, `caps`), and a level that needs `Level5Shift` or `NumLock` is skipped and reported.
 
 Defaults when omitted: level 2 = `[Level2Shift]`, level 3 = `[Level3Shift]`, level 4 = `[Level2Shift, Level3Shift]`.
 
@@ -142,14 +144,14 @@ Fields:
 - `id`: identifier; compiles to the LDML marker `\m{id}`.
 - `name`: optional human-readable name.
 - `display`: optional standalone character shown while the dead key is pending (e.g. `ˆ`).
-- `compositions`: base input string → output string. Document order is the rule order.
+- `compositions`: base input string → output string. Document order is the rule order. The base is a literal string, not a pattern. Note for LDML export: LDML's `transform@from` is a regex-like pattern in which `. ( ) ? [ \ ] { } * / ^ + | $` must be escaped, and the v1 exporter does not yet escape them (known gap E13 in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482)).
 - `fallback`: optional text emitted in place of the pending marker when no composition matches.
 
 Cancellation behavior (Escape, unrelated key, focus change) differs across platforms; exporters must document their mapping of `fallback` and cancellation (D4).
 
 ### Conformance Declaration
 
-A manifest may claim conformance to normative references through the `conformance` array (D13). A global "ISO 9995 compliant" claim is invalid: each claim names one reference with edition (e.g. `ISO/IEC 9995-1:2026`, `AFNOR NF Z71-300:2019`) and states its scope. Partial conformance is allowed and must be scoped.
+A manifest may claim conformance to normative references through the `conformance` array (D13). A global "ISO 9995 compliant" claim is invalid: each claim names one reference with edition (e.g. `ISO/IEC 9995-1:2026`, `AFNOR NF Z71-300:2019`) and states its scope. Partial conformance is allowed and must be scoped. ISO/IEC 9995-1:2026 (fourth edition, 2026-01-16) cancels and replaces ISO/IEC 9995-1:2009; the example manifests claim the 2026 edition for the key reference grid only.
 
 LDML alignment is not an ISO conformance claim; it is declared separately on the LDML export target (`exports[].options.conformsTo`, a whole number ≥ 45 per UTS #35 Part 7).
 
@@ -223,4 +225,4 @@ See `CONVERSIONS.md` for the conversion policy.
 
 ---
 
-*Last updated: 2026-07-10*
+*Last updated: 2026-09-15*

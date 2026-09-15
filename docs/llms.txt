@@ -2,17 +2,17 @@
 
 > An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.
 
-OKLM is a public draft (0.1), not yet a published or adopted standard. It does not compete with Unicode CLDR/LDML Keyboard: LDML Keyboard is the standards-oriented interchange export; OKLM is the source model and tooling layer around it. Canonical format: JSON, extension `.oklm.json`. Licenses: EUPL 1.2 (schemas, validators, tools) and CC BY 4.0 (documentation).
+OKLM is a public draft (0.1, frozen; 0.2 is the next revision), not yet a published or adopted standard. It does not compete with Unicode CLDR/LDML Keyboard: LDML Keyboard is the standards-oriented interchange export; OKLM is the source model and tooling layer around it. Its first users are its own reference layouts, AZERTY Global and QWERTY Global; external adoption is observed, not solicited. Progress is measured by four gates without dates: gap review against LDML Keyboard 48.2, ISO/IEC 9995-1:2026, W3C KeyboardEvent.code (2025) and USB HID Usage Tables 1.7 (passed 2026-09-03, known gaps published), reproducible checks (passed 2026-09-02), LDML round trip (open), independent use (open). Canonical format: JSON, extension `.oklm.json`. Licenses: EUPL 1.2 (schemas, validators, tools) and CC BY 4.0 (documentation).
 
 ## Documentation
 
 - [README](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/README.md): project overview and goals
 - [SPEC](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/SPEC.md): manifest specification, draft 0.1
 - [CONVERSIONS](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CONVERSIONS.md): conversion rules and conversion reports
-- [CLDR-LDML](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CLDR-LDML.md): relationship with Unicode CLDR/LDML Keyboard
-- [GOVERNANCE](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/GOVERNANCE.md): project governance
-- [ROADMAP](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/ROADMAP.md): planned milestones
-- [INDUSTRY-ADOPTION](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/INDUSTRY-ADOPTION.md): adoption targets across the keyboard ecosystem
+- [CLDR-LDML](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CLDR-LDML.md): relationship with Unicode CLDR/LDML Keyboard, reference versions, who consumes LDML today, known gaps of the 0.1 schema against LDML 48.2
+- [GOVERNANCE](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/GOVERNANCE.md): stewardship, decision record, version and compatibility policy
+- [ROADMAP](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/ROADMAP.md): the four gates and the ordered work list, no dates
+- [INDUSTRY-ADOPTION](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/INDUSTRY-ADOPTION.md): possible adopters, what is known of the landscape, and the sequence before any outreach
 
 ## Schemas and examples
 
