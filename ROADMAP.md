@@ -42,8 +42,8 @@ Each item lists what it depends on. None has a date.
    item 2, whose build chain it reuses.
 4. **Schema 0.2** — one revision, not several. Already decided: the
    normative schema opens (`additionalProperties` no longer `false`
-   everywhere) and a `--strict` validator mode takes over the rejection of
-   unknown members; extension namespaces take the prefixes `OKLM_`, `EXT_`
+   everywhere) and the `--strict` validator mode (in the validator since
+   2026-09-15) takes over the rejection of unknown members; extension namespaces take the prefixes `OKLM_`, `EXT_`
    and `<VENDOR>_` with a public prefix registry; three capability arrays at
    the root (`featuresRequired`, `extensionsRequired`, and their optional
    counterpart) replace any `minVersion`; `metadata` stays the only

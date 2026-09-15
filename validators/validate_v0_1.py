@@ -115,6 +115,47 @@ check("rejet attendu : import sans preservedAsExtensions", bool(list(rv.iter_err
 bad = copy.deepcopy(report_export); bad["compatibilityLevel"] = "perfect"
 check("rejet attendu : compatibilityLevel hors enum", bool(list(rv.iter_errors(bad))))
 
+# 6. Lint --strict (decision 19 du 2026-09-02, prerequis du schema 0.2) : membres inconnus,
+#    prefixes d extension, plages HID, codes W3C, un code par touche
+sys.path.insert(0, str(BASE / "validators"))
+import validate as strict_validator
+for path in sorted((BASE / "examples").glob("*.oklm.json")):
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    errs = strict_validator.strict_lint_errors(manifest, manifest_schema, strict=True)
+    check("lint --strict propre : " + path.name, not errs, "; ".join(errs[:3]))
+bad = copy.deepcopy(example); bad["foo"] = 1
+check("lint : membre inconnu non prefixe rejete (mode normal)",
+      bool(strict_validator.strict_lint_errors(bad, manifest_schema, strict=False)))
+bad = copy.deepcopy(example); bad["ACME_foo"] = {"x": 1}; bad["keys"][0]["EXT_shape"] = "wide"
+check("lint : membres prefixes <VENDEUR>_ et EXT_ acceptes (mode normal)",
+      not strict_validator.strict_lint_errors(bad, manifest_schema, strict=False))
+check("lint --strict : membres prefixes rejetes",
+      len(strict_validator.strict_lint_errors(bad, manifest_schema, strict=True)) == 2)
+bad = copy.deepcopy(example); bad["layers"] = ["base"]
+errs = strict_validator.strict_lint_errors(bad, manifest_schema, strict=False)
+check("lint : champ layers rejete avec indication keys[].levels", any("keys[].levels" in e for e in errs))
+bad = copy.deepcopy(example); bad["keys"][0]["levels"]["1"] = {"deadKey": "grave", "extra": 1}
+check("lint : membre inconnu dans une sortie oneOf rejete",
+      bool(strict_validator.strict_lint_errors(bad, manifest_schema, strict=False)))
+bad = copy.deepcopy(example); bad.setdefault("metadata", {})["training"] = {"anything": {"goes": [1, 2]}}
+check("lint --strict : bloc metadata non normatif laisse libre",
+      not strict_validator.strict_lint_errors(bad, manifest_schema, strict=True))
+bad = copy.deepcopy(example); bad["keys"][0]["hid"] = "0x01"
+check("lint --strict : hid non physique 0x01 rejete",
+      any("non-physical" in e for e in strict_validator.strict_lint_errors(bad, manifest_schema)))
+bad = copy.deepcopy(example); bad["keys"][0]["hid"] = "0xE8"
+check("lint --strict : hid reserve 0xE8 rejete",
+      any("reserved" in e for e in strict_validator.strict_lint_errors(bad, manifest_schema)))
+bad = copy.deepcopy(example); bad["keys"][0]["code"] = "KeyQQ"
+check("lint --strict : code hors enumeration W3C rejete",
+      any("W3C" in e for e in strict_validator.strict_lint_errors(bad, manifest_schema)))
+bad = copy.deepcopy(example); bad["keys"][0]["code"] = "Backslash"; bad["keys"][1]["code"] = "Backslash"
+check("lint --strict : deux touches Backslash rejetees",
+      any("one code names one physical key" in e for e in strict_validator.strict_lint_errors(bad, manifest_schema)))
+check("lint --strict : hid 0x04 et 0xE7 acceptes (bornes)",
+      not [e for e in strict_validator.strict_lint_errors(
+          {"keys": [{"id": "A", "hid": "0x04"}, {"id": "B", "hid": "0xE7"}]}, manifest_schema) if "hid" in e])
+
 print()
 if failures:
     print(f"ECHEC : {len(failures)} test(s) en échec : {failures}")

@@ -105,11 +105,15 @@ schema validity.
 
 ```text
 python validators/validate.py examples/*.oklm.json
+python validators/validate.py --strict examples/*.oklm.json
 python validators/validate_v0_1.py
 python tools/tests/run_tests.py
 ```
 
-All three ran green on a clean machine on 2026-09-02 (gate 2). They need
+The first, third and fourth ran green on a clean machine on 2026-09-02 (gate 2).
+`--strict` (added 2026-09-15, decided 2026-09-02 as a prerequisite of schema 0.2)
+lints what the schema does not: unknown members and extension prefixes, HID
+usage ranges, W3C `code` values, one physical code per key. They need
 Python 3 and `jsonschema`.
 
 ## What this is not
