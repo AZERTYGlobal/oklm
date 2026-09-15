@@ -111,7 +111,7 @@ Fields:
 - `xkb`: optional XKB key name alias for Linux export (e.g. `AD01`, `LSGT`, `SPCE`).
 - `code`: optional W3C UI Events `KeyboardEvent.code` cross-reference (D24) — e.g. `KeyQ`, `IntlBackslash`.
 - `name`: optional human-readable label for documentation.
-- `levels`: outputs by ISO level for group 1 (see Output below). A level with no output is omitted. Intended meaning: the key produces nothing at that level. LDML Keyboard expresses this differently (a keystroke with no matching layer is ignored, unless a layer `other` exists), and the v1 LDML exporter currently drops such a key from the layer's row instead of emitting a gap; see the known gaps in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482).
+- `levels`: outputs by ISO level for group 1 (see Output below). A level with no output is omitted. Intended meaning: the key produces nothing at that level. LDML Keyboard expresses this differently (a keystroke with no matching layer is ignored, unless a layer `other` exists), and the v1 LDML exporter emits LDML's implicit `gap` key at that position (fixed 2026-09-15); see the known gaps in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482).
 - `groups`: optional additional ISO groups, starting at `"2"` (group 1 is `levels`).
 - `categories`: optional semantic tags (e.g. `letter`, `digit`, `punctuation`, `french`).
 

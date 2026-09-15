@@ -294,45 +294,45 @@
     </layer>
     <layer modifiers="altR">
       <row keys="k_E00_3 k_E01_3 k_E02_3 k_E03_3 k_E04_3 k_E05_3 k_E06_3 k_E07_3 k_E08_3 k_E09_3 k_E10_3 k_E11_3 k_E12_3"/>
-      <row keys="k_D01_3 k_D02_3 k_D03_3 k_D04_3 k_D05_3 k_D06_3 k_D07_3 k_D08_3 k_D09_3 k_D11_3"/>
-      <row keys="k_C01_3 k_C02_3 k_C03_3 k_C04_3 k_C05_3 k_C06_3 k_C07_3 k_C08_3 k_C09_3 k_C10_3 k_C11_3"/>
+      <row keys="k_D01_3 k_D02_3 k_D03_3 k_D04_3 k_D05_3 k_D06_3 k_D07_3 k_D08_3 k_D09_3 gap k_D11_3 gap"/>
+      <row keys="k_C01_3 k_C02_3 k_C03_3 k_C04_3 k_C05_3 k_C06_3 k_C07_3 k_C08_3 k_C09_3 k_C10_3 k_C11_3 gap"/>
       <row keys="k_B00_3 k_B01_3 k_B02_3 k_B03_3 k_B04_3 k_B05_3 k_B06_3 k_B07_3 k_B08_3 k_B09_3 k_B10_3"/>
       <row keys="k_A03_3"/>
     </layer>
     <layer modifiers="altR shift">
-      <row keys="k_E00_4 k_E01_4 k_E02_4 k_E03_4 k_E04_4 k_E05_4 k_E08_4 k_E09_4 k_E10_4 k_E11_4 k_E12_4"/>
-      <row keys="k_D03_4 k_D04_4 k_D05_4 k_D09_4"/>
-      <row keys="k_C01_4 k_C02_4 k_C03_4 k_C04_4 k_C05_4 k_C06_4 k_C07_4 k_C08_4 k_C09_4"/>
-      <row keys="k_B00_4 k_B02_4 k_B03_4 k_B04_4 k_B05_4 k_B08_4 k_B09_4"/>
+      <row keys="k_E00_4 k_E01_4 k_E02_4 k_E03_4 k_E04_4 k_E05_4 gap gap k_E08_4 k_E09_4 k_E10_4 k_E11_4 k_E12_4"/>
+      <row keys="gap gap k_D03_4 k_D04_4 k_D05_4 gap gap gap k_D09_4 gap gap gap"/>
+      <row keys="k_C01_4 k_C02_4 k_C03_4 k_C04_4 k_C05_4 k_C06_4 k_C07_4 k_C08_4 k_C09_4 gap gap gap"/>
+      <row keys="k_B00_4 gap k_B02_4 k_B03_4 k_B04_4 k_B05_4 gap gap k_B08_4 k_B09_4 gap"/>
       <row keys="k_A03_4"/>
     </layer>
     <layer modifiers="caps">
-      <row keys="k_E01_5 k_E02_5 k_E03_5 k_E04_5 k_E05_5 k_E06_5 k_E07_5 k_E08_5 k_E09_5 k_E10_5"/>
-      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5 k_D11_5 k_D12_5"/>
-      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5 k_C10_5 k_C11_5 k_C12_5"/>
-      <row keys="k_B00_5 k_B01_5 k_B02_5 k_B03_5 k_B05_5 k_B07_5 k_B08_5 k_B09_5 k_B10_5"/>
-      <row keys=""/>
+      <row keys="gap k_E01_5 k_E02_5 k_E03_5 k_E04_5 k_E05_5 k_E06_5 k_E07_5 k_E08_5 k_E09_5 k_E10_5 gap gap"/>
+      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 gap k_D07_5 k_D08_5 k_D09_5 k_D10_5 k_D11_5 k_D12_5"/>
+      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 gap k_C06_5 k_C07_5 k_C08_5 k_C09_5 k_C10_5 k_C11_5 k_C12_5"/>
+      <row keys="k_B00_5 k_B01_5 k_B02_5 k_B03_5 gap k_B05_5 gap k_B07_5 k_B08_5 k_B09_5 k_B10_5"/>
+      <row keys="gap"/>
     </layer>
     <layer modifiers="caps shift">
-      <row keys="k_E01_6 k_E02_6 k_E03_6 k_E04_6 k_E05_6 k_E06_6 k_E07_6 k_E08_6 k_E09_6 k_E10_6"/>
-      <row keys="k_D01_6 k_D02_6 k_D03_6 k_D04_6 k_D05_6 k_D07_6 k_D08_6 k_D09_6 k_D10_6 k_D11_6 k_D12_6"/>
-      <row keys="k_C01_6 k_C02_6 k_C03_6 k_C04_6 k_C06_6 k_C07_6 k_C08_6 k_C09_6 k_C10_6 k_C11_6 k_C12_6"/>
-      <row keys="k_B00_6 k_B01_6 k_B02_6 k_B03_6 k_B05_6 k_B07_6 k_B08_6 k_B09_6 k_B10_6"/>
-      <row keys=""/>
+      <row keys="gap k_E01_6 k_E02_6 k_E03_6 k_E04_6 k_E05_6 k_E06_6 k_E07_6 k_E08_6 k_E09_6 k_E10_6 gap gap"/>
+      <row keys="k_D01_6 k_D02_6 k_D03_6 k_D04_6 k_D05_6 gap k_D07_6 k_D08_6 k_D09_6 k_D10_6 k_D11_6 k_D12_6"/>
+      <row keys="k_C01_6 k_C02_6 k_C03_6 k_C04_6 gap k_C06_6 k_C07_6 k_C08_6 k_C09_6 k_C10_6 k_C11_6 k_C12_6"/>
+      <row keys="k_B00_6 k_B01_6 k_B02_6 k_B03_6 gap k_B05_6 gap k_B07_6 k_B08_6 k_B09_6 k_B10_6"/>
+      <row keys="gap"/>
     </layer>
     <layer modifiers="caps altR">
-      <row keys=""/>
-      <row keys="k_D04_7"/>
-      <row keys="k_C01_7 k_C02_7"/>
-      <row keys=""/>
-      <row keys=""/>
+      <row keys="gap gap gap gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="gap gap gap k_D04_7 gap gap gap gap gap gap gap gap"/>
+      <row keys="k_C01_7 k_C02_7 gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="gap gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="gap"/>
     </layer>
     <layer modifiers="caps altR shift">
-      <row keys=""/>
-      <row keys="k_D04_8"/>
-      <row keys="k_C01_8 k_C02_8"/>
-      <row keys=""/>
-      <row keys=""/>
+      <row keys="gap gap gap gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="gap gap gap k_D04_8 gap gap gap gap gap gap gap gap"/>
+      <row keys="k_C01_8 k_C02_8 gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="gap gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="gap"/>
     </layer>
   </layers>
   <transforms type="simple">

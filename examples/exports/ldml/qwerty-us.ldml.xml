@@ -151,11 +151,11 @@
       <row keys="k_A03_2"/>
     </layer>
     <layer modifiers="caps">
-      <row keys=""/>
-      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5"/>
-      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5"/>
-      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5 k_B07_5"/>
-      <row keys=""/>
+      <row keys="gap gap gap gap gap gap gap gap gap gap gap gap gap"/>
+      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5 gap gap gap"/>
+      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5 gap gap"/>
+      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5 k_B07_5 gap gap gap"/>
+      <row keys="gap"/>
     </layer>
   </layers>
 </keyboard3>

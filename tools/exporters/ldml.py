@@ -172,6 +172,8 @@ def export(manifest, source_file=None):
             for _, level in layers:
                 out = key.get("levels", {}).get(level)
                 if out is None:
+                    # E21: keep the row aligned with the form scan codes (LDML implicit key).
+                    layer_rows[level][-1].append("gap")
                     continue
                 elem_id = f"k_{key['id']}_{level}"
                 if isinstance(out, str):
