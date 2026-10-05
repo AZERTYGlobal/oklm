@@ -128,6 +128,7 @@ class ReportBuilder:
         self.warnings = []
         self.errors = []
         self.round_trip_confidence = None
+        self.unsupported = False
 
     def mapped(self, path):
         if path not in self.mapped_fields:
@@ -142,12 +143,19 @@ class ReportBuilder:
     def warn(self, message):
         self.warnings.append(message)
 
+    def mark_unsupported(self, message):
+        """The source is valid but nothing usable can be produced (D33)."""
+        self.unsupported = True
+        self.warnings.append(message)
+
     def error(self, message):
         self.errors.append(message)
 
     def compatibility_level(self):
         if self.errors:
             return "failed"
+        if self.unsupported:
+            return "unsupported"
         if self.lossy_mappings:
             return "lossy-mapping"
         if self.skipped_fields:

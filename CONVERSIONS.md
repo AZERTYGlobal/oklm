@@ -184,6 +184,23 @@ See `tools/exporters/ldml.py`, `tools/exporters/xkb.py` and
 `tools/exporters/keylayout.py` for the full, current list of scope notes and
 approximations (kept in the module docstring, next to the code it documents).
 
+### Stream Deck profile (`oklm-to-streamdeck`)
+
+`python tools/export.py --target streamdeck FILE.oklm.json` writes a
+`.streamDeckProfile` (zip) of Elgato "Text" buttons: one per distinct
+character the layout types, except ASCII letters, digits and space, on a
+Stream Deck XL grid (8 x 4, 32 buttons per page). It is a reminder and a
+fallback for rarely used symbols, not a layout installer.
+
+- Always reported as `lossy-mapping` with `roundTripConfidence: low`: key
+  ids, levels, modifiers, dead-key sequences and compositions are not
+  represented.
+- A manifest whose outputs are all plain ASCII (the minimal example) gets
+  `compatibilityLevel: unsupported` and no file (D33).
+- **Not verified.** Elgato does not document the format. The structure was
+  rebuilt from public sources and community tools and has not been opened
+  with the Stream Deck software; the report says so in `warnings`.
+
 ## Extension Blocks
 
 OKLM may include an extension block for source-specific data:
