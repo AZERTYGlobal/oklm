@@ -1,0 +1,32 @@
+{
+  "module": "base",
+  "manifest": {
+    "layoutId": "qwerty-global-base",
+    "name": "QWERTY World Base",
+    "version": "2026",
+    "license": "NOASSERTION",
+    "authors": [
+      "QWERTY Global project"
+    ],
+    "locales": [
+      "en",
+      "en-US"
+    ],
+    "geometry": [
+      "iso-full",
+      "iso-tkl",
+      "iso-75"
+    ],
+    "summary": "the QWERTY World Base chassis (US QWERTY plus the world dead-key layer)",
+    "note": "Converted from the protected QWERTY World Base data of the QWERTY Global project, which remains the authoritative source. The source file states no license, hence NOASSERTION until the project owner decides.",
+    "links": {}
+  },
+  "diff": {
+    "removeKeys": [],
+    "setKeys": [],
+    "removeDeadKeys": [],
+    "setDeadKeys": [],
+    "fingers": {},
+    "removeFingers": []
+  }
+}

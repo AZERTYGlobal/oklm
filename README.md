@@ -108,6 +108,7 @@ python validators/validate.py examples/*.oklm.json
 python validators/validate.py --strict examples/*.oklm.json
 python validators/validate_v0_2.py
 python tools/tests/run_tests.py
+python tools/tests/test_qwerty_global.py
 ```
 
 The first, third and fourth ran green on a clean machine on 2026-09-02 (gate 2).
@@ -128,7 +129,7 @@ documents those outputs.
 ```text
 oklm/
 ├── README.md
-├── SPEC.md               manifest specification, draft 0.1
+├── SPEC.md               manifest specification, draft 0.2
 ├── CLDR-LDML.md          relationship with LDML Keyboard, reference versions, known gaps
 ├── CONVERSIONS.md        conversion policy and reports
 ├── INDUSTRY-ADOPTION.md  who could use this, and in which order we will find out
@@ -137,9 +138,11 @@ oklm/
 ├── docs/                 oklm.org site (GitHub Pages)
 ├── examples/             six example manifests
 │   └── exports/          committed reference exports (ldml/xkb/keylayout)
+├── extensions/           PREFIXES.md, the extension prefix registry
+├── qwerty-global/        chassis + module diffs, composed into one manifest per module
 ├── research/             deep-research journal and decisions D1–D44 (French)
-├── schemas/              manifest 0.1 and conversion-report 0.2 JSON Schemas
-├── tools/                export.py, exporters/, tests/
+├── schemas/              manifest and conversion-report 0.2 JSON Schemas
+├── tools/                export.py, qwerty_global.py, migrate_0_1_to_0_2.py, exporters/, tests/
 └── validators/           reference validation scripts
 ```
 
