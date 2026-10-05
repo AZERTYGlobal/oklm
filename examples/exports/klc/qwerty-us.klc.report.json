@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-klc",
+  "source": {
+    "format": "oklm",
+    "file": "qwerty-us.oklm.json",
+    "version": "0.2"
+  },
+  "target": {
+    "format": "windows-klc"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keys",
+    "keys[].levels",
+    "levelSelectors"
+  ],
+  "skippedFields": [
+    {
+      "path": "geometry",
+      "reason": "not represented in .klc (the short name comes from layoutId)"
+    },
+    {
+      "path": "layoutId",
+      "reason": "not represented in .klc (the short name comes from layoutId)"
+    },
+    {
+      "path": "version",
+      "reason": "not represented in .klc (the short name comes from layoutId)"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "keys[D01].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D02].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D03].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D04].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D05].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D06].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D07].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D08].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D09].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[D10].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C01].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C02].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C03].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C04].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C05].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C06].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C07].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C08].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[C09].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B01].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B02].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B03].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B04].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B05].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B06].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[B07].levels",
+      "detail": "CapsLock behaviour on states 0/1 is neither 'no effect' nor 'swap': needs SGCap, ignored"
+    },
+    {
+      "path": "keys[].levels",
+      "detail": "Ctrl column filled with the standard control codes; CapsLock reduced to the Cap column"
+    }
+  ],
+  "warnings": [
+    "MSKLC was not available: the .klc was never compiled; it is checked by an in-repo parser only"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.2"
+  },
+  "roundTripConfidence": "low"
+}

@@ -201,6 +201,27 @@ fallback for rarely used symbols, not a layout installer.
   rebuilt from public sources and community tools and has not been opened
   with the Stream Deck software; the report says so in `warnings`.
 
+### Windows `.klc` (`oklm-to-klc`)
+
+`python tools/export.py --target klc FILE.oklm.json` writes a Microsoft
+Keyboard Layout Creator source: UTF-16 LE with BOM, CRLF, shift states
+`0 1 2 6 7`. The module docstring of `tools/exporters/klc.py` is the
+reference for the mapping. In short:
+
+- levels 1-4 fill states 0, 1, 6, 7; the Ctrl column gets the usual control
+  codes; CapsLock levels set the `Cap` column (swap of 0/1 and of 6/7) and a
+  CapsLock behaviour that needs `SGCap` is reported as lossy;
+- Level5Shift, NumLock and levels without selectors are skipped and reported;
+- ligatures and characters outside the BMP are not exported (reported);
+- a dead key needs a standalone character: `display`, then `fallback`, then a
+  table of conventional spacing accents, then a private-use placeholder
+  (reported as lossy); compositions whose base or result is not one BMP
+  character are skipped and counted;
+- always `lossy-mapping`, `roundTripConfidence: low`.
+- **Not compiled.** MSKLC was not available; the files are checked by an
+  in-repo parser (`tools/tests/test_klc.py`), which proves consistency with the
+  manifest and not acceptance by Windows. The report says so in `warnings`.
+
 ## Extension Blocks
 
 OKLM may include an extension block for source-specific data:

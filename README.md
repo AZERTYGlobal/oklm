@@ -79,16 +79,17 @@ when prose and schema disagree.
 
 ## Exporters
 
-`tools/export.py` converts an `.oklm.json` manifest to one of four one-way
+`tools/export.py` converts an `.oklm.json` manifest to one of five one-way
 targets, each producing a target file plus a conversion report:
 
 ```text
-python tools/export.py --target ldml|xkb|keylayout|streamdeck FILE.oklm.json [FILE ...]
+python tools/export.py --target ldml|xkb|keylayout|streamdeck|klc FILE.oklm.json [FILE ...]
 ```
 
 - `ldml`: CLDR/UTS #35 Part 7 `keyboard3` XML;
 - `xkb`: a standalone `xkb_symbols` block for Linux (levels 1–4);
 - `keylayout`: an Apple `.keylayout` file for macOS;
+- `klc`: a Microsoft Keyboard Layout Creator source for Windows (never compiled, see CONVERSIONS.md);
 - `streamdeck`: an Elgato `.streamDeckProfile` of Text buttons (untested with the Stream Deck software, see CONVERSIONS.md).
 
 Every export writes `<name>.<ext>` and `<name>.<ext>.report.json`, the
@@ -111,6 +112,7 @@ python validators/validate_v0_2.py
 python tools/tests/run_tests.py
 python tools/tests/test_qwerty_global.py
 python tools/tests/test_streamdeck.py
+python tools/tests/test_klc.py
 ```
 
 The first, third and fourth ran green on a clean machine on 2026-09-02 (gate 2).

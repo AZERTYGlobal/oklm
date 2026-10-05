@@ -7,7 +7,7 @@ schemas/oklm-conversion-report.schema.json. If the manifest cannot be
 exported at all (compatibilityLevel "failed"), only the report is written.
 
 Usage:
-    python tools/export.py --target ldml|xkb|keylayout|streamdeck [--out DIR] FILE [FILE ...]
+    python tools/export.py --target ldml|xkb|keylayout|streamdeck|klc [--out DIR] FILE [FILE ...]
 
 Dependency: pip install jsonschema (>= 4.x, Draft 2020-12)
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "validators"))
 
-from exporters import ldml, xkb, keylayout, streamdeck  # noqa: E402
+from exporters import ldml, xkb, keylayout, streamdeck, klc  # noqa: E402
 from exporters.common import ExportError, load_manifest, write_text  # noqa: E402
 from validate import load_validator  # noqa: E402
 
@@ -27,6 +27,7 @@ EXPORTERS = {
     "xkb": (xkb, "xkb"),
     "keylayout": (keylayout, "keylayout"),
     "streamdeck": (streamdeck, "streamDeckProfile"),
+    "klc": (klc, "klc"),
 }
 
 
