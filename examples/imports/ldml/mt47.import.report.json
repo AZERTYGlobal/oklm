@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "ldml-to-oklm",
+  "source": {
+    "format": "ldml-keyboard-3",
+    "file": "mt47.xml",
+    "version": "47",
+    "conformsTo": 47
+  },
+  "target": {
+    "format": "oklm",
+    "version": "0.2",
+    "file": "mt47.oklm.json"
+  },
+  "compatibilityLevel": "lossy-metadata",
+  "mappedFields": [
+    "keyboard3@conformsTo",
+    "keyboard3@locale",
+    "locales",
+    "info@name",
+    "info@author",
+    "keys.import@cldr",
+    "keys.key",
+    "layers.layer",
+    "layers.row",
+    "layers@formId",
+    "keys"
+  ],
+  "skippedFields": [
+    {
+      "path": "(XML comments)",
+      "reason": "comments are not part of the parsed model and are not kept"
+    }
+  ],
+  "lossyMappings": [],
+  "preservedAsExtensions": [
+    {
+      "construct": "info attributes",
+      "extensionNamespace": "OKLM_ldml"
+    }
+  ],
+  "unsupportedConstructs": [],
+  "suggestedEnrichmentTasks": [
+    "set the license (the file does not carry one; CLDR data is Unicode-3.0)",
+    "add metadata.training (fingers, difficulty) and metadata.dynamicLegends if the layout should be taught or shown",
+    "name the dead keys (deadKeys[].name) and describe the layout (description)",
+    "declare the physical sizes in geometry (the import only knows the family)"
+  ],
+  "roundTripConfidence": "medium",
+  "warnings": [
+    "the file has no version element: version 1.0.0 (OKLM default)",
+    "form 'us' gives the family only: geometry declared as 'ansi-full' (LDML does not say the physical size)",
+    "an LDML keyboard file carries no license field: license is NOASSERTION (pass --license to set it)"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-importers",
+    "version": "0.2"
+  }
+}

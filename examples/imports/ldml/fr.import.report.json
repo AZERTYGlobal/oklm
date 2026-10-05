@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "ldml-to-oklm",
+  "source": {
+    "format": "ldml-keyboard-3",
+    "file": "fr.xml",
+    "version": "45",
+    "conformsTo": 45
+  },
+  "target": {
+    "format": "oklm",
+    "version": "0.2",
+    "file": "fr.oklm.json"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keyboard3@conformsTo",
+    "keyboard3@locale",
+    "version@number",
+    "info@name",
+    "info@author",
+    "variables.string",
+    "variables.set",
+    "keys.import@cldr",
+    "keys.key",
+    "layers.layer",
+    "layers.row",
+    "layers@formId",
+    "transforms.transform",
+    "displays.display",
+    "keys",
+    "deadKeys"
+  ],
+  "skippedFields": [
+    {
+      "path": "(XML comments)",
+      "reason": "comments are not part of the parsed model and are not kept"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "layoutId",
+      "detail": "the locale 'fr' carries no -t-k0-<id> tail: layoutId derived from info@name as 'francais-normalis-azerty' (each subtag cut to 8 characters, E20)"
+    },
+    {
+      "path": "layers.layer[ctrl alt]",
+      "detail": "'ctrl alt' is read as the AltGr level (Level3Shift)"
+    },
+    {
+      "path": "layers.layer[ctrl alt shift]",
+      "detail": "'ctrl alt' is read as the AltGr level (Level3Shift)"
+    }
+  ],
+  "preservedAsExtensions": [
+    {
+      "construct": "key attributes",
+      "extensionNamespace": "OKLM_ldml"
+    },
+    {
+      "construct": "transform (4)",
+      "extensionNamespace": "OKLM_ldml"
+    },
+    {
+      "construct": "display",
+      "extensionNamespace": "OKLM_ldml"
+    },
+    {
+      "construct": "display (not about a marker) (3)",
+      "extensionNamespace": "OKLM_ldml"
+    },
+    {
+      "construct": "variables",
+      "extensionNamespace": "OKLM_ldml"
+    },
+    {
+      "construct": "info attributes",
+      "extensionNamespace": "OKLM_ldml"
+    }
+  ],
+  "unsupportedConstructs": [],
+  "suggestedEnrichmentTasks": [
+    "set the license (the file does not carry one; CLDR data is Unicode-3.0)",
+    "add metadata.training (fingers, difficulty) and metadata.dynamicLegends if the layout should be taught or shown",
+    "name the dead keys (deadKeys[].name) and describe the layout (description)",
+    "declare the physical sizes in geometry (the import only knows the family)",
+    "review the 10 construct(s) kept in extensions.OKLM_ldml.unmapped and decide which belong in the core"
+  ],
+  "roundTripConfidence": "medium",
+  "warnings": [
+    "1 composition(s) were shadowed by an earlier rule for the same marker and base and dropped (first rule wins)",
+    "form 'iso' gives the family only: geometry declared as 'iso-full' (LDML does not say the physical size)",
+    "an LDML keyboard file carries no license field: license is NOASSERTION (pass --license to set it)"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-importers",
+    "version": "0.2"
+  }
+}

@@ -69,6 +69,10 @@ HID_TO_SCANCODE1 = {
     "0x64": "56",
 }
 
+# LDML-only additions: the ABNT2 Ro key (HID 0x87, scan code 73) and the JIS Yen key (HID 0x89, 7D) exist in
+# the CLDR implied forms abnt2 and jis. The other exporters (klc, keylayout, xkb) do not know them.
+LDML_SCANCODES = {**HID_TO_SCANCODE1, "0x87": "73", "0x89": "7D"}
+
 ROW_ORDER = "EDCBA"
 
 IMPLIED_FORMS_FILE = Path(__file__).resolve().parent / "data" / "scanCodes-implied.xml"
@@ -147,7 +151,7 @@ def _rows(manifest):
 def _implied_form_for(manifest):
     """(form id, rows of scan codes) of the implied hardware form whose scan codes the manifest's
     keys cover exactly, else None."""
-    codes = {HID_TO_SCANCODE1[key["hid"]] for key in manifest["keys"]}
+    codes = {LDML_SCANCODES[key["hid"]] for key in manifest["keys"]}
     forms = load_implied_forms()
     for form_id in IMPLIED_FORM_ORDER:
         rows = forms.get(form_id)
@@ -221,7 +225,7 @@ def export(manifest, source_file=None):
     unmapped_hid = []
     for row in rows:
         for key in row:
-            if key["hid"] not in HID_TO_SCANCODE1:
+            if key["hid"] not in LDML_SCANCODES:
                 unmapped_hid.append((key["id"], key["hid"]))
     if unmapped_hid:
         for key_id, hid in unmapped_hid:
@@ -251,13 +255,13 @@ def export(manifest, source_file=None):
     implied = _implied_form_for(manifest)
     if implied:
         form_id, implied_rows = implied
-        by_scancode = {HID_TO_SCANCODE1[key["hid"]]: key for key in manifest["keys"]}
+        by_scancode = {LDML_SCANCODES[key["hid"]]: key for key in manifest["keys"]}
         placement_rows = [[by_scancode[code] for code in codes] for codes in implied_rows]
         scancode_rows = None
     else:
         form_id = f"{manifest['layoutId']}-form"
         placement_rows = rows
-        scancode_rows = [" ".join(HID_TO_SCANCODE1[key["hid"]] for key in row) for row in rows]
+        scancode_rows = [" ".join(LDML_SCANCODES[key["hid"]] for key in row) for row in rows]
 
     key_elements = []  # (id, output)
     layer_rows = {level: [] for _, level in layers}

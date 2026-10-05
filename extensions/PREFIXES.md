@@ -37,3 +37,10 @@ else the schema rejects it (D34, D38), so a typo cannot silently become data.
 To register a `<VENDOR>_` prefix, open an issue on the repository with the
 prefix, the owner and a link to the documentation of the namespaces. A prefix is
 granted when it is unused and not a trademark of someone else.
+
+## Namespaces defined by this repository
+
+| Namespace | Content |
+|---|---|
+| `OKLM_ldml` | Written by `tools/import_ldml.py`. `source` (LDML namespace URI, original `locale`), `info` (the `info` attributes other than name and author), `unmapped` (list of `{construct, reason, xml}`: LDML constructs kept verbatim). On a dead key, `markerId` is the original LDML marker id when it was renamed. Never exported (E19). |
+| `OKLM_siteView` | Site rendering data carried by the oklm.org manifest (see `refonte-website`). Not part of the examples. |

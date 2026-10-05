@@ -19,7 +19,7 @@ a format that has not yet served its own authors has nothing to sell.
 |---|---|---|
 | **1 — Gap review** | The 0.1 manifest schema has been compared field by field with LDML Keyboard (UTS #35 Part 7, version 48.2), ISO/IEC 9995-1:2026, W3C UI Events `KeyboardEvent.code` (Recommendation, 2025-04-22) and USB HID Usage Tables 1.7, and the gaps are written down. The schema itself stays untouched by the review. | **Passed 2026-09-03.** Findings summarised in [CLDR-LDML.md § Known gaps](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482). ISO/IEC 9995-1:2026 was read from its public preview only (foreword, contents, abstract); the ISO-related findings carry that caveat. |
 | **2 — Reproducible checks** | The validator, the schema test suite and the exporter golden tests run green on a clean machine, and the 18 committed reference exports are byte-identical when regenerated. | **Passed 2026-09-02.** `validators/validate_v0_1.py` 15/15, `tools/tests/run_tests.py` 18 deterministic exports matching their goldens, 6 example manifests valid. |
-| **3 — Round trip** | An LDML Keyboard → OKLM importer exists, with its own conversion report, and the OKLM → LDML → OKLM round trip is measured on the six example manifests and on at least one third-party CLDR keyboard. | Open. Only the OKLM → LDML direction exists today. |
+| **3 — Round trip** | An LDML Keyboard → OKLM importer exists, with its own conversion report, and the OKLM → LDML → OKLM round trip is measured on the six example manifests and on at least one third-party CLDR keyboard. | **Met on branch `schema-v0.2` (2026-10-05), pending merge.** `tools/import_ldml.py` and its `ldml-to-oklm` report exist. Measured by `tools/tests/test_ldml_import.py`: OKLM → LDML → OKLM keeps 250/250 keys, 1097/1097 outputs, 78/78 dead keys and 2080/2080 compositions on the six examples; three third-party CLDR keyboards (French AZERTY, Portuguese ABNT2, Maltese 47-key) import, validate in strict mode and reach a fixed point on LDML → OKLM → LDML. See [CONVERSIONS.md](CONVERSIONS.md#ldml-to-oklm). |
 | **4 — Independent use** | Two implementations or usages of OKLM that this project did not write. | Open. Observed, not planned: nothing on this roadmap produces it directly. |
 
 ## Work items, in order
@@ -61,7 +61,9 @@ Each item lists what it depends on. None has a date.
 6. **Windows `.klc` export** — completes the OS trio (LDML, xkb, keylayout
    already exist); the output must compile in MSKLC. Depends on item 4.
 7. **LDML Keyboard importer** — `ldml-to-oklm` with its report; round trip
-   measured. This is gate 3. Depends on item 4.
+   measured. This is gate 3. Depends on item 4. *Done 2026-10-05* on branch
+   `schema-v0.2`: `tools/import_ldml.py`, `extensions.OKLM_ldml`, three
+   third-party CLDR keyboards as reference cases.
 
 What is deliberately **not** on this list: a kalamine bridge, a firmware
 (QMK/ZMK) exporter, dynamic-legend device profiles other than Stream Deck,

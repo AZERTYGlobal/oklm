@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "ldml-to-oklm",
+  "source": {
+    "format": "ldml-keyboard-3",
+    "file": "ptabnt.xml",
+    "version": "45",
+    "conformsTo": 45
+  },
+  "target": {
+    "format": "oklm",
+    "version": "0.2",
+    "file": "ptabnt.oklm.json"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keyboard3@conformsTo",
+    "keyboard3@locale",
+    "locales",
+    "version@number",
+    "info@name",
+    "keys.import@cldr",
+    "keys.key",
+    "layers.layer",
+    "layers.row",
+    "layers@formId",
+    "displays.display",
+    "keys"
+  ],
+  "skippedFields": [
+    {
+      "path": "(XML comments)",
+      "reason": "comments are not part of the parsed model and are not kept"
+    }
+  ],
+  "lossyMappings": [],
+  "preservedAsExtensions": [
+    {
+      "construct": "display (marker without dead key) (5)",
+      "extensionNamespace": "OKLM_ldml"
+    }
+  ],
+  "unsupportedConstructs": [
+    {
+      "construct": "marker 'umlaut'",
+      "detail": "no transform uses it: the key outputs E06/2 produce nothing visible and become silent levels (E21)"
+    },
+    {
+      "construct": "marker 'acute'",
+      "detail": "no transform uses it: the key outputs D11/1 produce nothing visible and become silent levels (E21)"
+    },
+    {
+      "construct": "marker 'grave'",
+      "detail": "no transform uses it: the key outputs D11/2 produce nothing visible and become silent levels (E21)"
+    },
+    {
+      "construct": "marker 'tilde'",
+      "detail": "no transform uses it: the key outputs C11/1 produce nothing visible and become silent levels (E21)"
+    },
+    {
+      "construct": "marker 'caret'",
+      "detail": "no transform uses it: the key outputs C11/2 produce nothing visible and become silent levels (E21)"
+    }
+  ],
+  "suggestedEnrichmentTasks": [
+    "name the layout authors (the file does not say)",
+    "set the license (the file does not carry one; CLDR data is Unicode-3.0)",
+    "add metadata.training (fingers, difficulty) and metadata.dynamicLegends if the layout should be taught or shown",
+    "name the dead keys (deadKeys[].name) and describe the layout (description)",
+    "declare the physical sizes in geometry (the import only knows the family)",
+    "review the 5 construct(s) kept in extensions.OKLM_ldml.unmapped and decide which belong in the core"
+  ],
+  "roundTripConfidence": "low",
+  "warnings": [
+    "info@author is missing: authors is ['Unknown'] (OKLM requires one author)",
+    "2 key position(s) have no output at any level and were not created: D11, C11",
+    "form 'abnt2' gives the family only: geometry declared as 'abnt-full' (LDML does not say the physical size)",
+    "an LDML keyboard file carries no license field: license is NOASSERTION (pass --license to set it)"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-importers",
+    "version": "0.2"
+  }
+}

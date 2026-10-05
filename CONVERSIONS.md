@@ -11,7 +11,7 @@ LDML Keyboard -> OKLM
 
 The conversions do not have the same guarantees.
 
-Both directions must produce a machine-readable report validating against [`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json).
+Both directions produce a machine-readable report validating against [`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json).
 
 OKLM is broader than LDML Keyboard because it can include product, pedagogy, dynamic legend, assistant and export metadata. Therefore, an OKLM to LDML conversion may lose OKLM-only information.
 
@@ -133,6 +133,46 @@ The import report must include:
 - warnings;
 - errors;
 - suggested enrichment tasks.
+
+### The importer (`tools/import_ldml.py`, schema 0.2)
+
+The module docstring of `tools/importers/ldml.py` is the reference. The rules:
+
+- **Placement.** A layer row is paired with the scan codes of its form: a CLDR implied form or a `<forms>` form with `scanCodes`. A scan code gives the ISO key id and the HID (the exporter table, plus ABNT2 Ro `0x87` / scan 73 as B11 and JIS Yen `0x89` / 7D as E13, which only the LDML exporter writes). Scan code 2B is D13 on the `us` and `ks` forms (it ends the Q row there) and C12 on the others, with the same HID `0x31`.
+- **Levels.** `none` 1, `shift` 2, `altR` 3, `altR shift` 4, and the same with `caps` for 5 to 8 (declared in `levelSelectors`). `ctrl alt` is read as AltGr and reported as lossy. A layer with another modifier set (`ctrl`, `altL`...), a second layer for a level already filled, and the alternatives of a comma list that do not map are preserved verbatim.
+- **Keys.** The implicit CLDR import `keys-Latn-implied` and the `keys-Zyyy-punctuation` / `keys-Zyyy-currency` imports are bundled (CLDR release 47, Unicode license). Any other import is preserved as unresolved, and a key id that nothing defines is declared unsupported with its output lost. Output syntax: text, `\u{..}`, `${string}`; one `\m{id}` is a dead-key output; a marker mixed with text is unsupported.
+- **Dead keys.** A simple transform whose `from` is one marker followed by literal characters or one `$[set]` becomes compositions: sets are expanded and `$1` / `$[1:set]` are resolved, so one LDML rule over 58 letters gives 58 compositions. A bare marker with a literal `to` is the `fallback` (E15). When two rules give the same base the first wins and a warning counts the others. Regular expressions, chained markers, a rule without `to`, other transform types and `reorder` are preserved verbatim. A marker without any transform is declared unsupported and the key levels that output it become silent (E21). A marker whose id is not lowercase kebab-case is renamed, with the original in `deadKeys[].extensions.OKLM_ldml.markerId`. A dead key that has only a fallback gets `space -> fallback` as its single composition, because the schema requires one (reported as lossy).
+- **Identity.** `layoutId` is the `-t-k0-<id>` tail of the locale (E20 reversed), else a slug of `info@name` cut to 8 characters per subtag (lossy). `locales` takes the language part of the locale and the `<locales>` list. The original locale is kept in `extensions.OKLM_ldml.source.locale`.
+- **Defaults, not losses.** An LDML file has no license, author list or physical size. The importer writes `NOASSERTION`, `Unknown` and `<family>-full`, says so in `warnings` and lists the enrichment tasks. `--license`, `--author` and `--layout-id` override them.
+- **Preserved.** `extensions.OKLM_ldml` holds `source` (namespace, locale), `info` (the `info` attributes other than name and author), and `unmapped`: one entry per preserved construct with `construct`, `reason` and the verbatim `xml`. `extensionsUsed` lists the namespace. XML comments are not kept and the report says so.
+- **Confidence.** `roundTripConfidence` is `low` when something is unsupported, `medium` when something is approximated or preserved, `high` otherwise. `compatibilityLevel` is `lossless-core` for a file with nothing to declare.
+- **Not interpreted.** `uset` variables, `final` and `backspace` transforms, `reorder`, touch layers, gesture keys (long press, flick, multi-tap). They are preserved, not applied.
+
+### Measured round trip
+
+`python tools/tests/test_ldml_import.py` prints these figures (2026-10-05, schema 0.2).
+
+OKLM -> LDML -> OKLM on the six examples (equal / total after normalisation by qualifier set):
+
+| Item | Result |
+|---|---|
+| keys (id and HID) | 250 / 250 |
+| outputs (levels the exporter can write) | 1097 / 1097 |
+| dead keys (display, fallback, ordered compositions) | 78 / 78 |
+| compositions | 2080 / 2080 |
+| name, version, primary locale | 18 / 18 |
+
+Every re-import is `lossless-core` with confidence `high`. What LDML cannot carry back, per example: `authors`, `license` when present, `geometry`, `description`, `conformance`, `exports`, `metadata`, and the locales after the first. This is the OKLM-only loss the exporter already declares.
+
+LDML -> OKLM -> LDML on three third-party CLDR keyboards (copies in `tools/tests/fixtures/ldml/`):
+
+| Keyboard | Keys | Dead keys | Compositions | Outputs read independently | Level | Preserved | Unsupported |
+|---|---|---|---|---|---|---|---|
+| `fr` (French AZERTY, iso) | 49 | 23 | 1276 | 177 | lossy-mapping, medium | 6 | 0 |
+| `ptabnt` (Portuguese ABNT2) | 48 | 0 | 0 | 110 | lossy-mapping, low | 1 | 5 |
+| `mt47` (Maltese 47-key, us) | 48 | 0 | 0 | 117 | lossy-metadata, medium | 1 | 0 |
+
+For each, the exported LDML re-imports to the same core and exporting again gives the same text (fixed point), and every imported output matches an independent reading of the XML. What does not come back as an equal file: the original transforms (sets and regular expressions) are rewritten as one rule per composition; the locale `fr` becomes `fr-t-k0-francais-normalis-azerty`; `fr` has four chained or regular-expression transforms, four display entries (one with an invalid `0300` escape, three for key ids), one `longPressKeyIds` attribute and the `variables` block preserved but not applied. `ptabnt` has five dead keys with no transform (the file says `TODO: transform!`): their key levels are silent after import, which is the effect they have in the source.
 
 ## Round-Trip Policy
 
@@ -261,4 +301,4 @@ OKLM is not a rival format. It becomes:
 
 ---
 
-*Last updated: 2026-07-11*
+*Last updated: 2026-10-05*

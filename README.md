@@ -17,17 +17,17 @@ What exists today:
   the legacy Windows French AZERTY, US QWERTY, and a minimal teaching
   subset;
 - a reference validator and a schema test suite;
-- three one-way exporters with loss reports: LDML Keyboard 3 (keyboard3),
-  Linux `xkb_symbols`, macOS `.keylayout`; 18 committed reference exports
+- an LDML Keyboard 3 importer (`tools/import_ldml.py`, round trip measured) and five one-way exporters with loss reports: LDML Keyboard 3 (keyboard3),
+  Linux `xkb_symbols`, macOS `.keylayout`, Windows `.klc`, Stream Deck profile; reference exports
   checked for determinism;
 - [oklm.org](https://oklm.org), a demo rendered from the real manifests.
 
-What does not exist yet: any importer, the Windows `.klc` export, any
-device profile export, and any use of OKLM by a project we did not write.
+What does not exist yet: an importer for xkb, keylayout or `.klc`, and any
+use of OKLM by a project we did not write.
 
 Progress is measured by four gates, not by dates. Gates 1 (gap review
 against the reference standards) and 2 (reproducible checks) are passed;
-gates 3 (LDML round trip) and 4 (independent use) are open. Details and
+gate 3 (LDML round trip) is measured and passed on a branch, gate 4 (independent use) is open. Details and
 the ordered work list: [ROADMAP.md](ROADMAP.md).
 
 ## Role: a bridge, used first by its authors
@@ -103,6 +103,23 @@ lists what the LDML export gets wrong or cannot express today.
 `tools/tests/run_tests.py` checks them for regressions, determinism and
 schema validity.
 
+## LDML importer
+
+```text
+python tools/import_ldml.py [--out DIR] [--license SPDX] [--author NAME] [--layout-id ID] FILE.xml [FILE.xml ...]
+```
+
+Reads a CLDR `keyboard3` file and writes `<name>.oklm.json` and
+`<name>.import.report.json` (direction `ldml-to-oklm`: mapped fields, what is
+preserved as an extension, what is unsupported, enrichment tasks, round-trip
+confidence). What the core cannot express goes verbatim into
+`extensions.OKLM_ldml`. The CLDR key imports (`keys-Latn-implied`,
+`keys-Zyyy-punctuation`, `keys-Zyyy-currency`, release 47, Unicode license) are
+bundled in `tools/importers/data/`, so nothing is fetched. Three third-party
+CLDR keyboards (`tools/tests/fixtures/ldml/`) and their imports
+(`examples/imports/ldml/`) are the reference cases; rules and measured round
+trip are in [CONVERSIONS.md](CONVERSIONS.md).
+
 ## Checks
 
 ```text
@@ -113,6 +130,7 @@ python tools/tests/run_tests.py
 python tools/tests/test_qwerty_global.py
 python tools/tests/test_streamdeck.py
 python tools/tests/test_klc.py
+python tools/tests/test_ldml_import.py
 ```
 
 The first, third and fourth ran green on a clean machine on 2026-09-02 (gate 2).
