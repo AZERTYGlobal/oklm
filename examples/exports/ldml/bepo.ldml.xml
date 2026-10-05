@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr" conformsTo="45">
-  <version number="2026"/>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-bepo" conformsTo="45">
+  <version number="2026.0.0"/>
   <info name="French (Standard, BÉPO)"/>
   <keys>
     <key id="k_E00_1" output="$"/>
@@ -213,7 +213,7 @@
     <key id="k_B00_6" output="ê"/>
     <key id="k_B01_1" output="à"/>
     <key id="k_B01_2" output="À"/>
-    <key id="k_B01_3" output="\"/>
+    <key id="k_B01_3" output="\u{5C}"/>
     <key id="k_B01_5" output="À"/>
     <key id="k_B01_6" output="à"/>
     <key id="k_B02_1" output="y"/>
@@ -264,20 +264,11 @@
     <key id="k_B10_5" output="F"/>
     <key id="k_B10_6" output="f"/>
     <key id="k_A03_1" output=" "/>
-    <key id="k_A03_2" output=" "/>
+    <key id="k_A03_2" output="\u{202F}"/>
     <key id="k_A03_3" output="_"/>
-    <key id="k_A03_4" output=" "/>
+    <key id="k_A03_4" output="\u{A0}"/>
   </keys>
-  <forms>
-    <form id="bepo-form">
-      <scanCodes codes="29 02 03 04 05 06 07 08 09 0A 0B 0C 0D"/>
-      <scanCodes codes="10 11 12 13 14 15 16 17 18 19 1A 1B"/>
-      <scanCodes codes="1E 1F 20 21 22 23 24 25 26 27 28 2B"/>
-      <scanCodes codes="56 2C 2D 2E 2F 30 31 32 33 34 35"/>
-      <scanCodes codes="39"/>
-    </form>
-  </forms>
-  <layers formId="bepo-form">
+  <layers formId="iso">
     <layer modifiers="none">
       <row keys="k_E00_1 k_E01_1 k_E02_1 k_E03_1 k_E04_1 k_E05_1 k_E06_1 k_E07_1 k_E08_1 k_E09_1 k_E10_1 k_E11_1 k_E12_1"/>
       <row keys="k_D01_1 k_D02_1 k_D03_1 k_D04_1 k_D05_1 k_D06_1 k_D07_1 k_D08_1 k_D09_1 k_D10_1 k_D11_1 k_D12_1"/>
@@ -509,7 +500,7 @@
       <transform from="\m{currencies}ç" to="₢"/>
       <transform from="\m{currencies}Ç" to="₡"/>
       <transform from="\m{currencies}%" to="₰"/>
-      <transform from="\m{currencies}|" to="₾"/>
+      <transform from="\m{currencies}\u{7C}" to="₾"/>
       <transform from="\m{currencies}®" to="₨"/>
       <transform from="\m{currencies} " to="¤"/>
       <transform from="\m{diaeresis}a" to="ä"/>
@@ -629,13 +620,13 @@
       <transform from="\m{extended-latin}S" to="ẞ"/>
       <transform from="\m{extended-latin}t" to="þ"/>
       <transform from="\m{extended-latin}T" to="Þ"/>
-      <transform from="\m{extended-latin}-" to="­"/>
+      <transform from="\m{extended-latin}-" to="\u{AD}"/>
       <transform from="\m{extended-latin}«" to="‹"/>
       <transform from="\m{extended-latin}»" to="›"/>
       <transform from="\m{extended-latin}ſ" to="ẞ"/>
       <transform from="\m{extended-latin}‘" to="ʻ"/>
       <transform from="\m{extended-latin}’" to="ʼ"/>
-      <transform from="\m{extended-latin} " to=" "/>
+      <transform from="\m{extended-latin}\u{202F}" to="\u{2003}"/>
       <transform from="\m{extended-latin} " to="ß"/>
       <transform from="\m{grave}a" to="à"/>
       <transform from="\m{grave}A" to="À"/>
@@ -794,9 +785,9 @@
       <transform from="\m{superscript}7" to="⁷"/>
       <transform from="\m{superscript}8" to="⁸"/>
       <transform from="\m{superscript}9" to="⁹"/>
-      <transform from="\m{superscript}(" to="⁽"/>
-      <transform from="\m{superscript})" to="⁾"/>
-      <transform from="\m{superscript}+" to="⁺"/>
+      <transform from="\m{superscript}\u{28}" to="⁽"/>
+      <transform from="\m{superscript}\u{29}" to="⁾"/>
+      <transform from="\m{superscript}\u{2B}" to="⁺"/>
       <transform from="\m{superscript}-" to="⁻"/>
       <transform from="\m{superscript}=" to="⁼"/>
       <transform from="\m{superscript} " to="ᵉ"/>

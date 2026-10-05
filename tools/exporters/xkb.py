@@ -20,7 +20,13 @@ approximations (see CONVERSIONS.md and the generated report):
   are skipped entirely if no `display` is available.
 - Keys with no `xkb` name declared are omitted (skipped, not guessed).
 """
-from .common import levels_used_by, ReportBuilder, reject_unsupported_v1_scope, skip_oklm_only_metadata
+from .common import (
+    levels_used_by,
+    ReportBuilder,
+    reject_unsupported_v1_scope,
+    skip_oklm_only_metadata,
+    without_modifier_keys,
+)
 
 ASCII_KEYSYMS = {
     " ": "space", "!": "exclam", '"': "quotedbl", "#": "numbersign",
@@ -92,6 +98,7 @@ def export(manifest, source_file=None):
 
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
+    manifest = without_modifier_keys(report, manifest)
 
     used_levels = levels_used_by(manifest)
     skipped_levels = sorted((used_levels - set(LEVELS)), key=int)

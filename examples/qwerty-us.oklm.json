@@ -1,13 +1,13 @@
 {
-  "schemaVersion": "0.1",
+  "schemaVersion": "0.2",
   "layoutId": "qwerty-us",
   "name": "QWERTY US",
-  "version": "ANSI (US 104-key)",
+  "version": "1.0.0",
   "license": "CC0-1.0",
   "authors": [
     "Traditional US layout (public domain); manifest by the OKLM project"
   ],
-  "description": "Complete OKLM description of the standard US QWERTY layout (47 graphic keys plus space, 2 shift levels plus CapsLock variants on letters, no dead keys). Hand-written as the ANSI baseline example: the simplest widely deployed layout, in contrast with the dead-key-rich French manifests. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "description": "Complete OKLM description of the standard US QWERTY layout (47 graphic keys plus space, 2 shift levels plus CapsLock variants on letters, no dead keys). Hand-written as the ANSI baseline example: the simplest widely deployed layout, in contrast with the dead-key-rich French manifests. Frame keys (function row, navigation, numpad) are out of the draft 0.2 core.",
   "locales": [
     "en",
     "en-US"
@@ -555,6 +555,7 @@
     }
   ],
   "metadata": {
-    "description": "ANSI keyboards have no B00 (ISO extra) key; the backslash key sits at D13. CapsLock levels are declared only on letter keys; other keys are unaffected by CapsLock."
+    "description": "ANSI keyboards have no B00 (ISO extra) key; the backslash key sits at D13. CapsLock levels are declared only on letter keys; other keys are unaffected by CapsLock.",
+    "versionLabel": "ANSI (US 104-key)"
   }
 }

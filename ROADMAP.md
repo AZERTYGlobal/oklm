@@ -36,10 +36,10 @@ Each item lists what it depends on. None has a date.
    build time, and the generated files are proven byte-identical to the
    current ones before the switch. Depends on gates 1 and 2.
 3. **QWERTY Global manifest** — a shared US ANSI chassis plus local modules
-   (French, Italian first). Design question to settle first: modules as
-   `groups` inside one manifest (reserved in 0.1, not yet exported by any
-   v1 exporter) or as separate manifests sharing the chassis. Depends on
-   item 2, whose build chain it reuses.
+   (French, Italian first). Design question settled: one manifest per
+   module, generated at build time from the chassis and a diff; `groups`
+   stays reserved and unused. Depends on item 2, whose build chain it
+   reuses.
 4. **Schema 0.2** — one revision, not several. Already decided: the
    normative schema opens (`additionalProperties` no longer `false`
    everywhere) and the `--strict` validator mode (in the validator since
@@ -49,7 +49,12 @@ Each item lists what it depends on. None has a date.
    counterpart) replace any `minVersion`; `metadata` stays the only
    free-form envelope. The revision also absorbs the gate 1 findings and
    what items 2 and 3 taught about real use. Depends on gate 1 and items
-   2 and 3.
+   2 and 3. *Done 2026-10-05* on branch `schema-v0.2`: open schema, SemVer
+   `version`, `extensionsUsed`, `extensionsRequired` and `featuresRequired`,
+   `--strict` validator, migration tool, exporters aligned (E1, E13, E15,
+   E20, E21, E22), prefix registry in [`extensions/PREFIXES.md`](extensions/PREFIXES.md).
+   Not done: the site generator reading `extensions.OKLM_siteView` (outside
+   this repository).
 5. **Stream Deck profile export** — characters and shortcuts of a layout as
    an Elgato `.streamDeckProfile`, with a conversion report. First
    potential consumer outside an operating system. Depends on item 4.
@@ -82,4 +87,4 @@ are replaced by the gates above and are kept in the git history only.
 
 ---
 
-*Last updated: 2026-09-15*
+*Last updated: 2026-10-05*

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oklm.org/schemas/0.1/oklm-manifest.schema.json",
+  "$id": "https://oklm.org/schemas/0.2/oklm-manifest.schema.json",
+  "$comment": "Draft 0.2, dated 2026-10-05. Open schema (decision D32): no object is closed with additionalProperties:false. Typos are caught by `validate.py --strict` (W_UNKNOWN_MEMBER); the only members the schema itself refuses are prefixed members outside an `extensions` object (decision D34/D38: one notation per concept).",
   "title": "OKLM Manifest",
-  "description": "JSON Schema for an Open Keyboard Layout Model manifest (.oklm.json), draft 0.1. An OKLM manifest must remain readable, correctable and versionable by a human without a proprietary generator: stable field order (follow the order of this schema's properties), explicit names, compact notation for simple mappings. The text core of a manifest is designed to compile to LDML Keyboard 3.0 (UTS #35 Part 7, root element keyboard3); OKLM does not reinvent LDML transforms, reorders, markers or UnicodeSet notation. Design decisions referenced as D1..D30 live in research/Décisions de conception — deep research.md.",
+  "description": "JSON Schema for an Open Keyboard Layout Model manifest (.oklm.json), draft 0.2. An OKLM manifest must remain readable, correctable and versionable by a human without a proprietary generator: stable field order (follow the order of this schema's properties), explicit names, compact notation for simple mappings. The text core of a manifest is designed to compile to LDML Keyboard 3.0 (UTS #35 Part 7, root element keyboard3); OKLM does not reinvent LDML transforms, reorders, markers or UnicodeSet notation. Reading rule (D31): a reader ignores what it does not know, except what the manifest lists in extensionsRequired or featuresRequired. Design decisions referenced as D1..D44 live in research/Décisions de conception — deep research.md.",
   "type": "object",
-  "additionalProperties": false,
   "required": [
     "schemaVersion",
     "layoutId",
@@ -18,8 +18,9 @@
   ],
   "properties": {
     "schemaVersion": {
-      "description": "Version of the OKLM manifest schema this file targets.",
-      "const": "0.1"
+      "description": "Version of the OKLM manifest schema this file targets, MAJOR.MINOR. A reader refuses a MAJOR it does not know and treats a higher MINOR as valid but not supported (validator rule, D33).",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
     },
     "layoutId": {
       "description": "Stable machine identifier of the layout, lowercase kebab-case.",
@@ -32,9 +33,9 @@
       "minLength": 1
     },
     "version": {
-      "description": "Version of the layout itself (not of the schema).",
+      "description": "Version of the layout itself (not of the schema), Semantic Versioning 2.0.0 (E2). A human label that is not SemVer (a standard's edition, say) goes to metadata.versionLabel.",
       "type": "string",
-      "minLength": 1
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
     },
     "license": {
       "description": "License of the layout data. SPDX identifier recommended (e.g. EUPL-1.2, CC-BY-4.0).",
@@ -61,7 +62,7 @@
       }
     },
     "geometry": {
-      "description": "Target physical geometries, declared as aliases (D5): the physical form factor family (iso-*, ansi-*, jis-*, abnt-*) plus size (e.g. iso-full, iso-tkl, ansi-60, custom). Geometry tells consumers which physical keys exist; omitting it would mean silently missing bindings. Canonical key positions remain ISO/IEC 9995-1 key numbers regardless of geometry (D1/D5/D24). A drawable geometry layer (absolute x/y/w/h, D23-D30) is intentionally NOT part of core v0.1; see the frame-keys / geometry extension namespaces.",
+      "description": "Target physical geometries, declared as aliases (D5): the physical form factor family (iso-*, ansi-*, jis-*, abnt-*, ks-*, touch) plus size (e.g. iso-full, iso-tkl, ansi-60, custom). Aliases us (= ansi) and abnt2 (= abnt) are accepted. The family list is checked by the validator, not by an enum, so that a file written for a later MINOR stays valid (D33). Geometry tells consumers which physical keys exist; omitting it would mean silently missing bindings. Canonical key positions remain ISO/IEC 9995-1 key numbers regardless of geometry (D1/D5/D24). A drawable geometry layer (absolute x/y/w/h, D23-D30) is not part of the core; see the OKLM_geometry extension.",
       "type": "array",
       "minItems": 1,
       "items": {
@@ -70,9 +71,8 @@
       }
     },
     "levelSelectors": {
-      "description": "Optional declaration of how levels 2..8 are selected, using ISO/IEC 9995 functional qualifier names (D2/D14): modifiers are named by function, never by the physical key that activates them. Defaults when omitted: level 2 = [Level2Shift], level 3 = [Level3Shift], level 4 = [Level2Shift, Level3Shift]. Platform details (AltGr vs Ctrl+Alt, macOS Option) are export concerns.",
+      "description": "Optional declaration of how levels 2..8 are selected, using functional qualifier names (D2/D14): modifiers are named by function, never by the physical key that activates them. Defaults when omitted: level 2 = [Level2Shift], level 3 = [Level3Shift], level 4 = [Level2Shift, Level3Shift]. A level that is omitted from a key means no output (E21). Platform details (AltGr vs Ctrl+Alt, macOS Option) are export concerns. NumLock is kept here, without LDML export (E6); it serves the .klc exporter.",
       "type": "object",
-      "additionalProperties": false,
       "patternProperties": {
         "^[2-8]$": {
           "type": "array",
@@ -81,11 +81,15 @@
             "type": "string",
             "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock"]
           }
-        }
+        },
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+      },
+      "properties": {
+        "extensions": { "$ref": "#/$defs/extensions" }
       }
     },
     "keys": {
-      "description": "Graphic keys of the alphanumeric section. Key ids must be unique (checked by validators beyond JSON Schema). Frame keys (function row, navigation, numpad, Fn, media) are out of the LDML-aligned core (D11) and belong to the extensions block.",
+      "description": "Graphic keys of the alphanumeric section, and the modifier keys that select its levels. Key ids must be unique (checked by the validator). Frame keys (function row, navigation, numpad, Fn, media) are out of the LDML-aligned core (D11) and belong to the OKLM_frameKeys extension.",
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/$defs/key" }
@@ -101,51 +105,107 @@
       "items": { "$ref": "#/$defs/conformanceClaim" }
     },
     "exports": {
-      "description": "Declared export targets. Export ids must be unique. Target-specific option schemas are intentionally not fixed in v0.1 (exporter research pending); options is a free object.",
+      "description": "Declared export targets. Export ids must be unique. Target-specific option schemas are intentionally not fixed (exporter research pending); options is a free object.",
       "type": "array",
       "items": { "$ref": "#/$defs/exportTarget" }
     },
     "metadata": {
-      "description": "OKLM envelope metadata (D8): value that LDML does not cover, stripped on LDML export but preserved for non-OS consumers. Pedagogy, AI and accessibility blocks are separable extensions, never core; their inner structure is non-normative in v0.1.",
+      "description": "OKLM envelope metadata (D8): value that LDML does not cover, stripped on LDML export but preserved for non-OS consumers. Pedagogy, AI and accessibility blocks are separable, never core; their inner structure is non-normative. Prefixed members do not belong here: they go in metadata.extensions.",
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "description": { "type": "string" },
+        "versionLabel": {
+          "description": "Human label of the layout version when it is not SemVer (a standard's edition, a marketing name). E2.",
+          "type": "string"
+        },
+        "attribution": {
+          "description": "Credit and provenance of the layout (E9). Free-form object.",
+          "type": "object"
+        },
+        "layoutPattern": {
+          "description": "Name of the layout family or pattern (azerty, qwerty, bépo...), for documentation (E9).",
+          "type": "string"
+        },
+        "indicator": {
+          "description": "Short language-bar indicator text, for example FR (E9).",
+          "type": "string"
+        },
         "links": {
           "description": "Named URLs (homepage, documentation, repository...).",
           "type": "object",
           "additionalProperties": { "type": "string", "format": "uri" }
         },
         "dynamicLegends": {
-          "description": "Dynamic legend metadata (non-normative in v0.1).",
+          "description": "Dynamic legend metadata (non-normative).",
           "type": "object"
         },
         "training": {
-          "description": "Learning / pedagogy metadata (non-normative in v0.1).",
+          "description": "Learning / pedagogy metadata (non-normative).",
           "type": "object"
         },
         "accessibility": {
-          "description": "Accessibility annotations (non-normative in v0.1).",
+          "description": "Accessibility annotations (non-normative).",
           "type": "object"
         },
         "assistant": {
-          "description": "Scoped assistant/AI metadata (non-normative in v0.1). Must not require keylogging or embed predictive models.",
+          "description": "Scoped assistant/AI metadata (non-normative). Must not require keylogging or embed predictive models.",
           "type": "object"
-        }
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "patternProperties": {
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
       }
     },
+    "extensionsUsed": {
+      "description": "Names of the extensions this manifest uses (glTF-style capability list, D22). May be empty.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/extensionName" },
+      "uniqueItems": true
+    },
+    "extensionsRequired": {
+      "description": "Names of the extensions a reader must understand to read this manifest correctly. A subset of extensionsUsed (checked by the validator). May be empty.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/extensionName" },
+      "uniqueItems": true
+    },
+    "featuresRequired": {
+      "description": "Names of the core features a reader must support to read this manifest correctly. May be empty.",
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$" },
+      "uniqueItems": true
+    },
     "extensions": {
-      "description": "Namespaced extension blocks for data outside the LDML-aligned core. Reserved namespaces (contents intentionally unspecified in v0.1): frame-keys (D11: function/navigation/numpad/media/Fn keys, HID pages beyond 0x07), firmware (D10: physical matrix / QMK-ZMK bindings, scope arbitration pending), geometry (D23-D30: drawable absolute geometry), ldml (imported LDML constructs preserved during LDML -> OKLM conversion).",
-      "type": "object",
-      "propertyNames": { "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$" },
-      "additionalProperties": { "type": "object" }
+      "$ref": "#/$defs/extensions",
+      "description": "Namespaced extension blocks for data outside the LDML-aligned core (D34). Every key carries an OKLM_, EXT_ or <VENDOR>_ prefix; registry in extensions/PREFIXES.md. Reserved names (contents unspecified in 0.2): OKLM_frameKeys (D11: function/navigation/numpad/media/Fn keys, HID pages beyond 0x07), OKLM_firmware (D10: physical matrix / QMK-ZMK bindings), OKLM_geometry (D23-D30: drawable absolute geometry), OKLM_ldml (imported LDML constructs preserved during LDML -> OKLM conversion)."
     }
   },
+  "patternProperties": {
+    "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+  },
   "$defs": {
+    "extensionName": {
+      "type": "string",
+      "pattern": "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$"
+    },
+    "extensions": {
+      "description": "Extension container (D34, D38): an object whose every key is a prefixed extension name and whose value is an object. Present at the root and on every object of the model.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/extensionName" },
+      "additionalProperties": { "type": "object" }
+    },
     "key": {
       "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "hid", "levels"],
+      "required": ["id", "hid"],
+      "anyOf": [
+        { "required": ["levels"] },
+        { "required": ["role"] }
+      ],
+      "if": {
+        "required": ["role"],
+        "properties": { "role": { "const": "modifier" } }
+      },
+      "then": { "required": ["modifier"] },
       "properties": {
         "id": {
           "description": "Canonical physical key identifier: ISO/IEC 9995-1 key number (D1), e.g. D01 (QWERTY Q position), C00 (Caps Lock), B00 (ISO extra key), E01 (digit row). ISO 9995-1 is the de jure position standard used by national layout norms.",
@@ -171,23 +231,30 @@
           "description": "Optional human-readable key label for documentation.",
           "type": "string"
         },
+        "role": {
+          "description": "What the key is. Default \"key\": a graphic key described by levels. \"modifier\": a functional modifier key (E22, D2): it carries no output, `modifier` names its function.",
+          "type": "string",
+          "enum": ["key", "modifier"]
+        },
+        "modifier": {
+          "description": "Functional name of the modifier a key with role \"modifier\" provides (D2: named by function, not by physical key).",
+          "type": "string",
+          "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock", "GroupSelect"]
+        },
         "levels": {
-          "description": "Outputs by ISO level for group 1 (D2/D3/D14): level 1 = base, 2 = Level2Shift, 3 = Level3Shift, 4 = levels 2+3 combined, 5-8 optional. A level with no output is simply omitted. Compact notation: a plain string is a literal text output (one or more codepoints, covering ligatures).",
+          "description": "Outputs by level for group 1 (D2/D3/D14): level 1 = base, 2 = Level2Shift, 3 = Level3Shift, 4 = levels 2+3 combined, 5-8 optional. A level with no output is simply omitted and means no output (E21). Compact notation: a plain string is a literal text output (one or more codepoints, covering ligatures).",
           "type": "object",
-          "additionalProperties": false,
           "minProperties": 1,
           "patternProperties": {
             "^[1-8]$": { "$ref": "#/$defs/output" }
           }
         },
         "groups": {
-          "description": "Optional additional ISO groups (D3: groups are complete alternative keymaps, e.g. multi-script; a distinct axis from levels). Group 1 is the levels property above; entries here start at \"2\".",
+          "description": "Reserved (D3, D37: never removed). Additional ISO groups: complete alternative keymaps, a distinct axis from levels. Group 1 is the levels property above; entries here start at \"2\". Not exported by any v0.2 exporter, which rejects a manifest that uses it; a group would be exported as a separate LDML file (CONVERSIONS.md E8).",
           "type": "object",
-          "additionalProperties": false,
           "patternProperties": {
             "^[2-9]$": {
               "type": "object",
-              "additionalProperties": false,
               "minProperties": 1,
               "patternProperties": {
                 "^[1-8]$": { "$ref": "#/$defs/output" }
@@ -199,11 +266,15 @@
           "description": "Optional semantic tags (e.g. letter, digit, punctuation, french).",
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
-        }
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "patternProperties": {
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
       }
     },
     "output": {
-      "description": "What a key produces at one (group, level). Compact form: a string is literal text output. Object forms: { \"deadKey\": id } emits the dead-key marker; { \"modifier\": name } declares a functional modifier key (D2: named by function, not by physical key).",
+      "description": "What a key produces at one (group, level). Compact form: a string is literal text output. Object form: { \"deadKey\": id } emits the dead-key marker. Modifier keys are declared on the key (role: modifier), not as an output.",
       "oneOf": [
         {
           "type": "string",
@@ -211,32 +282,23 @@
         },
         {
           "type": "object",
-          "additionalProperties": false,
           "required": ["deadKey"],
           "properties": {
             "deadKey": {
               "description": "Id of a dead key defined in the top-level deadKeys array.",
               "type": "string",
               "pattern": "^[a-z][a-z0-9-]*$"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["modifier"],
-          "properties": {
-            "modifier": {
-              "type": "string",
-              "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock", "GroupSelect"]
-            }
+            },
+            "extensions": { "$ref": "#/$defs/extensions" }
+          },
+          "patternProperties": {
+            "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
           }
         }
       ]
     },
     "deadKey": {
       "type": "object",
-      "additionalProperties": false,
       "required": ["id", "compositions"],
       "properties": {
         "id": {
@@ -254,21 +316,24 @@
           "minLength": 1
         },
         "compositions": {
-          "description": "Composition table: base input string -> output string. Each entry compiles to one LDML simple transform (\\m{id} + base -> output). Document order is the rule order.",
+          "description": "Composition table: base input string -> output string. The base is a literal string (E13): exporters escape it for the target. Each entry compiles to one LDML simple transform (\\m{id} + base -> output). Document order is the rule order.",
           "type": "object",
           "minProperties": 1,
           "propertyNames": { "minLength": 1 },
           "additionalProperties": { "type": "string", "minLength": 1 }
         },
         "fallback": {
-          "description": "Optional text emitted in place of the pending marker when no composition matches. Cancellation behavior differs across platforms (D4); exporters document their mapping.",
+          "description": "Optional text emitted in place of the pending marker when no composition matches. It is an explicit transform on the bare marker (E15), not a \"cancellation\" behavior: platforms that cancel a pending dead key differently are covered by the exporter's own notes.",
           "type": "string"
-        }
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "patternProperties": {
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
       }
     },
     "conformanceClaim": {
       "type": "object",
-      "additionalProperties": false,
       "required": ["reference"],
       "properties": {
         "reference": {
@@ -280,16 +345,19 @@
           "description": "What part of the layout the claim covers (clauses, sections, key subset...).",
           "type": "string"
         },
-        "notes": { "type": "string" }
+        "notes": { "type": "string" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "patternProperties": {
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
       }
     },
     "exportTarget": {
       "type": "object",
-      "additionalProperties": false,
       "required": ["target"],
       "properties": {
         "target": {
-          "description": "Export target kind, e.g. ldml-keyboard-3, web-tester, xkb, windows-klc, macos-keylayout, keymap-image.",
+          "description": "Export target kind, e.g. ldml-keyboard-3, web-tester, xkb, windows-klc, macos-keylayout, keymap-image, streamdeck-profile.",
           "type": "string",
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
         },
@@ -299,9 +367,13 @@
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
         },
         "options": {
-          "description": "Target-specific options (free-form in v0.1; per-exporter schemas will come with the exporter research prompts). For ldml-keyboard-3, conformsTo must be a whole number of 45 or greater per UTS #35 Part 7.",
+          "description": "Target-specific options (free-form; per-exporter schemas will come with the exporter research prompts). For ldml-keyboard-3, conformsTo must be a whole number of 45 or greater per UTS #35 Part 7.",
           "type": "object"
-        }
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "patternProperties": {
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
       }
     }
   }

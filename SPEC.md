@@ -2,9 +2,11 @@
 
 ## Version
 
-Draft 0.1, **frozen**. The next revision is 0.2, the only one planned before 1.0; its structural choices and the order of work are in [ROADMAP.md](ROADMAP.md).
+Draft 0.2 (2026-10-05). It supersedes the frozen 0.1 and is the only revision planned before 1.0; the structural choices and the order of work are in [ROADMAP.md](ROADMAP.md). `schemaVersion` is `MAJOR.MINOR` (`0.2`). A reader refuses a MAJOR it does not know and reads a higher MINOR as valid but unsupported (it warns, it does not fail).
 
-Normative machine-readable definitions live in [`schemas/oklm-manifest.schema.json`](schemas/oklm-manifest.schema.json) and [`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json). This document explains the model; when prose and schema disagree, the schema wins for draft 0.1.
+**Reading rule (D31).** The schema is open: no object forbids additional members. A reader ignores members it does not know, never rewrites them, and keeps `extensions` blocks intact. Members whose name looks like a vendor prefix (`OKLM_x`, `EXT_x`, `ABC_x`) are valid only inside `extensions`; anywhere else they are rejected (D34, D38). An unknown member without prefix is a warning in the validator, and an error under `--strict`.
+
+Normative machine-readable definitions live in [`schemas/oklm-manifest.schema.json`](schemas/oklm-manifest.schema.json) and [`schemas/oklm-conversion-report.schema.json`](schemas/oklm-conversion-report.schema.json). This document explains the model; when prose and schema disagree, the schema wins for draft 0.2.
 
 OKLM is a bridge and tooling layer around Unicode CLDR/LDML Keyboard, not a competing interchange format. The 0.1 schema was compared field by field with LDML Keyboard 48.2, ISO/IEC 9995-1:2026, W3C `KeyboardEvent.code` (2025) and USB HID Usage Tables 1.7 on 2026-09-03; the schema was not changed, and the gaps are listed in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482). Where this document below notes an ISO/IEC 9995-1:2026 statement, it relies on the standard's public preview (foreword and contents), not on its clause text.
 
@@ -77,7 +79,9 @@ Required fields:
 - `geometry`
 - `keys`
 
-Optional fields: `description`, `levelSelectors`, `deadKeys`, `conformance`, `exports`, `metadata`, `extensions`.
+Optional fields: `description`, `levelSelectors`, `deadKeys`, `conformance`, `exports`, `metadata`, `extensions`, `extensionsUsed`, `extensionsRequired`, `featuresRequired`.
+
+`version` is a SemVer string (E2); a free-text label such as `2019 NF Z71-300` goes in `metadata.versionLabel`. `extensionsUsed` lists the extension namespaces the file uses, `extensionsRequired` the subset a reader must understand to use the file correctly, `featuresRequired` the core features it needs; the three are root arrays and may be empty. A reader that does not know a namespace of `extensionsRequired` refuses the file (`E_EXTENSIONS_REQUIRED`). `extensions` exists on every object, not only at the root.
 
 ### Locales
 
@@ -111,8 +115,9 @@ Fields:
 - `xkb`: optional XKB key name alias for Linux export (e.g. `AD01`, `LSGT`, `SPCE`).
 - `code`: optional W3C UI Events `KeyboardEvent.code` cross-reference (D24) — e.g. `KeyQ`, `IntlBackslash`.
 - `name`: optional human-readable label for documentation.
-- `levels`: outputs by ISO level for group 1 (see Output below). A level with no output is omitted. Intended meaning: the key produces nothing at that level. LDML Keyboard expresses this differently (a keystroke with no matching layer is ignored, unless a layer `other` exists), and the v1 LDML exporter emits LDML's implicit `gap` key at that position (fixed 2026-09-15); see the known gaps in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482).
-- `groups`: optional additional ISO groups, starting at `"2"` (group 1 is `levels`).
+- `levels`: outputs by level, 1 to 8 (see Output below). A level with no output is omitted, and a missing level means the key produces nothing there (E21). LDML Keyboard expresses this differently (a keystroke with no matching layer is ignored, unless a layer `other` exists), and the v1 LDML exporter emits LDML's implicit `gap` key at that position (fixed 2026-09-15); see the known gaps in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482).
+- `role`, `modifier`: a modifier key is declared with `"role": "modifier"` and `"modifier": "Level2Shift"` (or another qualifier name) on the key itself, without `levels` (E22). A key needs `levels` or a `role`.
+- `groups`: **reserved**. The field is still accepted by the schema, but every exporter rejects a manifest that uses it (`compatibilityLevel` `failed`). No consumer reads it before 1.0.
 - `categories`: optional semantic tags (e.g. `letter`, `digit`, `punctuation`, `french`).
 
 Physical placement fields (`row`, `column`, `width`) are not part of the core Key object: drawable geometry is deferred to the `extensions.geometry` namespace (D23).
@@ -133,7 +138,7 @@ Forms:
 
 - compact: a plain string is a literal text output (one or more codepoints, covering ligatures);
 - `{ "deadKey": id }`: emits the dead-key marker for a dead key defined in `deadKeys`;
-- `{ "modifier": name }`: declares a functional modifier key (named by function, D2).
+- `{ "modifier": name }`: 0.1 form, removed in 0.2. A modifier key is now declared by `role` and `modifier` on the key (see Key); exporters skip it and declare the skip in the report.
 
 ### Dead Key
 
@@ -144,8 +149,8 @@ Fields:
 - `id`: identifier; compiles to the LDML marker `\m{id}`.
 - `name`: optional human-readable name.
 - `display`: optional standalone character shown while the dead key is pending (e.g. `ˆ`).
-- `compositions`: base input string → output string. Document order is the rule order. The base is a literal string, not a pattern. Note for LDML export: LDML's `transform@from` is a regex-like pattern in which `. ( ) ? [ \ ] { } * / ^ + | $` must be escaped, and the v1 exporter does not yet escape them (known gap E13 in [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482)).
-- `fallback`: optional text emitted in place of the pending marker when no composition matches.
+- `compositions`: base input string → output string. Document order is the rule order. The base is a literal string, not a pattern. Note for LDML export: LDML's `transform@from` is a regex-like pattern, so the exporter escapes the metacharacters of the base and the `$` of the output (E13, see [CONVERSIONS.md](CONVERSIONS.md#rules-settled-in-schema-02)).
+- `fallback`: optional text emitted in place of the pending marker when no composition matches. It is an explicit transform on the bare marker (E15), not a cancellation behavior.
 
 Cancellation behavior (Escape, unrelated key, focus change) differs across platforms; exporters must document their mapping of `fallback` and cancellation (D4).
 
@@ -161,18 +166,20 @@ Declared export targets (e.g. `ldml-keyboard-3`, `web-tester`, `xkb`, `windows-k
 
 ### Metadata Envelope
 
-The `metadata` object carries value that LDML does not cover (D8): description, links, dynamic legends, training/pedagogy, accessibility annotations, scoped assistant metadata. It is stripped on LDML export but preserved for non-OS consumers. Inner structure of these blocks is non-normative in 0.1.
+The `metadata` object carries value that LDML does not cover (D8): description, links, dynamic legends, training/pedagogy, accessibility annotations, scoped assistant metadata. It is stripped on LDML export but preserved for non-OS consumers. Inner structure of these blocks is non-normative in 0.2. `metadata.versionLabel` carries the human label of a version when `version` is SemVer.
 
 Assistant metadata exists to answer deterministic typing questions ("How do I type É?", "Where is the em dash?"). It must not require keylogging and must not embed predictive models.
 
 ### Extensions
 
-Namespaced extension blocks for data outside the LDML-aligned core. Reserved namespaces, contents intentionally unspecified in 0.1:
+Namespaced extension blocks for data outside the LDML-aligned core, allowed on every object. Keys of `extensions` follow `^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$` (registry and rules: [`extensions/PREFIXES.md`](extensions/PREFIXES.md)). Namespaces that the project reserves, contents intentionally unspecified in 0.2:
 
 - `frame-keys` (D11): function/navigation/numpad/media/Fn keys, HID pages beyond 0x07;
 - `firmware` (D10): physical matrix / QMK-ZMK bindings — scope arbitration pending;
 - `geometry` (D23-D30): drawable absolute geometry;
 - `ldml`: LDML constructs preserved during LDML → OKLM conversion.
+
+Exporters never write `extensions` into the target format (E19): the block and the `extensionsUsed` list are declared as skipped in the report.
 
 ## Example
 
@@ -187,9 +194,14 @@ A valid manifest must:
 - use unique export ids;
 - define every dead-key id referenced from key outputs;
 - declare a license;
-- declare at least one locale and one target geometry.
+- declare at least one locale and one target geometry;
+- carry a `schemaVersion` of MAJOR 0 and a SemVer `version`;
+- list every `extensionsRequired` entry in `extensionsUsed`;
+- keep `hid` in `04`-`E7` and `code` among the W3C values, one `code` per key.
 
-Uniqueness and reference resolution are checked by validators beyond JSON Schema. [`validators/validate.py`](validators/validate.py) validates any manifest or conversion report from the command line; [`validators/validate_v0_1.py`](validators/validate_v0_1.py) is the schema test suite.
+Under `--strict`, an unknown member (`W_UNKNOWN_MEMBER`) and a geometry family the validator does not know (`W_GEOMETRY_UNKNOWN`) become errors. `geometry` is not a closed enum (D33): the validator checks the family, with `us` read as `ansi` and `abnt2` as `abnt`.
+
+Uniqueness and reference resolution are checked by validators beyond JSON Schema. [`validators/validate.py`](validators/validate.py) validates any manifest or conversion report from the command line; [`validators/validate_v0_2.py`](validators/validate_v0_2.py) is the schema test suite (a positive and a negative fixture per rule, plus the migration). [`tools/migrate_0_1_to_0_2.py`](tools/migrate_0_1_to_0_2.py) migrates a 0.1 manifest.
 
 ## Export Requirements
 
@@ -225,4 +237,4 @@ See `CONVERSIONS.md` for the conversion policy.
 
 ---
 
-*Last updated: 2026-09-15*
+*Last updated: 2026-10-05*

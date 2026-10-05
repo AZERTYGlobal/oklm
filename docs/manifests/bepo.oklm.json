@@ -1,13 +1,13 @@
 {
-  "schemaVersion": "0.1",
+  "schemaVersion": "0.2",
   "layoutId": "bepo",
   "name": "French (Standard, BÉPO)",
-  "version": "2026",
+  "version": "2026.0.0",
   "license": "CC-BY-SA-3.0 OR GFDL-1.2",
   "authors": [
     "Communauté bépo / Association Ergodis"
   ],
-  "description": "Complete OKLM description of the BÉPO ergonomic French layout (49 graphic keys, 8 ISO levels, 21 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "description": "Complete OKLM description of the BÉPO ergonomic French layout (49 graphic keys, 8 ISO levels, 21 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.2 core.",
   "locales": [
     "fr",
     "fr-FR"

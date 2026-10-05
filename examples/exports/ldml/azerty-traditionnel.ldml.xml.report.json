@@ -4,7 +4,7 @@
   "source": {
     "format": "oklm",
     "file": "azerty-traditionnel.oklm.json",
-    "version": "0.1"
+    "version": "0.2"
   },
   "target": {
     "format": "ldml-keyboard-3"
@@ -49,6 +49,10 @@
   ],
   "lossyMappings": [
     {
+      "path": "layoutId",
+      "detail": "a layoutId subtag longer than 8 characters is cut to 8 in the derived LDML locale identifier 'fr-t-k0-azerty-traditio' (BCP 47 limit)"
+    },
+    {
       "path": "locales",
       "detail": "only the primary locale 'fr' is exported; LDML keyboard3 declares one locale"
     },
@@ -61,7 +65,7 @@
   "errors": [],
   "generator": {
     "name": "oklm-exporters",
-    "version": "0.1"
+    "version": "0.2"
   },
   "roundTripConfidence": "medium"
 }

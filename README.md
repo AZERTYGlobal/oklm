@@ -8,11 +8,11 @@
 
 ## Status
 
-**Draft 0.1, public, in the open.** Not a published or adopted standard.
+**Draft 0.2, public, in the open.** Not a published or adopted standard.
 
 What exists today:
 
-- a manifest JSON Schema (0.1) and a conversion-report schema (0.2);
+- a manifest JSON Schema (0.2, open: extensions carry a vendor prefix) and a conversion-report schema (0.2), with a 0.1 to 0.2 migration tool;
 - six example manifests: AZERTY Global, the AFNOR NF Z71-300 AZERTY, BÉPO,
   the legacy Windows French AZERTY, US QWERTY, and a minimal teaching
   subset;
@@ -106,14 +106,14 @@ schema validity.
 ```text
 python validators/validate.py examples/*.oklm.json
 python validators/validate.py --strict examples/*.oklm.json
-python validators/validate_v0_1.py
+python validators/validate_v0_2.py
 python tools/tests/run_tests.py
 ```
 
 The first, third and fourth ran green on a clean machine on 2026-09-02 (gate 2).
 `--strict` (added 2026-09-15, decided 2026-09-02 as a prerequisite of schema 0.2)
 lints what the schema does not: unknown members and extension prefixes, HID
-usage ranges, W3C `code` values, one physical code per key. They need
+usage ranges, W3C `code` values, one physical code per key. `--strict` turns the warnings `W_UNKNOWN_MEMBER` and `W_GEOMETRY_UNKNOWN` into errors; `--json` prints the findings with stable codes. `python tools/migrate_0_1_to_0_2.py FILE.oklm.json` migrates a 0.1 manifest. They need
 Python 3 and `jsonschema`.
 
 ## What this is not

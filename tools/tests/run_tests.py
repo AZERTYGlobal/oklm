@@ -38,7 +38,11 @@ TARGETS = {
 failures = []
 
 
+CHECKS = {"n": 0}
+
+
 def check(condition, message):
+    CHECKS["n"] += 1
     if not condition:
         failures.append(message)
 
@@ -108,15 +112,79 @@ def main():
         problems = list(manifest_validator.iter_errors(json.loads(path.read_text(encoding="utf-8"))))
         check(not problems, f"{path.name}: manifest itself no longer validates: {[p.message for p in problems]}")
 
+    v02_checks(minimal, report_validator)
+
     if failures:
-        print(f"FAILED ({len(failures)} problem(s)):")
+        print(f"FAILED ({len(failures)} problem(s) over {CHECKS['n']} checks):")
         for f in failures:
             print(f"  - {f}")
         return 1
     total = len(EXAMPLES) * len(TARGETS)
     print(f"OK: {total} exports (6 examples x 3 targets), all reports schema-valid, "
-          f"deterministic, matching committed goldens; groups-scope rejection verified.")
+          f"deterministic, matching committed goldens; groups-scope rejection verified; "
+          f"{CHECKS['n']} checks passed.")
     return 0
+
+
+def v02_checks(minimal, report_validator):
+    """Schema 0.2 behaviors: modifier keys, LDML escaping (E13), derived locale (E20),
+    implied scan-code forms (E1), fallback transform (E15), capability lists."""
+    import copy
+
+    # E1: every scan code the HID table produces exists in CLDR's scanCodes-implied.xml
+    forms = ldml.load_implied_forms()
+    implied_codes = {code for rows in forms.values() for row in rows for code in row}
+    check(set(forms) >= {"us", "iso", "abnt2", "jis", "ks"}, "implied forms: us/iso/abnt2/jis/ks present")
+    stray = sorted(set(ldml.HID_TO_SCANCODE1.values()) - implied_codes)
+    check(not stray, f"HID_TO_SCANCODE1 produces scan codes absent from CLDR implied forms: {stray}")
+    check(ldml._implied_form_for(load_manifest(ROOT / "examples" / "azerty-global.oklm.json"))[0] == "iso",
+          "azerty-global covers exactly the CLDR 'iso' form")
+    check(ldml._implied_form_for(load_manifest(ROOT / "examples" / "qwerty-us.oklm.json"))[0] == "us",
+          "qwerty-us covers exactly the CLDR 'us' form")
+    check(ldml._implied_form_for(minimal) is None, "partial manifest keeps a custom form")
+
+    # E13: escaping
+    check(ldml.ldml_escape("\\") == "\\u{5C}", "E13: backslash output escaped")
+    check(ldml.ldml_escape("á") == "a\\u{301}", "E13: combining mark escaped, base letter kept")
+    check(ldml.ldml_escape(" ") == "\\u{A0}", "E13: no-break space escaped")
+    check(ldml.ldml_escape(" ") == " ", "E13: ASCII space kept")
+    check(ldml.ldml_escape("(", regex=True) == "\\u{28}" and ldml.ldml_escape("(") == "(",
+          "E13: regex metacharacter escaped in `from` only")
+    check(ldml.ldml_escape("$", replacement=True) == "\\u{24}", "E13: `$` escaped in `to`")
+    metas = "\\^$.|?*+()[]{}"
+    check(all(ldml.ldml_escape(ch, regex=True).startswith("\\u{") for ch in metas), "E13: all 14 metacharacters escaped in `from`")
+
+    # E20: derived locale, 8-character subtags
+    check(ldml.derived_locale(minimal) == ("fr-t-k0-azerty-global-minimal", False), "E20: derived locale")
+    traditional = load_manifest(ROOT / "examples" / "azerty-traditionnel.oklm.json")
+    check(ldml.derived_locale(traditional) == ("fr-t-k0-azerty-traditio", True), "E20: subtag cut to 8 characters")
+    text, report = ldml.export(traditional, source_file="x")
+    check(any(m["path"] == "layoutId" for m in report["lossyMappings"]), "E20: the cut is declared as lossy")
+
+    # E15: fallback is a transform, not a lossy mapping
+    text, report = ldml.export(minimal, source_file="x")
+    check('from="\\m{circumflex}" to="^"' in text, "E15: fallback exported as a bare-marker transform")
+    check(not any("fallback" in m["path"] for m in report["lossyMappings"]), "E15: fallback not reported as lossy")
+
+    # E22: modifier keys carry no output and are skipped by every exporter
+    with_modifier = copy.deepcopy(minimal)
+    with_modifier["keys"].append({"id": "B99", "hid": "0xE1", "role": "modifier", "modifier": "Level2Shift"})
+    for target, (module, _ext) in TARGETS.items():
+        text, report = module.export(with_modifier, source_file="x")
+        check(text is not None, f"E22/{target}: manifest with a modifier key exports")
+        check(any(s["path"] == "keys[B99]" for s in report["skippedFields"]), f"E22/{target}: modifier key declared as skipped")
+        check(not list(report_validator.iter_errors(report)), f"E22/{target}: report valid")
+        reference_text, _ = module.export(minimal, source_file="x")
+        check(text == reference_text, f"E22/{target}: output identical to the manifest without the modifier key")
+
+    # capability lists and extensions are declared as skipped, never exported (E19)
+    with_ext = copy.deepcopy(minimal)
+    with_ext["extensions"] = {"OKLM_geometry": {"x": 1}}
+    with_ext["extensionsUsed"] = ["OKLM_geometry"]
+    text, report = ldml.export(with_ext, source_file="x")
+    skipped = {s["path"] for s in report["skippedFields"]}
+    check({"extensions", "extensionsUsed"} <= skipped, "E19: extensions and extensionsUsed declared as skipped")
+    check("special" not in text and "OKLM_geometry" not in text, "E19: no `special` element, no extension content in LDML")
 
 
 if __name__ == "__main__":

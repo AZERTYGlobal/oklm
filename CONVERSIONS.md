@@ -28,6 +28,20 @@ LDML Keyboard is a standard interchange format with its own concepts and constra
 7. Keep generated files deterministic.
 8. Preserve human-readable ordering and formatting where possible.
 
+## Rules settled in schema 0.2
+
+Decided on 2026-10-05 with schema 0.2; the exporters and the report schema follow them.
+
+- **E8, groups.** `keys[].groups` stays reserved. Every exporter rejects a manifest that uses it and reports `compatibilityLevel: failed`.
+- **E13, escaping.** A composition base is a literal string. In LDML `transform@from`, the backslash, the 14 regex metacharacters (`\ ^ $ . | ? * + ( ) [ ] { }`), the characters of categories Cc, Cf, Cs, Co, Cn, Mn, Mc, Me, Zl, Zp and every non-ASCII space are written `\u{..}`. In `transform@to` and in key outputs the same rule applies, plus `$`, which is escaped in `to`.
+- **E19, extensions.** `extensions` and `extensionsUsed` are never exported; the report lists them in `skippedFields`. Extensions found by an importer are preserved in a namespace and listed in `preservedAsExtensions`.
+- **E20, derived LDML locale.** The `keyboard@locale` is `<locales[0]>-t-k0-<layoutId>`. Each subtag after `k0` is cut to 8 characters; a cut is declared in `lossyMappings` (`layoutId`).
+- **E21, silent level.** A level without output is a key that produces nothing. LDML gets an implicit `gap` at that position; the schema cannot express a layer `other`.
+- **E1, scan codes.** When the keys cover exactly one of the CLDR implied forms (`us`, `iso`, `abnt2`, `jis`, `ks`, table `scanCodes-implied.xml` bundled in `tools/exporters/data/` with the Unicode license), the exporter uses that form and writes no custom `<form>`. Otherwise it writes a custom form.
+- **E15, fallback.** `fallback` is exported as a transform on the bare marker. It is not a lossy mapping.
+- **E22, modifier keys.** A key with `role: "modifier"` is skipped by the exporters and declared in `skippedFields`.
+- **D33, `unsupported`.** The compatibility level `unsupported` means the source is valid but uses a construct that the converter does not handle at all and nothing usable came out. It differs from `failed`, which means the source or the conversion is broken.
+
 ## OKLM to LDML
 
 Purpose:

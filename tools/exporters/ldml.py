@@ -12,25 +12,41 @@ approximations (see CONVERSIONS.md and the generated report):
   of Level2Shift/Level3Shift/CapsLock (the only functional qualifiers with a
   direct LDML modifier component: shift, altR, caps). Level5Shift and
   NumLock have no LDML equivalent and cause that level to be skipped.
-- Physical key placement uses a custom, self-contained <form> (scanCodes),
-  which UTS #35 permits for keyboards not intended for the CLDR repository
-  (our manifests only cover the alphanumeric section, not a full physical
-  keyboard). Placement is derived from each key's mandatory `hid` (USB HID
-  usage page 0x07) via the standard USB-to-PS/2-Set-1 scan code table.
+- Physical key placement is derived from each key's mandatory `hid` (USB HID
+  usage page 0x07) via the standard USB-to-PS/2-Set-1 scan code table. When
+  the manifest's keys cover exactly one of the hardware forms of CLDR's
+  scanCodes-implied.xml (us, iso, abnt2, jis, ks; data/scanCodes-implied.xml,
+  Unicode License in data/LICENSE-UNICODE), the layers reference that implied
+  form by id (E1). Otherwise the exporter writes a custom, self-contained
+  <form> (scanCodes), which UTS #35 permits for keyboards not intended for the
+  CLDR repository (a partial manifest covers only part of a physical keyboard).
 - Dead keys compile to LDML markers (`\\m{id}`) and simple <transform>
   rules, one per composition entry, in manifest document order. `fallback`
-  is approximated as a transform matching the bare marker; this is recorded
-  as a lossy mapping because bare-marker fallback/cancellation semantics are
-  not fully pinned down across implementations.
+  is an explicit transform matching the bare marker (E15): that is what the
+  field means in OKLM, so it is not a lossy mapping.
+- The composition base is a literal string (E13): it is escaped before it is
+  written as a transform `from` (a regular expression), and every output is
+  escaped (backslash, control, format, combining and non-ASCII space
+  characters become \\u{...}).
+- The LDML `locale` identifier is derived (E20): locales[0] + "-t-k0-" +
+  layoutId, each layoutId subtag cut to the 8 characters BCP 47 allows (the
+  cut is declared as a lossy mapping).
 - OKLM-only metadata (description, conformance, exports, metadata,
-  extensions) is never exported; always recorded as skipped.
+  extensions, capability lists) is never exported and no `special` element is
+  written (E19); it is always recorded as skipped.
+- Modifier keys (role: modifier) carry no output and are not exported (E22).
 """
+import unicodedata
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
 from .common import (
     ReportBuilder,
     resolve_level_modifiers,
     levels_used_by,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
+    without_modifier_keys,
     xml_escape,
 )
 
@@ -55,6 +71,12 @@ HID_TO_SCANCODE1 = {
 
 ROW_ORDER = "EDCBA"
 
+IMPLIED_FORMS_FILE = Path(__file__).resolve().parent / "data" / "scanCodes-implied.xml"
+IMPLIED_FORM_ORDER = ["us", "iso", "abnt2", "jis", "ks"]
+
+# Metacharacters of the regular expression in a transform `from`.
+FROM_METACHARACTERS = set("\\^$.|?*+()[]{}")
+
 # Functional qualifier (SPEC.md "Level Selectors") -> LDML modifier component
 # (UTS #35 Part 7 valid components: none, alt, altL, altR, caps, ctrl,
 # ctrlL, ctrlR, shift, other).
@@ -64,6 +86,50 @@ QUALIFIER_TO_LDML = {
     "CapsLock": "caps",
 }
 MODIFIER_ORDER = ["caps", "altR", "shift"]
+
+
+def load_implied_forms():
+    """CLDR scanCodes-implied.xml -> {form id: [[scan code, ...] per row]} (upper-case hex)."""
+    root = ET.parse(IMPLIED_FORMS_FILE).getroot()
+    forms = {}
+    for form in root.iter("form"):
+        forms[form.get("id")] = [
+            [code.upper() for code in row.get("codes").split()] for row in form.iter("scanCodes")
+        ]
+    return forms
+
+
+def _needs_escape(ch):
+    if ch == "\\":
+        return True
+    category = unicodedata.category(ch)
+    if category in ("Cc", "Cf", "Cs", "Co", "Cn", "Mn", "Mc", "Me", "Zl", "Zp"):
+        return True
+    return category == "Zs" and ch != " "
+
+
+def ldml_escape(text, regex=False, replacement=False):
+    """Escape a literal OKLM string for an LDML attribute value (E13).
+
+    regex=True: the text is the literal base of a transform `from`, so the regular-expression
+    metacharacters are escaped too. replacement=True: the text is a transform `to`, where `$`
+    would start a back-reference.
+    """
+    out = []
+    for ch in text:
+        if _needs_escape(ch) or (regex and ch in FROM_METACHARACTERS) or (replacement and ch == "$"):
+            out.append("\\u{%X}" % ord(ch))
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def derived_locale(manifest):
+    """E20: locales[0] + "-t-k0-" + layoutId. Returns (identifier, cut): cut is True when a
+    layoutId subtag had to be shortened to the 8 characters BCP 47 allows."""
+    subtags = manifest["layoutId"].split("-")
+    cut = any(len(tag) > 8 for tag in subtags)
+    return manifest["locales"][0] + "-t-k0-" + "-".join(tag[:8] for tag in subtags), cut
 
 
 def _rows(manifest):
@@ -76,6 +142,18 @@ def _rows(manifest):
         if letter in by_row:
             rows.append(sorted(by_row[letter], key=lambda k: int(k["id"][1:])))
     return rows
+
+
+def _implied_form_for(manifest):
+    """(form id, rows of scan codes) of the implied hardware form whose scan codes the manifest's
+    keys cover exactly, else None."""
+    codes = {HID_TO_SCANCODE1[key["hid"]] for key in manifest["keys"]}
+    forms = load_implied_forms()
+    for form_id in IMPLIED_FORM_ORDER:
+        rows = forms.get(form_id)
+        if rows and codes == {code for row in rows for code in row}:
+            return form_id, rows
+    return None
 
 
 def _layer_modifiers(level, resolved, report, warned_altR):
@@ -116,6 +194,7 @@ def export(manifest, source_file=None):
 
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
+    manifest = without_modifier_keys(report, manifest)
 
     conforms_to = 45
     for export_target in manifest.get("exports", []):
@@ -124,10 +203,16 @@ def export(manifest, source_file=None):
             break
 
     locales = manifest["locales"]
-    primary_locale = locales[0]
+    primary_locale, cut = derived_locale(manifest)
     report.mapped("locales")
+    if cut:
+        report.lossy(
+            "layoutId",
+            "a layoutId subtag longer than 8 characters is cut to 8 in the derived LDML locale "
+            f"identifier '{primary_locale}' (BCP 47 limit)",
+        )
     if len(locales) > 1:
-        report.lossy("locales", f"only the primary locale '{primary_locale}' is exported; LDML keyboard3 declares one locale")
+        report.lossy("locales", f"only the primary locale '{locales[0]}' is exported; LDML keyboard3 declares one locale")
 
     for field in ("layoutId", "authors", "license"):
         report.skip(field, "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter")
@@ -161,11 +246,22 @@ def export(manifest, source_file=None):
         report.mapped("levelSelectors")
 
     dead_keys = manifest.get("deadKeys", [])
-    dead_key_ids = {dk["id"] for dk in dead_keys}
+
+    # Placement: an implied hardware form when the keys cover exactly one, else a custom form.
+    implied = _implied_form_for(manifest)
+    if implied:
+        form_id, implied_rows = implied
+        by_scancode = {HID_TO_SCANCODE1[key["hid"]]: key for key in manifest["keys"]}
+        placement_rows = [[by_scancode[code] for code in codes] for codes in implied_rows]
+        scancode_rows = None
+    else:
+        form_id = f"{manifest['layoutId']}-form"
+        placement_rows = rows
+        scancode_rows = [" ".join(HID_TO_SCANCODE1[key["hid"]] for key in row) for row in rows]
 
     key_elements = []  # (id, output)
     layer_rows = {level: [] for _, level in layers}
-    for row in rows:
+    for row in placement_rows:
         for level in layer_rows:
             layer_rows[level].append([])
         for key in row:
@@ -177,33 +273,22 @@ def export(manifest, source_file=None):
                     continue
                 elem_id = f"k_{key['id']}_{level}"
                 if isinstance(out, str):
-                    output = out
+                    output = ldml_escape(out)
                 else:
                     output = f"\\m{{{out['deadKey']}}}"
                 key_elements.append((elem_id, output))
                 layer_rows[level][-1].append(elem_id)
-
-    form_id = f"{manifest['layoutId']}-form"
-    scancode_rows = []
-    for row in rows:
-        codes = " ".join(HID_TO_SCANCODE1[key["hid"]] for key in row)
-        scancode_rows.append(codes)
 
     displays = []
     transforms = []
     for dk in dead_keys:
         marker = f"\\m{{{dk['id']}}}"
         if "display" in dk:
-            displays.append((marker, dk["display"]))
+            displays.append((marker, ldml_escape(dk["display"])))
         for base, result in dk.get("compositions", {}).items():
-            transforms.append((f"{marker}{base}", result))
+            transforms.append((marker + ldml_escape(base, regex=True), ldml_escape(result, replacement=True)))
         if "fallback" in dk:
-            transforms.append((marker, dk["fallback"]))
-            report.lossy(
-                f"deadKeys[{dk['id']}].fallback",
-                "approximated as a transform matching the bare marker; bare-marker fallback/"
-                "cancellation semantics are not fully pinned down across implementations",
-            )
+            transforms.append((marker, ldml_escape(dk["fallback"], replacement=True)))
     if dead_keys:
         report.mapped("deadKeys")
 
@@ -226,12 +311,13 @@ def export(manifest, source_file=None):
         for marker, display in displays:
             lines.append(f'    <display output="{xml_escape(marker)}" display="{xml_escape(display)}"/>')
         lines.append("  </displays>")
-    lines.append("  <forms>")
-    lines.append(f'    <form id="{form_id}">')
-    for codes in scancode_rows:
-        lines.append(f'      <scanCodes codes="{codes}"/>')
-    lines.append("    </form>")
-    lines.append("  </forms>")
+    if scancode_rows is not None:
+        lines.append("  <forms>")
+        lines.append(f'    <form id="{form_id}">')
+        for codes in scancode_rows:
+            lines.append(f'      <scanCodes codes="{codes}"/>')
+        lines.append("    </form>")
+        lines.append("  </forms>")
     lines.append(f'  <layers formId="{form_id}">')
     for modifiers, level in layers:
         lines.append(f'    <layer modifiers="{modifiers}">')
