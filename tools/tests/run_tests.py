@@ -97,6 +97,35 @@ def main():
                 golden_report_obj = json.loads(golden_report.read_text(encoding="utf-8"))
                 check(golden_report_obj == report, f"{stem}/{target}: golden report {golden_report} does not match fresh report (regression)")
 
+    # .XCompose companion of the xkb export: golden, determinism, integrity
+    for path in EXAMPLES:
+        stem = path.name[: -len(".oklm.json")]
+        manifest = load_manifest(path)
+        compose = xkb.export_compose(manifest, source_file=path.name)
+        integrity_check(f"{stem}/XCompose", compose)
+        check(compose == xkb.export_compose(manifest, source_file=path.name), f"{stem}/XCompose: not deterministic")
+        golden = ROOT / "examples" / "exports" / "xkb" / f"{stem}.XCompose"
+        check(golden.exists(), f"{stem}/XCompose: missing golden {golden}")
+        if golden.exists():
+            fresh = (compose + "\n").encode("utf-8") if not compose.endswith("\n") else compose.encode("utf-8")
+            check(golden.read_bytes() == fresh, f"{stem}/XCompose: golden does not match fresh export (regression)")
+        dead_ids = set() if stem != "azerty-global" else {dk["id"] for dk in manifest.get("deadKeys", [])}
+        check(dead_ids <= set(xkb.DEAD_KEYSYMS), f"{stem}/xkb: dead keys without dead_* keysym: {sorted(dead_ids - set(xkb.DEAD_KEYSYMS))}")
+
+    # .keylayout: every used dead key has a terminator and an own-state entry
+    for path in EXAMPLES:
+        stem = path.name[: -len(".oklm.json")]
+        if stem != "azerty-global":
+            continue
+        text, _ = results[(stem, "keylayout")]
+        used = set(re.findall(r'<action id="dk_([^"]+)"', text))
+        terminators = set(re.findall(r'<when state="([^"]+)" output="[^"]*"/>', text.split("<terminators>")[-1])) if "<terminators>" in text else set()
+        check(used <= terminators, f"{stem}/keylayout: dead keys without terminator: {sorted(used - terminators)}")
+        for dk_id in used:
+            block = re.search(rf'<action id="dk_{re.escape(dk_id)}">(.*?)</action>', text, re.S).group(1)
+            if dk_id not in ("cyrillic", "extended-latin"):  # blank terminators: no own-state entry
+                check(f'<when state="{dk_id}" output=' in block, f"{stem}/keylayout: dk_{dk_id} has no own-state entry")
+
     minimal = load_manifest(ROOT / "examples" / "azerty-global-minimal.oklm.json")
     groups_manifest = json.loads(json.dumps(minimal))
     groups_manifest["keys"][0]["groups"] = {"2": {"1": "b"}}

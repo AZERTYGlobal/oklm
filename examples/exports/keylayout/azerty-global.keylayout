@@ -1658,90 +1658,178 @@
   </action>
   <action id="dk_acute">
     <when state="none" next="acute"/>
+    <when state="acute" output="́"/>
+    <when state="macron" output="᷇"/>
+    <when state="cyrillic" output="ћ"/>
   </action>
   <action id="dk_breve">
     <when state="none" next="breve"/>
+    <when state="breve" output="̆"/>
+    <when state="extended-latin" output="̮"/>
+    <when state="phonetic" output="̯"/>
   </action>
   <action id="dk_caron">
     <when state="none" next="caron"/>
+    <when state="caron" output="̌"/>
+    <when state="extended-latin" output="̬"/>
   </action>
   <action id="dk_cedilla">
     <when state="none" next="cedilla"/>
+    <when state="cedilla" output="̧"/>
   </action>
   <action id="dk_circumflex">
     <when state="none" next="circumflex"/>
+    <when state="circumflex" output="̂"/>
+    <when state="extended-latin" output="̭"/>
+    <when state="cyrillic" output="џ"/>
+    <when state="scientific" output="∧"/>
+    <when state="punctuation" output="‸"/>
   </action>
   <action id="dk_comma">
     <when state="none" next="comma"/>
+    <when state="comma" output="̦"/>
   </action>
   <action id="dk_currencies">
     <when state="none" next="currencies"/>
+    <when state="currencies" output="¤"/>
   </action>
   <action id="dk_cyrillic">
     <when state="none" next="cyrillic"/>
   </action>
   <action id="dk_diaeresis">
     <when state="none" next="diaeresis"/>
+    <when state="diaeresis" output="̈"/>
+    <when state="extended-latin" output="̤"/>
+    <when state="cyrillic" output="Џ"/>
+    <when state="scientific" output="∨"/>
   </action>
   <action id="dk_dot-above">
     <when state="none" next="dot-above"/>
+    <when state="dot-above" output="̇"/>
   </action>
   <action id="dk_dot-below">
     <when state="none" next="dot-below"/>
+    <when state="dot-below" output="̣"/>
   </action>
   <action id="dk_double-acute">
     <when state="none" next="double-acute"/>
+    <when state="double-acute" output="̋"/>
   </action>
   <action id="dk_double-grave">
     <when state="none" next="double-grave"/>
+    <when state="double-grave" output="̏"/>
   </action>
   <action id="dk_extended-latin">
     <when state="none" next="extended-latin"/>
   </action>
   <action id="dk_grave">
     <when state="none" next="grave"/>
+    <when state="grave" output="̀"/>
+    <when state="macron" output="᷆"/>
+    <when state="cyrillic" output="Ћ"/>
   </action>
   <action id="dk_greek">
     <when state="none" next="greek"/>
+    <when state="greek" output="µ"/>
+    <when state="cyrillic" output="Ђ"/>
   </action>
   <action id="dk_hook">
     <when state="none" next="hook"/>
+    <when state="hook" output="̉"/>
   </action>
   <action id="dk_horizontal-stroke">
     <when state="none" next="horizontal-stroke"/>
+    <when state="circumflex" output="⁻"/>
+    <when state="acute" output="₋"/>
+    <when state="tilde" output="≃"/>
+    <when state="horizontal-stroke" output="̶"/>
+    <when state="phonetic" output="ʰ"/>
+    <when state="greek" output="ύ"/>
+    <when state="cyrillic" output="ў"/>
+    <when state="misc-symbols" output="☼"/>
+    <when state="scientific" output="−"/>
+    <when state="punctuation" output="‐"/>
   </action>
   <action id="dk_horn">
     <when state="none" next="horn"/>
+    <when state="horn" output="̛"/>
   </action>
   <action id="dk_inverted-breve">
     <when state="none" next="inverted-breve"/>
+    <when state="inverted-breve" output="̑"/>
   </action>
   <action id="dk_macron">
     <when state="none" next="macron"/>
+    <when state="macron" output="̄"/>
   </action>
   <action id="dk_misc-symbols">
     <when state="none" next="misc-symbols"/>
+    <when state="misc-symbols" output="→"/>
   </action>
   <action id="dk_ogonek">
     <when state="none" next="ogonek"/>
+    <when state="ogonek" output="̨"/>
   </action>
   <action id="dk_phonetic">
     <when state="none" next="phonetic"/>
+    <when state="phonetic" output="ʁ"/>
   </action>
   <action id="dk_punctuation">
     <when state="none" next="punctuation"/>
+    <when state="punctuation" output="§"/>
   </action>
   <action id="dk_ring-above">
     <when state="none" next="ring-above"/>
+    <when state="extended-latin" output="̥"/>
+    <when state="ring-above" output="̊"/>
   </action>
   <action id="dk_scientific">
     <when state="none" next="scientific"/>
+    <when state="scientific" output="±"/>
   </action>
   <action id="dk_stroke">
     <when state="none" next="stroke"/>
+    <when state="stroke" output="̷"/>
+    <when state="cyrillic" output="Њ"/>
+    <when state="scientific" output="÷"/>
+    <when state="punctuation" output="‣"/>
   </action>
   <action id="dk_tilde">
     <when state="none" next="tilde"/>
+    <when state="tilde" output="̃"/>
+    <when state="extended-latin" output="̰"/>
+    <when state="scientific" output="≈"/>
   </action>
   </actions>
+  <terminators>
+    <when state="circumflex" output="^"/>
+    <when state="diaeresis" output="¨"/>
+    <when state="acute" output="´"/>
+    <when state="grave" output="`"/>
+    <when state="tilde" output="~"/>
+    <when state="dot-above" output="˙"/>
+    <when state="dot-below" output="̣"/>
+    <when state="double-acute" output="˝"/>
+    <when state="double-grave" output="̏"/>
+    <when state="horn" output="̛"/>
+    <when state="hook" output="̉"/>
+    <when state="caron" output="ˇ"/>
+    <when state="ogonek" output="˛"/>
+    <when state="breve" output="˘"/>
+    <when state="inverted-breve" output="̑"/>
+    <when state="stroke" output="/"/>
+    <when state="horizontal-stroke" output="-"/>
+    <when state="macron" output="¯"/>
+    <when state="extended-latin" output=" "/>
+    <when state="cedilla" output="¸"/>
+    <when state="comma" output="̦"/>
+    <when state="phonetic" output="ʁ"/>
+    <when state="ring-above" output="˚"/>
+    <when state="greek" output="µ"/>
+    <when state="cyrillic" output=" "/>
+    <when state="misc-symbols" output="→"/>
+    <when state="scientific" output="±"/>
+    <when state="currencies" output="¤"/>
+    <when state="punctuation" output="§"/>
+  </terminators>
 </keyboard>

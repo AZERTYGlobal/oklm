@@ -12,12 +12,15 @@ approximations (see CONVERSIONS.md and the generated report):
   and letters use their canonical X11 keysym name; everything else uses the
   Unicode keysym form `U<hex codepoint>` (lossless -- xkb resolves this to
   the Unicode codepoint directly).
-- Dead keys map to `dead_*` keysyms only where a direct xkb equivalent
-  exists. OKLM `compositions` tables are not re-emitted as XCompose rules:
-  actual composition results depend on the system's Compose configuration,
-  which is recorded as a lossy mapping. Dead keys with no `dead_*`
-  equivalent fall back to their `display` character (composition lost) or
-  are skipped entirely if no `display` is available.
+- Dead keys map to `dead_*` keysyms. Where X11 has no direct `dead_*` for an
+  OKLM dead key, a spare, otherwise unused `dead_*` keysym is used as a
+  carrier (see DEAD_KEYSYMS); `export_compose()` writes the matching
+  `.XCompose` rules, which define the real outputs. Dead keys with no
+  `dead_*` entry at all fall back to their `display` character (composition
+  lost) or are skipped entirely if no `display` is available.
+- `export_compose()` re-emits every OKLM `compositions` table as XCompose
+  rules (`<dead_x> <base> : "result"`); tools/export.py writes it next to the
+  xkb file as `<name>.XCompose`.
 - Keys with no `xkb` name declared are omitted (skipped, not guessed).
 """
 from .common import (
@@ -44,8 +47,14 @@ for _c in "0123456789":
 for _c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ":
     ASCII_KEYSYMS[_c] = _c
 
-# OKLM dead-key id -> xkb dead_* keysym, only where a direct equivalent
-# exists (X11 keysymdef.h dead_* set).
+# OKLM dead-key id -> xkb dead_* keysym (X11 keysymdef.h dead_* set).
+# The first 21 entries are direct equivalents. The last 8 are carriers: X11
+# has no matching dead keysym, so an unused one stands in and the .XCompose
+# written by export_compose() defines the outputs (as in json_to_xkb).
+# Provenance: carrier table DK_TO_XKB of azerty-global/components/website/
+# scripts/json_to_xkb.py, ported 2026-10-06 (decision D28 of
+# IA/operations/2026-10-04-outils-maison-vs-en-ligne), OKLM dead-key ids in
+# place of the site's `dk_*` names.
 DEAD_KEYSYMS = {
     "acute": "dead_acute",
     "breve": "dead_breve",
@@ -68,6 +77,34 @@ DEAD_KEYSYMS = {
     "ring-above": "dead_abovering",
     "stroke": "dead_stroke",
     "tilde": "dead_tilde",
+    # carriers
+    "horizontal-stroke": "dead_belowring",
+    "comma": "dead_belowcomma",
+    "cyrillic": "dead_semivoiced_sound",
+    "scientific": "dead_iota",
+    "punctuation": "dead_belowtilde",
+    "extended-latin": "dead_voiced_sound",
+    "misc-symbols": "dead_belowmacron",
+    "phonetic": "dead_belowbreve",
+}
+
+# Characters -> canonical keysym names in .XCompose sequences (ported from
+# json_to_xkb.py); other non-ASCII characters use the `U<hex>` form.
+XCOMPOSE_KEYSYMS = {
+    "À": "Agrave", "Á": "Aacute", "Â": "Acircumflex", "Ã": "Atilde", "Ä": "Adiaeresis", "Å": "Aring",
+    "Æ": "AE", "Ç": "Ccedilla", "È": "Egrave", "É": "Eacute", "Ê": "Ecircumflex", "Ë": "Ediaeresis",
+    "Ì": "Igrave", "Í": "Iacute", "Î": "Icircumflex", "Ï": "Idiaeresis", "Ñ": "Ntilde",
+    "Ò": "Ograve", "Ó": "Oacute", "Ô": "Ocircumflex", "Õ": "Otilde", "Ö": "Odiaeresis", "Ø": "Oslash",
+    "Ù": "Ugrave", "Ú": "Uacute", "Û": "Ucircumflex", "Ü": "Udiaeresis", "Ý": "Yacute",
+    "à": "agrave", "á": "aacute", "â": "acircumflex", "ã": "atilde", "ä": "adiaeresis", "å": "aring",
+    "æ": "ae", "ç": "ccedilla", "è": "egrave", "é": "eacute", "ê": "ecircumflex", "ë": "ediaeresis",
+    "ì": "igrave", "í": "iacute", "î": "icircumflex", "ï": "idiaeresis", "ñ": "ntilde",
+    "ò": "ograve", "ó": "oacute", "ô": "ocircumflex", "õ": "otilde", "ö": "odiaeresis", "ø": "oslash",
+    "ù": "ugrave", "ú": "uacute", "û": "ucircumflex", "ü": "udiaeresis", "ý": "yacute", "ÿ": "ydiaeresis",
+    "Œ": "OE", "œ": "oe", "ß": "ssharp", "µ": "mu",
+    "¡": "exclamdown", "¿": "questiondown", "§": "section", "¶": "paragraph", "©": "copyright", "®": "registered",
+    "«": "guillemotleft", "»": "guillemotright", "°": "degree", "±": "plusminus", "×": "multiply", "÷": "division",
+    "£": "sterling", "€": "EuroSign",
 }
 
 LEVELS = ["1", "2", "3", "4"]
@@ -81,6 +118,42 @@ def keysym_for_char(text):
     # Multi-codepoint literal output (ligature-like): no single xkb keysym
     # can hold it losslessly; fall back to the first codepoint.
     return f"U{ord(text[0]):04X}"
+
+
+def compose_keysym(text):
+    """Keysym name of a composition base character in an .XCompose rule, or None."""
+    if len(text) != 1:
+        return None
+    if text in ASCII_KEYSYMS:
+        return ASCII_KEYSYMS[text]
+    if text in XCOMPOSE_KEYSYMS:
+        return XCOMPOSE_KEYSYMS[text]
+    return f"U{ord(text):04X}"
+
+
+def export_compose(manifest, source_file=None):
+    """Returns the .XCompose text: every composition of the dead keys that have a
+    dead_* keysym (direct or carrier), like json_to_xkb."""
+    lines = [
+        f"# {manifest['name']}",
+        "# Generated by OKLM exporters (draft v1) -- do not edit by hand.",
+        f"# Source manifest: {source_file or manifest['layoutId'] + '.oklm.json'}",
+        "",
+        'include "%L"',
+        "",
+    ]
+    for dk in sorted(manifest.get("deadKeys", []), key=lambda d: d["id"]):
+        keysym = DEAD_KEYSYMS.get(dk["id"])
+        table = dk.get("compositions", {})
+        if not keysym or not table:
+            continue
+        lines.append(f"# Dead Key: {dk['id']}")
+        for base, result in sorted(table.items(), key=lambda kv: (len(kv[0]), kv[0])):
+            base_keysym = compose_keysym(base)
+            if base_keysym:
+                lines.append(f'<{keysym}> <{base_keysym}> : "{xkb_string_escape(result)}"')
+        lines.append("")
+    return "\n".join(lines)
 
 
 def xkb_string_escape(text):
@@ -167,9 +240,11 @@ def export(manifest, source_file=None):
     if dead_keys:
         report.lossy(
             "deadKeys[].compositions",
-            "composition tables are not re-emitted as XCompose rules; results for dead_* "
-            "keysyms are delegated to the system's own Compose configuration and may differ "
-            "from the OKLM compositions",
+            "compositions are re-emitted as XCompose rules in the companion .XCompose file, "
+            "which must be installed (~/.XCompose or merged into the system Compose "
+            "configuration) for the dead keys to give the OKLM results; carrier dead_* keysyms "
+            "(e.g. dead_belowring for horizontal-stroke) have no native composition meaning; "
+            "dead keys without any dead_* keysym lose their compositions",
         )
     report.mapped("keys")
     report.mapped("keys[].levels")

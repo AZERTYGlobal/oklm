@@ -56,41 +56,127 @@
       "detail": "exported as macOS modifier 'anyOption'; actual physical binding (AltGr vs Ctrl+Alt vs macOS Option) is platform-specific per SPEC.md"
     },
     {
+      "path": "deadKeys[circumflex]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[diaeresis]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[acute]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[grave]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[tilde]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[dot-above]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[dot-below]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[double-acute]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[double-grave]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[horn]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[hook]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[caron]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[ogonek]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[breve]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[inverted-breve]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[stroke]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[horizontal-stroke]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[macron]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[extended-latin]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[cedilla]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[comma]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[phonetic]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[ring-above]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[greek]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[cyrillic]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[misc-symbols]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[scientific]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[currencies]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
+      "path": "deadKeys[punctuation]",
+      "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
+    },
+    {
       "path": "geometry",
       "detail": "the <layouts> hardware-detection range is not modeled per OKLM geometry in v1; the generic first=0 last=17 mapSet=ANSI range from Apple's reference example is used"
     }
   ],
-  "warnings": [
-    "deadKeys[circumflex]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[diaeresis]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[acute]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[grave]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[tilde]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[dot-above]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[dot-below]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[double-acute]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[double-grave]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[horn]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[hook]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[caron]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[ogonek]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[breve]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[inverted-breve]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[stroke]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[horizontal-stroke]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[macron]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[extended-latin]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[cedilla]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[comma]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[phonetic]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[ring-above]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[greek]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[cyrillic]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[misc-symbols]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[scientific]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[currencies]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS",
-    "deadKeys[punctuation]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS"
-  ],
+  "warnings": [],
   "errors": [],
   "generator": {
     "name": "oklm-exporters",

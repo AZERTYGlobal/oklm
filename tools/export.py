@@ -84,7 +84,12 @@ def main():
             target_path.write_bytes(text)
         else:
             write_text(target_path, text)
-        print(f"OK      {path} -> {target_path}, {report_path} (compatibilityLevel: {report['compatibilityLevel']})")
+        extra = ""
+        if hasattr(module, "export_compose"):
+            compose_path = out_dir / f"{base}.XCompose"
+            write_text(compose_path, module.export_compose(manifest, source_file=path.name))
+            extra = f", {compose_path}"
+        print(f"OK      {path} -> {target_path}, {report_path}{extra} (compatibilityLevel: {report['compatibilityLevel']})")
 
     return exit_code
 

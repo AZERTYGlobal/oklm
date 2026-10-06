@@ -63,7 +63,7 @@
   "lossyMappings": [
     {
       "path": "deadKeys[].compositions",
-      "detail": "composition tables are not re-emitted as XCompose rules; results for dead_* keysyms are delegated to the system's own Compose configuration and may differ from the OKLM compositions"
+      "detail": "compositions are re-emitted as XCompose rules in the companion .XCompose file, which must be installed (~/.XCompose or merged into the system Compose configuration) for the dead keys to give the OKLM results; carrier dead_* keysyms (e.g. dead_belowring for horizontal-stroke) have no native composition meaning; dead keys without any dead_* keysym lose their compositions"
     }
   ],
   "warnings": [],

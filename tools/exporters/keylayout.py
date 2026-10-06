@@ -55,6 +55,23 @@ HID_TO_MACVK = {
     "0x10": "46", "0x37": "47", "0x2C": "49", "0x35": "50",
 }
 
+# Terminator output (spacing form of the accent) for dead keys that declare
+# neither `fallback` nor `display`. Provenance: the `<terminators>` of the
+# shipped AZERTY Global.keylayout (azerty-global release audit 2026-09-05),
+# keyed by OKLM dead-key id; ported 2026-10-06 (decision D29 of
+# IA/operations/2026-10-04-outils-maison-vs-en-ligne). The entries for
+# cyrillic and extended-latin are U+0020, as in that file.
+DEFAULT_TERMINATORS = {
+    "acute": "´", "double-acute": "˝", "grave": "`", "double-grave": "̏",
+    "cyrillic": " ", "greek": "µ", "phonetic": "ʁ", "stroke": "/",
+    "horizontal-stroke": "-", "breve": "˘", "inverted-breve": "̑",
+    "caron": "ˇ", "circumflex": "^", "horn": "̛", "hook": "̉",
+    "cedilla": "¸", "extended-latin": " ", "macron": "¯", "ogonek": "˛",
+    "dot-above": "˙", "dot-below": "̣", "punctuation": "§",
+    "ring-above": "˚", "misc-symbols": "→", "currencies": "¤",
+    "scientific": "±", "tilde": "~", "diaeresis": "¨", "comma": "̦",
+}
+
 QUALIFIER_TO_MAC = {
     "Level2Shift": "anyShift",
     "Level3Shift": "anyOption",
@@ -176,27 +193,60 @@ def export(manifest, source_file=None):
             whens.append(f'    <when state="{dk_id}" output="{xml_escape(result)}"/>')
         action_blocks.append(f'  <action id="{action_id}">\n' + "\n".join(whens) + "\n  </action>")
 
-    for dk_id in sorted(dead_ids_used):
-        action_blocks.append(f'  <action id="dk_{dk_id}">\n    <when state="none" next="{dk_id}"/>\n  </action>')
-
+    # Terminator output of each dead key: its `fallback`, else its `display`,
+    # else the built-in spacing character of DEFAULT_TERMINATORS.
+    terminator_char = {}
     terminator_lines = []
     for dk in dead_keys:
         if dk["id"] not in dead_ids_used:
             continue
         if "fallback" in dk:
-            terminator_lines.append(f'    <when state="{dk["id"]}" output="{xml_escape(dk["fallback"])}"/>')
+            terminator_char[dk["id"]] = dk["fallback"]
         elif "display" in dk:
-            terminator_lines.append(f'    <when state="{dk["id"]}" output="{xml_escape(dk["display"])}"/>')
+            terminator_char[dk["id"]] = dk["display"]
             report.lossy(
                 f"deadKeys[{dk['id']}]",
                 "no 'fallback' declared; the dead key's 'display' character is used as the "
                 "macOS terminator output instead",
+            )
+        elif dk["id"] in DEFAULT_TERMINATORS:
+            terminator_char[dk["id"]] = DEFAULT_TERMINATORS[dk["id"]]
+            report.lossy(
+                f"deadKeys[{dk['id']}]",
+                "no 'fallback' or 'display' declared; the built-in terminator character of "
+                "the exporter is used (macOS output of the dead key pressed then a non-composing key)",
+            )
+        if dk["id"] in terminator_char:
+            terminator_lines.append(
+                f'    <when state="{dk["id"]}" output="{xml_escape(terminator_char[dk["id"]])}"/>'
             )
         else:
             report.warn(
                 f"deadKeys[{dk['id']}]: no 'fallback' or 'display' declared; no terminator "
                 "emitted, behavior when input matches no composition is undefined on macOS"
             )
+
+    # A dead key pressed while another dead state is pending: the output is the
+    # composition of the pending dead key for the pressed dead key's terminator
+    # character (e.g. acute pending, horizontal-stroke key "-" pressed -> the
+    # `-` composition of acute); pressed twice with no such composition, it
+    # outputs its terminator.
+    for dk_id in sorted(dead_ids_used):
+        whens = [f'    <when state="none" next="{dk_id}"/>']
+        pressed_char = terminator_char.get(dk_id)
+        # A blank terminator (space) would only duplicate the space composition
+        # of every pending dead key: no entry, as in the shipped keylayout.
+        if pressed_char is not None and pressed_char.strip():
+            for pending in dead_keys:
+                if pending["id"] not in dead_ids_used:
+                    continue
+                result = pending.get("compositions", {}).get(pressed_char)
+                if result is None and pending["id"] == dk_id:
+                    result = pressed_char
+                if result is not None:
+                    max_output_len = max(max_output_len, len(result.encode("utf-16-le")) // 2)
+                    whens.append(f'    <when state="{pending["id"]}" output="{xml_escape(result)}"/>')
+        action_blocks.append(f'  <action id="dk_{dk_id}">\n' + "\n".join(whens) + "\n  </action>")
 
     modifier_select = []
     keymap_blocks = []
