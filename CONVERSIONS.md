@@ -211,12 +211,18 @@ Known, explicitly reported approximations:
   Level2Shift/Level3Shift/CapsLock;
 - Level3Shift exports as xkb/LDML `altR` or macOS `anyOption`; the actual
   physical binding (AltGr vs Ctrl+Alt vs macOS Option) stays platform-specific;
-- OKLM `deadKeys[].compositions` are not re-emitted as XCompose rules for
-  xkb: dead keys map to `dead_*` keysyms where one exists, and the actual
-  composition result is delegated to the system's own Compose
-  configuration, which may differ from the OKLM table. macOS keylayout, by
-  contrast, encodes the full composition table natively via its
-  `<actions>`/`<terminators>` state machine;
+- xkb: OKLM `deadKeys[].compositions` are re-emitted as XCompose rules in a
+  companion `<name>.XCompose` file (`tools/export.py` writes it next to the
+  xkb file). Dead keys map to `dead_*` keysyms; where X11 has no matching
+  one, a spare `dead_*` keysym is used as a carrier (e.g. `dead_belowring`
+  for `horizontal-stroke`) and only the `.XCompose` gives it meaning, so the
+  file must be installed (`~/.XCompose` or merged into the system Compose
+  configuration). macOS keylayout encodes the full composition table
+  natively via its `<actions>`/`<terminators>` state machine, including the
+  dead key pressed while another dead state is pending; the terminator
+  characters come from `fallback`, then `display`, then a built-in table.
+  The macOS behavior of these `.keylayout` additions is not tested on a Mac
+  (checked against the shipped AZERTY Global `.keylayout` only);
 - the exporters run from `tools/export.py` (see `tools/exporters/`) and are
   covered by golden-file tests in `examples/exports/` (`tools/tests/run_tests.py`).
 

@@ -1112,69 +1112,115 @@
   </action>
   <action id="dk_acute">
     <when state="none" next="acute"/>
+    <when state="acute" output="´"/>
   </action>
   <action id="dk_breve">
     <when state="none" next="breve"/>
+    <when state="breve" output="˘"/>
   </action>
   <action id="dk_caron">
     <when state="none" next="caron"/>
+    <when state="caron" output="ˇ"/>
   </action>
   <action id="dk_cedilla">
     <when state="none" next="cedilla"/>
+    <when state="cedilla" output="¸"/>
   </action>
   <action id="dk_circumflex">
     <when state="none" next="circumflex"/>
+    <when state="circumflex" output="^"/>
   </action>
   <action id="dk_comma">
     <when state="none" next="comma"/>
+    <when state="comma" output="̦"/>
   </action>
   <action id="dk_currencies">
     <when state="none" next="currencies"/>
+    <when state="currencies" output="¤"/>
   </action>
   <action id="dk_diaeresis">
     <when state="none" next="diaeresis"/>
+    <when state="diaeresis" output="¨"/>
   </action>
   <action id="dk_dot-above">
     <when state="none" next="dot-above"/>
+    <when state="dot-above" output="˙"/>
   </action>
   <action id="dk_dot-below">
     <when state="none" next="dot-below"/>
+    <when state="dot-below" output="̣"/>
   </action>
   <action id="dk_double-acute">
     <when state="none" next="double-acute"/>
+    <when state="double-acute" output="˝"/>
   </action>
   <action id="dk_double-grave">
     <when state="none" next="double-grave"/>
+    <when state="double-grave" output="̏"/>
   </action>
   <action id="dk_extended-latin">
     <when state="none" next="extended-latin"/>
   </action>
   <action id="dk_grave">
     <when state="none" next="grave"/>
+    <when state="grave" output="`"/>
   </action>
   <action id="dk_greek">
     <when state="none" next="greek"/>
+    <when state="greek" output="µ"/>
   </action>
   <action id="dk_horizontal-stroke">
     <when state="none" next="horizontal-stroke"/>
+    <when state="horizontal-stroke" output="-"/>
+    <when state="tilde" output="≃"/>
   </action>
   <action id="dk_inverted-breve">
     <when state="none" next="inverted-breve"/>
+    <when state="inverted-breve" output="̑"/>
   </action>
   <action id="dk_macron">
     <when state="none" next="macron"/>
+    <when state="macron" output="¯"/>
   </action>
   <action id="dk_ogonek">
     <when state="none" next="ogonek"/>
+    <when state="ogonek" output="˛"/>
   </action>
   <action id="dk_ring-above">
     <when state="none" next="ring-above"/>
+    <when state="ring-above" output="˚"/>
   </action>
   <action id="dk_stroke">
     <when state="none" next="stroke"/>
+    <when state="stroke" output="/"/>
   </action>
   <action id="dk_tilde">
     <when state="none" next="tilde"/>
+    <when state="tilde" output="~"/>
   </action>
   </actions>
+  <terminators>
+    <when state="acute" output="´"/>
+    <when state="breve" output="˘"/>
+    <when state="caron" output="ˇ"/>
+    <when state="cedilla" output="¸"/>
+    <when state="circumflex" output="^"/>
+    <when state="comma" output="̦"/>
+    <when state="currencies" output="¤"/>
+    <when state="diaeresis" output="¨"/>
+    <when state="dot-above" output="˙"/>
+    <when state="dot-below" output="̣"/>
+    <when state="double-acute" output="˝"/>
+    <when state="double-grave" output="̏"/>
+    <when state="extended-latin" output=" "/>
+    <when state="grave" output="`"/>
+    <when state="greek" output="µ"/>
+    <when state="horizontal-stroke" output="-"/>
+    <when state="inverted-breve" output="̑"/>
+    <when state="macron" output="¯"/>
+    <when state="ogonek" output="˛"/>
+    <when state="ring-above" output="˚"/>
+    <when state="stroke" output="/"/>
+    <when state="tilde" output="~"/>
+  </terminators>
 </keyboard>

@@ -35,7 +35,7 @@ xkb_symbols "azerty-afnor" {
     key <AC03> { [ d, D, dollar ] };
     key <AC04> { [ f, F, dead_currency ] };
     key <AC05> { [ g, G, dead_greek ] };
-    key <AC06> { [ h, H, NoSymbol, dead_macron ] };
+    key <AC06> { [ h, H, dead_voiced_sound, dead_macron ] };
     key <AC07> { [ j, J ] };
     key <AC08> { [ k, K, dead_stroke ] };
     key <AC09> { [ l, L, bar ] };
@@ -47,10 +47,10 @@ xkb_symbols "azerty-afnor" {
     key <AB02> { [ x, X, U00A9 ] };
     key <AB03> { [ c, C, U00E7, U00C7 ] };
     key <AB04> { [ v, V, dead_cedilla, dead_ogonek ] };
-    key <AB05> { [ b, B, NoSymbol ] };
+    key <AB05> { [ b, B, dead_belowring ] };
     key <AB06> { [ n, N, dead_tilde ] };
     key <AB07> { [ period, question, U00BF ] };
-    key <AB08> { [ comma, exclam, U00A1, NoSymbol ] };
+    key <AB08> { [ comma, exclam, U00A1, dead_belowcomma ] };
     key <AB09> { [ colon, U2026, U00B7 ] };
     key <AB10> { [ semicolon, equal, U2243, U2260 ] };
     key <SPCE> { [ space, space, U00A0, U202F ] };

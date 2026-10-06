@@ -5,19 +5,19 @@ default partial alphanumeric_keys
 xkb_symbols "azerty-global" {
     name[Group1] = "AZERTY Global";
 
-    key <TLDE> { [ at, numbersign, NoSymbol ] };
+    key <TLDE> { [ at, numbersign, dead_belowmacron ] };
     key <AE01> { [ ampersand, 1, dead_hook, dead_horn ] };
     key <AE02> { [ U00E9, 2, dead_doubleacute, dead_doublegrave ] };
     key <AE03> { [ quotedbl, 3, dead_belowdot, dead_abovedot ] };
     key <AE04> { [ apostrophe, 4, U2019, U2018 ] };
     key <AE05> { [ parenleft, 5, dead_breve, dead_invertedbreve ] };
-    key <AE06> { [ minus, 6, NoSymbol, U2011 ] };
-    key <AE07> { [ U00E8, 7, dead_stroke, NoSymbol ] };
+    key <AE06> { [ minus, 6, dead_voiced_sound, U2011 ] };
+    key <AE07> { [ U00E8, 7, dead_stroke, dead_belowring ] };
     key <AE08> { [ underscore, 8, dead_macron ] };
-    key <AE09> { [ U00E7, 9, dead_cedilla, NoSymbol ] };
-    key <AE10> { [ U00E0, 0, at, NoSymbol ] };
+    key <AE09> { [ U00E7, 9, dead_cedilla, dead_belowcomma ] };
+    key <AE10> { [ U00E0, 0, at, dead_belowbreve ] };
     key <AE11> { [ parenright, percent, U00B0, dead_abovering ] };
-    key <AE12> { [ equal, plus, NoSymbol ] };
+    key <AE12> { [ equal, plus, dead_iota ] };
     key <AD01> { [ a, A, U00E6, U00C6 ] };
     key <AD02> { [ z, Z ] };
     key <AD03> { [ e, E, U20AC ] };
@@ -41,7 +41,7 @@ xkb_symbols "azerty-global" {
     key <AC09> { [ l, L, grave ] };
     key <AC10> { [ m, M ] };
     key <AC11> { [ dead_acute, dead_grave, dead_tilde ] };
-    key <BKSL> { [ asterisk, dead_greek, NoSymbol ] };
+    key <BKSL> { [ asterisk, dead_greek, dead_semivoiced_sound ] };
     key <LSGT> { [ less, greater, U2264, U2265 ] };
     key <AB01> { [ w, W, U00AB, U201C ] };
     key <AB02> { [ x, X, U00BB, U201D ] };
@@ -52,6 +52,6 @@ xkb_symbols "azerty-global" {
     key <AB07> { [ comma, question, less, U00BF ] };
     key <AB08> { [ period, semicolon, greater, U00B7 ] };
     key <AB09> { [ colon, slash, numbersign ] };
-    key <AB10> { [ exclam, NoSymbol, U00A1 ] };
+    key <AB10> { [ exclam, dead_belowtilde, U00A1 ] };
     key <SPCE> { [ space, space, U202F, U00A0 ] };
 };

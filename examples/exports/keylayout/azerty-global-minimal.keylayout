@@ -67,9 +67,11 @@
   </action>
   <action id="dk_circumflex">
     <when state="none" next="circumflex"/>
+    <when state="circumflex" output="^"/>
   </action>
   <action id="dk_diaeresis">
     <when state="none" next="diaeresis"/>
+    <when state="diaeresis" output="¨"/>
   </action>
   </actions>
   <terminators>

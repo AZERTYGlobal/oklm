@@ -322,15 +322,25 @@
   </action>
   <action id="dk_circumflex">
     <when state="none" next="circumflex"/>
+    <when state="circumflex" output="^"/>
   </action>
   <action id="dk_diaeresis">
     <when state="none" next="diaeresis"/>
+    <when state="diaeresis" output="¨"/>
   </action>
   <action id="dk_grave">
     <when state="none" next="grave"/>
+    <when state="grave" output="`"/>
   </action>
   <action id="dk_tilde">
     <when state="none" next="tilde"/>
+    <when state="tilde" output="~"/>
   </action>
   </actions>
+  <terminators>
+    <when state="circumflex" output="^"/>
+    <when state="diaeresis" output="¨"/>
+    <when state="grave" output="`"/>
+    <when state="tilde" output="~"/>
+  </terminators>
 </keyboard>
