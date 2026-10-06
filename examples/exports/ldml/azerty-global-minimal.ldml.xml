@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr" conformsTo="45">
-  <version number="2026"/>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-azerty-global-minimal" conformsTo="45">
+  <version number="2026.0.0"/>
   <info name="AZERTY Global"/>
   <keys>
     <key id="k_D01_1" output="a"/>

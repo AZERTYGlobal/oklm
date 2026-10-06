@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-streamdeck",
+  "source": {
+    "format": "oklm",
+    "file": "azerty-global-minimal.oklm.json",
+    "version": "0.2"
+  },
+  "target": {
+    "format": "streamdeck-profile"
+  },
+  "compatibilityLevel": "unsupported",
+  "mappedFields": [],
+  "skippedFields": [],
+  "lossyMappings": [],
+  "warnings": [
+    "no exportable character: every output is a plain ASCII letter, digit or space"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.2"
+  },
+  "roundTripConfidence": "low"
+}

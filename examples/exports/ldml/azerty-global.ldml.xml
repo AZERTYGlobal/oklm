@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr" conformsTo="45">
-  <version number="2026"/>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-azerty-global" conformsTo="45">
+  <version number="2026.0.0"/>
   <info name="AZERTY Global"/>
   <keys>
     <key id="k_E00_1" output="@"/>
@@ -140,7 +140,7 @@
     <key id="k_C04_6" output="f"/>
     <key id="k_C05_1" output="g"/>
     <key id="k_C05_2" output="G"/>
-    <key id="k_C05_3" output="\"/>
+    <key id="k_C05_3" output="\u{5C}"/>
     <key id="k_C05_5" output="G"/>
     <key id="k_C05_6" output="g"/>
     <key id="k_C06_1" output="h"/>
@@ -226,19 +226,10 @@
     <key id="k_B10_3" output="¡"/>
     <key id="k_A03_1" output=" "/>
     <key id="k_A03_2" output=" "/>
-    <key id="k_A03_3" output=" "/>
-    <key id="k_A03_4" output=" "/>
+    <key id="k_A03_3" output="\u{202F}"/>
+    <key id="k_A03_4" output="\u{A0}"/>
   </keys>
-  <forms>
-    <form id="azerty-global-form">
-      <scanCodes codes="29 02 03 04 05 06 07 08 09 0A 0B 0C 0D"/>
-      <scanCodes codes="10 11 12 13 14 15 16 17 18 19 1A 1B"/>
-      <scanCodes codes="1E 1F 20 21 22 23 24 25 26 27 28 2B"/>
-      <scanCodes codes="56 2C 2D 2E 2F 30 31 32 33 34 35"/>
-      <scanCodes codes="39"/>
-    </form>
-  </forms>
-  <layers formId="azerty-global-form">
+  <layers formId="iso">
     <layer modifiers="none">
       <row keys="k_E00_1 k_E01_1 k_E02_1 k_E03_1 k_E04_1 k_E05_1 k_E06_1 k_E07_1 k_E08_1 k_E09_1 k_E10_1 k_E11_1 k_E12_1"/>
       <row keys="k_D01_1 k_D02_1 k_D03_1 k_D04_1 k_D05_1 k_D06_1 k_D07_1 k_D08_1 k_D09_1 k_D10_1 k_D11_1 k_D12_1"/>
@@ -360,12 +351,12 @@
       <transform from="\m{circumflex}7" to="⁷"/>
       <transform from="\m{circumflex}8" to="⁸"/>
       <transform from="\m{circumflex}9" to="⁹"/>
-      <transform from="\m{circumflex}+" to="⁺"/>
+      <transform from="\m{circumflex}\u{2B}" to="⁺"/>
       <transform from="\m{circumflex}-" to="⁻"/>
       <transform from="\m{circumflex}=" to="⁼"/>
-      <transform from="\m{circumflex}(" to="⁽"/>
-      <transform from="\m{circumflex})" to="⁾"/>
-      <transform from="\m{circumflex}^" to="̂"/>
+      <transform from="\m{circumflex}\u{28}" to="⁽"/>
+      <transform from="\m{circumflex}\u{29}" to="⁾"/>
+      <transform from="\m{circumflex}\u{5E}" to="\u{302}"/>
       <transform from="\m{circumflex} " to="^"/>
       <transform from="\m{diaeresis}a" to="ä"/>
       <transform from="\m{diaeresis}A" to="Ä"/>
@@ -386,7 +377,7 @@
       <transform from="\m{diaeresis}X" to="Ẍ"/>
       <transform from="\m{diaeresis}y" to="ÿ"/>
       <transform from="\m{diaeresis}Y" to="Ÿ"/>
-      <transform from="\m{diaeresis}¨" to="̈"/>
+      <transform from="\m{diaeresis}¨" to="\u{308}"/>
       <transform from="\m{diaeresis} " to="¨"/>
       <transform from="\m{acute}a" to="á"/>
       <transform from="\m{acute}A" to="Á"/>
@@ -450,13 +441,13 @@
       <transform from="\m{acute}7" to="₇"/>
       <transform from="\m{acute}8" to="₈"/>
       <transform from="\m{acute}9" to="₉"/>
-      <transform from="\m{acute}+" to="₊"/>
+      <transform from="\m{acute}\u{2B}" to="₊"/>
       <transform from="\m{acute}-" to="₋"/>
       <transform from="\m{acute}=" to="₌"/>
-      <transform from="\m{acute}(" to="₍"/>
-      <transform from="\m{acute})" to="₎"/>
+      <transform from="\m{acute}\u{28}" to="₍"/>
+      <transform from="\m{acute}\u{29}" to="₎"/>
       <transform from="\m{acute}'" to="ʼ"/>
-      <transform from="\m{acute}´" to="́"/>
+      <transform from="\m{acute}´" to="\u{301}"/>
       <transform from="\m{acute} " to="´"/>
       <transform from="\m{grave}a" to="à"/>
       <transform from="\m{grave}A" to="À"/>
@@ -474,7 +465,7 @@
       <transform from="\m{grave}W" to="Ẁ"/>
       <transform from="\m{grave}y" to="ỳ"/>
       <transform from="\m{grave}Y" to="Ỳ"/>
-      <transform from="\m{grave}`" to="̀"/>
+      <transform from="\m{grave}`" to="\u{300}"/>
       <transform from="\m{grave} " to="`"/>
       <transform from="\m{tilde}a" to="ã"/>
       <transform from="\m{tilde}A" to="Ã"/>
@@ -495,7 +486,7 @@
       <transform from="\m{tilde}-" to="≃"/>
       <transform from="\m{tilde}_" to="≃"/>
       <transform from="\m{tilde}=" to="≈"/>
-      <transform from="\m{tilde}~" to="̃"/>
+      <transform from="\m{tilde}~" to="\u{303}"/>
       <transform from="\m{tilde} " to="~"/>
       <transform from="\m{dot-above}a" to="ȧ"/>
       <transform from="\m{dot-above}A" to="Ȧ"/>
@@ -537,7 +528,7 @@
       <transform from="\m{dot-above}Y" to="Ẏ"/>
       <transform from="\m{dot-above}z" to="ż"/>
       <transform from="\m{dot-above}Z" to="Ż"/>
-      <transform from="\m{dot-above}˙" to="̇"/>
+      <transform from="\m{dot-above}˙" to="\u{307}"/>
       <transform from="\m{dot-above} " to="˙"/>
       <transform from="\m{dot-below}a" to="ạ"/>
       <transform from="\m{dot-below}A" to="Ạ"/>
@@ -577,13 +568,13 @@
       <transform from="\m{dot-below}Y" to="Ỵ"/>
       <transform from="\m{dot-below}z" to="ẓ"/>
       <transform from="\m{dot-below}Z" to="Ẓ"/>
-      <transform from="\m{dot-below}̣" to="̣"/>
-      <transform from="\m{dot-below} " to="̣"/>
+      <transform from="\m{dot-below}\u{323}" to="\u{323}"/>
+      <transform from="\m{dot-below} " to="\u{323}"/>
       <transform from="\m{double-acute}o" to="ő"/>
       <transform from="\m{double-acute}O" to="Ő"/>
       <transform from="\m{double-acute}u" to="ű"/>
       <transform from="\m{double-acute}U" to="Ű"/>
-      <transform from="\m{double-acute}˝" to="̋"/>
+      <transform from="\m{double-acute}˝" to="\u{30B}"/>
       <transform from="\m{double-acute} " to="˝"/>
       <transform from="\m{double-grave}a" to="ȁ"/>
       <transform from="\m{double-grave}A" to="Ȁ"/>
@@ -597,14 +588,14 @@
       <transform from="\m{double-grave}R" to="Ȑ"/>
       <transform from="\m{double-grave}u" to="ȕ"/>
       <transform from="\m{double-grave}U" to="Ȕ"/>
-      <transform from="\m{double-grave}̏" to="̏"/>
-      <transform from="\m{double-grave} " to="̏"/>
+      <transform from="\m{double-grave}\u{30F}" to="\u{30F}"/>
+      <transform from="\m{double-grave} " to="\u{30F}"/>
       <transform from="\m{horn}o" to="ơ"/>
       <transform from="\m{horn}O" to="Ơ"/>
       <transform from="\m{horn}u" to="ư"/>
       <transform from="\m{horn}U" to="Ư"/>
-      <transform from="\m{horn}̛" to="̛"/>
-      <transform from="\m{horn} " to="̛"/>
+      <transform from="\m{horn}\u{31B}" to="\u{31B}"/>
+      <transform from="\m{horn} " to="\u{31B}"/>
       <transform from="\m{hook}a" to="ả"/>
       <transform from="\m{hook}A" to="Ả"/>
       <transform from="\m{hook}e" to="ẻ"/>
@@ -635,8 +626,8 @@
       <transform from="\m{hook}T" to="Ƭ"/>
       <transform from="\m{hook}V" to="Ʋ"/>
       <transform from="\m{hook}v" to="ʋ"/>
-      <transform from="\m{hook}̉" to="̉"/>
-      <transform from="\m{hook} " to="̉"/>
+      <transform from="\m{hook}\u{309}" to="\u{309}"/>
+      <transform from="\m{hook} " to="\u{309}"/>
       <transform from="\m{caron}a" to="ǎ"/>
       <transform from="\m{caron}A" to="Ǎ"/>
       <transform from="\m{caron}c" to="č"/>
@@ -670,7 +661,7 @@
       <transform from="\m{caron}U" to="Ǔ"/>
       <transform from="\m{caron}z" to="ž"/>
       <transform from="\m{caron}Z" to="Ž"/>
-      <transform from="\m{caron}ˇ" to="̌"/>
+      <transform from="\m{caron}ˇ" to="\u{30C}"/>
       <transform from="\m{caron} " to="ˇ"/>
       <transform from="\m{ogonek}a" to="ą"/>
       <transform from="\m{ogonek}A" to="Ą"/>
@@ -682,7 +673,7 @@
       <transform from="\m{ogonek}O" to="Ǫ"/>
       <transform from="\m{ogonek}u" to="ų"/>
       <transform from="\m{ogonek}U" to="Ų"/>
-      <transform from="\m{ogonek}˛" to="̨"/>
+      <transform from="\m{ogonek}˛" to="\u{328}"/>
       <transform from="\m{ogonek} " to="˛"/>
       <transform from="\m{breve}a" to="ă"/>
       <transform from="\m{breve}A" to="Ă"/>
@@ -696,7 +687,7 @@
       <transform from="\m{breve}O" to="Ŏ"/>
       <transform from="\m{breve}u" to="ŭ"/>
       <transform from="\m{breve}U" to="Ŭ"/>
-      <transform from="\m{breve}˘" to="̆"/>
+      <transform from="\m{breve}˘" to="\u{306}"/>
       <transform from="\m{breve} " to="˘"/>
       <transform from="\m{inverted-breve}a" to="ȃ"/>
       <transform from="\m{inverted-breve}A" to="Ȃ"/>
@@ -710,8 +701,8 @@
       <transform from="\m{inverted-breve}R" to="Ȓ"/>
       <transform from="\m{inverted-breve}u" to="ȗ"/>
       <transform from="\m{inverted-breve}U" to="Ȗ"/>
-      <transform from="\m{inverted-breve}̑" to="̑"/>
-      <transform from="\m{inverted-breve} " to="̑"/>
+      <transform from="\m{inverted-breve}\u{311}" to="\u{311}"/>
+      <transform from="\m{inverted-breve} " to="\u{311}"/>
       <transform from="\m{stroke}a" to="ⱥ"/>
       <transform from="\m{stroke}A" to="Ⱥ"/>
       <transform from="\m{stroke}c" to="ȼ"/>
@@ -725,7 +716,7 @@
       <transform from="\m{stroke}t" to="ⱦ"/>
       <transform from="\m{stroke}T" to="Ⱦ"/>
       <transform from="\m{stroke}=" to="≠"/>
-      <transform from="\m{stroke}/" to="̷"/>
+      <transform from="\m{stroke}/" to="\u{337}"/>
       <transform from="\m{stroke} " to="/"/>
       <transform from="\m{horizontal-stroke}b" to="ƀ"/>
       <transform from="\m{horizontal-stroke}B" to="Ƀ"/>
@@ -749,7 +740,7 @@
       <transform from="\m{horizontal-stroke}Y" to="Ɏ"/>
       <transform from="\m{horizontal-stroke}z" to="ƶ"/>
       <transform from="\m{horizontal-stroke}Z" to="Ƶ"/>
-      <transform from="\m{horizontal-stroke}-" to="̶"/>
+      <transform from="\m{horizontal-stroke}-" to="\u{336}"/>
       <transform from="\m{horizontal-stroke} " to="-"/>
       <transform from="\m{macron}a" to="ā"/>
       <transform from="\m{macron}A" to="Ā"/>
@@ -784,11 +775,11 @@
       <transform from="\m{macron}T" to="Ṯ"/>
       <transform from="\m{macron}z" to="ẕ"/>
       <transform from="\m{macron}Z" to="Ẕ"/>
-      <transform from="\m{macron}_" to="̱"/>
-      <transform from="\m{macron}8" to="̅"/>
-      <transform from="\m{macron}`" to="᷆"/>
-      <transform from="\m{macron}´" to="᷇"/>
-      <transform from="\m{macron}¯" to="̄"/>
+      <transform from="\m{macron}_" to="\u{331}"/>
+      <transform from="\m{macron}8" to="\u{305}"/>
+      <transform from="\m{macron}`" to="\u{1DC6}"/>
+      <transform from="\m{macron}´" to="\u{1DC7}"/>
+      <transform from="\m{macron}¯" to="\u{304}"/>
       <transform from="\m{macron} " to="¯"/>
       <transform from="\m{extended-latin}a" to="ɑ"/>
       <transform from="\m{extended-latin}A" to="Ɑ"/>
@@ -830,13 +821,13 @@
       <transform from="\m{extended-latin}&quot;" to="ə"/>
       <transform from="\m{extended-latin}3" to="Ə"/>
       <transform from="\m{extended-latin}'" to="ʼ"/>
-      <transform from="\m{extended-latin}?" to="ʔ"/>
-      <transform from="\m{extended-latin}^" to="̭"/>
-      <transform from="\m{extended-latin}¨" to="̤"/>
-      <transform from="\m{extended-latin}~" to="̰"/>
-      <transform from="\m{extended-latin}ˇ" to="̬"/>
-      <transform from="\m{extended-latin}˘" to="̮"/>
-      <transform from="\m{extended-latin}˚" to="̥"/>
+      <transform from="\m{extended-latin}\u{3F}" to="ʔ"/>
+      <transform from="\m{extended-latin}\u{5E}" to="\u{32D}"/>
+      <transform from="\m{extended-latin}¨" to="\u{324}"/>
+      <transform from="\m{extended-latin}~" to="\u{330}"/>
+      <transform from="\m{extended-latin}ˇ" to="\u{32C}"/>
+      <transform from="\m{extended-latin}˘" to="\u{32E}"/>
+      <transform from="\m{extended-latin}˚" to="\u{325}"/>
       <transform from="\m{extended-latin} " to=" "/>
       <transform from="\m{cedilla}c" to="ç"/>
       <transform from="\m{cedilla}C" to="Ç"/>
@@ -860,14 +851,14 @@
       <transform from="\m{cedilla}S" to="Ş"/>
       <transform from="\m{cedilla}t" to="ţ"/>
       <transform from="\m{cedilla}T" to="Ţ"/>
-      <transform from="\m{cedilla}¸" to="̧"/>
+      <transform from="\m{cedilla}¸" to="\u{327}"/>
       <transform from="\m{cedilla} " to="¸"/>
       <transform from="\m{comma}s" to="ș"/>
       <transform from="\m{comma}S" to="Ș"/>
       <transform from="\m{comma}t" to="ț"/>
       <transform from="\m{comma}T" to="Ț"/>
-      <transform from="\m{comma}̦" to="̦"/>
-      <transform from="\m{comma} " to="̦"/>
+      <transform from="\m{comma}\u{326}" to="\u{326}"/>
+      <transform from="\m{comma} " to="\u{326}"/>
       <transform from="\m{phonetic}a" to="ɐ"/>
       <transform from="\m{phonetic}d" to="ɹ"/>
       <transform from="\m{phonetic}e" to="ɜ"/>
@@ -894,7 +885,7 @@
       <transform from="\m{phonetic}y" to="ɥ"/>
       <transform from="\m{phonetic}Y" to="ʏ"/>
       <transform from="\m{phonetic}z" to="ɮ"/>
-      <transform from="\m{phonetic}?" to="ˤ"/>
+      <transform from="\m{phonetic}\u{3F}" to="ˤ"/>
       <transform from="\m{phonetic}¿" to="ʕ"/>
       <transform from="\m{phonetic}4" to="ʀ"/>
       <transform from="\m{phonetic}:" to="ː"/>
@@ -905,11 +896,11 @@
       <transform from="\m{phonetic}è" to="ʲ"/>
       <transform from="\m{phonetic}&amp;" to="ʷ"/>
       <transform from="\m{phonetic}ç" to="ˡ"/>
-      <transform from="\m{phonetic}(" to="ˠ"/>
-      <transform from="\m{phonetic}=" to="̚"/>
+      <transform from="\m{phonetic}\u{28}" to="ˠ"/>
+      <transform from="\m{phonetic}=" to="\u{31A}"/>
       <transform from="\m{phonetic}_" to="ⁿ"/>
-      <transform from="\m{phonetic}|" to="̩"/>
-      <transform from="\m{phonetic}˘" to="̯"/>
+      <transform from="\m{phonetic}\u{7C}" to="\u{329}"/>
+      <transform from="\m{phonetic}˘" to="\u{32F}"/>
       <transform from="\m{phonetic} " to="ʁ"/>
       <transform from="\m{ring-above}a" to="å"/>
       <transform from="\m{ring-above}A" to="Å"/>
@@ -917,7 +908,7 @@
       <transform from="\m{ring-above}U" to="Ů"/>
       <transform from="\m{ring-above}w" to="ẘ"/>
       <transform from="\m{ring-above}y" to="ẙ"/>
-      <transform from="\m{ring-above}˚" to="̊"/>
+      <transform from="\m{ring-above}˚" to="\u{30A}"/>
       <transform from="\m{ring-above} " to="˚"/>
       <transform from="\m{greek}a" to="α"/>
       <transform from="\m{greek}A" to="Α"/>
@@ -975,7 +966,7 @@
       <transform from="\m{greek}3" to="Ή"/>
       <transform from="\m{greek}'" to="ί"/>
       <transform from="\m{greek}4" to="Ί"/>
-      <transform from="\m{greek}(" to="ό"/>
+      <transform from="\m{greek}\u{28}" to="ό"/>
       <transform from="\m{greek}5" to="Ό"/>
       <transform from="\m{greek}-" to="ύ"/>
       <transform from="\m{greek}6" to="Ύ"/>
@@ -985,11 +976,11 @@
       <transform from="\m{greek}8" to="Ϊ"/>
       <transform from="\m{greek}ç" to="ϋ"/>
       <transform from="\m{greek}9" to="Ϋ"/>
-      <transform from="\m{greek})" to="ΰ"/>
+      <transform from="\m{greek}\u{29}" to="ΰ"/>
       <transform from="\m{greek}à" to="ΐ"/>
       <transform from="\m{greek}&lt;" to="ς"/>
       <transform from="\m{greek};" to=";"/>
-      <transform from="\m{greek}." to="·"/>
+      <transform from="\m{greek}\u{2E}" to="·"/>
       <transform from="\m{greek}µ" to="µ"/>
       <transform from="\m{greek} " to="µ"/>
       <transform from="\m{cyrillic}a" to="а"/>
@@ -1052,7 +1043,7 @@
       <transform from="\m{cyrillic}3" to="Э"/>
       <transform from="\m{cyrillic}'" to="ї"/>
       <transform from="\m{cyrillic}4" to="Ї"/>
-      <transform from="\m{cyrillic}(" to="є"/>
+      <transform from="\m{cyrillic}\u{28}" to="є"/>
       <transform from="\m{cyrillic}5" to="Є"/>
       <transform from="\m{cyrillic}-" to="ў"/>
       <transform from="\m{cyrillic}6" to="Ў"/>
@@ -1064,15 +1055,15 @@
       <transform from="\m{cyrillic}9" to="Ґ"/>
       <transform from="\m{cyrillic}à" to="ю"/>
       <transform from="\m{cyrillic}0" to="Ю"/>
-      <transform from="\m{cyrillic})" to="ј"/>
+      <transform from="\m{cyrillic}\u{29}" to="ј"/>
       <transform from="\m{cyrillic}%" to="Ј"/>
       <transform from="\m{cyrillic}=" to="й"/>
-      <transform from="\m{cyrillic}+" to="Й"/>
-      <transform from="\m{cyrillic}$" to="щ"/>
+      <transform from="\m{cyrillic}\u{2B}" to="Й"/>
+      <transform from="\m{cyrillic}\u{24}" to="щ"/>
       <transform from="\m{cyrillic}£" to="Щ"/>
       <transform from="\m{cyrillic}," to="ь"/>
-      <transform from="\m{cyrillic}?" to="Ь"/>
-      <transform from="\m{cyrillic}." to="ъ"/>
+      <transform from="\m{cyrillic}\u{3F}" to="Ь"/>
+      <transform from="\m{cyrillic}\u{2E}" to="ъ"/>
       <transform from="\m{cyrillic};" to="Ъ"/>
       <transform from="\m{cyrillic}!" to="№"/>
       <transform from="\m{cyrillic}@" to="ѕ"/>
@@ -1081,15 +1072,15 @@
       <transform from="\m{cyrillic}&gt;" to="Љ"/>
       <transform from="\m{cyrillic}:" to="њ"/>
       <transform from="\m{cyrillic}/" to="Њ"/>
-      <transform from="\m{cyrillic}*" to="ђ"/>
-      <transform from="\m{cyrillic}{" to="ѓ"/>
-      <transform from="\m{cyrillic}}" to="Ѓ"/>
-      <transform from="\m{cyrillic}]" to="Ќ"/>
-      <transform from="\m{cyrillic}[" to="ќ"/>
+      <transform from="\m{cyrillic}\u{2A}" to="ђ"/>
+      <transform from="\m{cyrillic}\u{7B}" to="ѓ"/>
+      <transform from="\m{cyrillic}\u{7D}" to="Ѓ"/>
+      <transform from="\m{cyrillic}\u{5D}" to="Ќ"/>
+      <transform from="\m{cyrillic}\u{5B}" to="ќ"/>
       <transform from="\m{cyrillic}´" to="ћ"/>
       <transform from="\m{cyrillic}`" to="Ћ"/>
       <transform from="\m{cyrillic}µ" to="Ђ"/>
-      <transform from="\m{cyrillic}^" to="џ"/>
+      <transform from="\m{cyrillic}\u{5E}" to="џ"/>
       <transform from="\m{cyrillic}¨" to="Џ"/>
       <transform from="\m{cyrillic} " to=" "/>
       <transform from="\m{misc-symbols}a" to="✈"/>
@@ -1144,7 +1135,7 @@
       <transform from="\m{misc-symbols}3" to="¾"/>
       <transform from="\m{misc-symbols}'" to="⅓"/>
       <transform from="\m{misc-symbols}4" to="⅓"/>
-      <transform from="\m{misc-symbols}(" to="⅔"/>
+      <transform from="\m{misc-symbols}\u{28}" to="⅔"/>
       <transform from="\m{misc-symbols}5" to="⅔"/>
       <transform from="\m{misc-symbols}-" to="☼"/>
       <transform from="\m{misc-symbols}6" to="☼"/>
@@ -1158,9 +1149,9 @@
       <transform from="\m{misc-symbols}0" to="❄"/>
       <transform from="\m{misc-symbols}@" to="№"/>
       <transform from="\m{misc-symbols}#" to="№"/>
-      <transform from="\m{misc-symbols})" to="☺"/>
+      <transform from="\m{misc-symbols}\u{29}" to="☺"/>
       <transform from="\m{misc-symbols}%" to="☹"/>
-      <transform from="\m{misc-symbols}|" to="¦"/>
+      <transform from="\m{misc-symbols}\u{7C}" to="¦"/>
       <transform from="\m{misc-symbols}&lt;" to="↘"/>
       <transform from="\m{misc-symbols}&gt;" to="↘"/>
       <transform from="\m{misc-symbols}!" to="⚠"/>
@@ -1209,19 +1200,19 @@
       <transform from="\m{scientific}&lt;" to="≤"/>
       <transform from="\m{scientific}&gt;" to="≥"/>
       <transform from="\m{scientific}=" to="≠"/>
-      <transform from="\m{scientific}+" to="±"/>
+      <transform from="\m{scientific}\u{2B}" to="±"/>
       <transform from="\m{scientific}-" to="−"/>
-      <transform from="\m{scientific}*" to="×"/>
+      <transform from="\m{scientific}\u{2A}" to="×"/>
       <transform from="\m{scientific}€" to="∉"/>
-      <transform from="\m{scientific}[" to="⊆"/>
-      <transform from="\m{scientific}]" to="⊇"/>
+      <transform from="\m{scientific}\u{5B}" to="⊆"/>
+      <transform from="\m{scientific}\u{5D}" to="⊇"/>
       <transform from="\m{scientific}:" to="≔"/>
       <transform from="\m{scientific}/" to="÷"/>
       <transform from="\m{scientific}°" to="∘"/>
-      <transform from="\m{scientific}." to="∙"/>
-      <transform from="\m{scientific}$" to="⊗"/>
+      <transform from="\m{scientific}\u{2E}" to="∙"/>
+      <transform from="\m{scientific}\u{24}" to="⊗"/>
       <transform from="\m{scientific}£" to="⊕"/>
-      <transform from="\m{scientific}^" to="∧"/>
+      <transform from="\m{scientific}\u{5E}" to="∧"/>
       <transform from="\m{scientific}¨" to="∨"/>
       <transform from="\m{scientific}_" to="∝"/>
       <transform from="\m{scientific}8" to="∞"/>
@@ -1229,7 +1220,7 @@
       <transform from="\m{scientific}0" to="∅"/>
       <transform from="\m{scientific}~" to="≈"/>
       <transform from="\m{scientific}%" to="‰"/>
-      <transform from="\m{scientific}|" to="ℏ"/>
+      <transform from="\m{scientific}\u{7C}" to="ℏ"/>
       <transform from="\m{scientific}@" to="¬"/>
       <transform from="\m{scientific} " to="±"/>
       <transform from="\m{currencies}a" to="₳"/>
@@ -1292,19 +1283,19 @@
       <transform from="\m{punctuation}n" to="‛"/>
       <transform from="\m{punctuation}N" to="‛"/>
       <transform from="\m{punctuation}!" to="‽"/>
-      <transform from="\m{punctuation}?" to="⸮"/>
+      <transform from="\m{punctuation}\u{3F}" to="⸮"/>
       <transform from="\m{punctuation}&quot;" to="″"/>
       <transform from="\m{punctuation}é" to="′"/>
       <transform from="\m{punctuation}'" to="ʼ"/>
-      <transform from="\m{punctuation}(" to="ʻ"/>
+      <transform from="\m{punctuation}\u{28}" to="ʻ"/>
       <transform from="\m{punctuation}-" to="‐"/>
       <transform from="\m{punctuation}_" to="␣"/>
-      <transform from="\m{punctuation}*" to="⁂"/>
-      <transform from="\m{punctuation}." to="…"/>
-      <transform from="\m{punctuation}|" to="‖"/>
-      <transform from="\m{punctuation})" to="‿"/>
-      <transform from="\m{punctuation}6" to="­"/>
-      <transform from="\m{punctuation}^" to="‸"/>
+      <transform from="\m{punctuation}\u{2A}" to="⁂"/>
+      <transform from="\m{punctuation}\u{2E}" to="…"/>
+      <transform from="\m{punctuation}\u{7C}" to="‖"/>
+      <transform from="\m{punctuation}\u{29}" to="‿"/>
+      <transform from="\m{punctuation}6" to="\u{AD}"/>
+      <transform from="\m{punctuation}\u{5E}" to="‸"/>
       <transform from="\m{punctuation}:" to="•"/>
       <transform from="\m{punctuation}/" to="‣"/>
       <transform from="\m{punctuation}q" to="¶"/>

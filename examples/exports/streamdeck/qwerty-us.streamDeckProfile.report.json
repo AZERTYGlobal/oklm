@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-streamdeck",
+  "source": {
+    "format": "oklm",
+    "file": "qwerty-us.oklm.json",
+    "version": "0.2"
+  },
+  "target": {
+    "format": "streamdeck-profile"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keys[].levels"
+  ],
+  "skippedFields": [
+    {
+      "path": "levelSelectors",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "geometry",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "locales",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "layoutId",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "authors",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "license",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "version",
+      "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "keys",
+      "detail": "one Text button per distinct character (32), not per key: key ids, levels and modifiers are not represented, only the character typed"
+    }
+  ],
+  "warnings": [
+    "32 buttons on 1 page(s) of 8x4 (Stream Deck XL); other models need the profile to be adapted in the Stream Deck software",
+    "the .streamDeckProfile layout was rebuilt from public sources and has not been opened with the Stream Deck software: treat the output as untested"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.2"
+  },
+  "roundTripConfidence": "low"
+}

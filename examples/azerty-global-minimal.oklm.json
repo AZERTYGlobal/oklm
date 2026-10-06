@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "0.1",
+  "schemaVersion": "0.2",
   "layoutId": "azerty-global-minimal",
   "name": "AZERTY Global",
-  "version": "2026",
+  "version": "2026.0.0",
   "license": "EUPL-1.2",
   "authors": ["AMCF"],
   "description": "Minimal illustrative subset of AZERTY Global, hand-written to exercise the OKLM manifest schema v0.1. This file is NOT the authoritative source of truth for the layout: it only shows a few AZERTY-inherited letter keys, the space bar and one dead-key pair.",
@@ -35,10 +35,7 @@
       "xkb": "AD11",
       "code": "BracketLeft",
       "name": "Dead circumflex / dead diaeresis",
-      "levels": {
-        "1": { "deadKey": "circumflex" },
-        "2": { "deadKey": "diaeresis" }
-      },
+      "levels": { "1": { "deadKey": "circumflex" }, "2": { "deadKey": "diaeresis" } },
       "categories": ["deadkey", "french"]
     },
     {
@@ -109,7 +106,9 @@
     {
       "target": "ldml-keyboard-3",
       "id": "ldml",
-      "options": { "conformsTo": 45 }
+      "options": {
+        "conformsTo": 45
+      }
     },
     {
       "target": "web-tester",

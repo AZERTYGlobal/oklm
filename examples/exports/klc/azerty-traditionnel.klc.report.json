@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "0.2",
+  "direction": "oklm-to-klc",
+  "source": {
+    "format": "oklm",
+    "file": "azerty-traditionnel.oklm.json",
+    "version": "0.2"
+  },
+  "target": {
+    "format": "windows-klc"
+  },
+  "compatibilityLevel": "lossy-mapping",
+  "mappedFields": [
+    "keys",
+    "keys[].levels",
+    "levelSelectors",
+    "deadKeys"
+  ],
+  "skippedFields": [
+    {
+      "path": "geometry",
+      "reason": "not represented in .klc (the short name comes from layoutId)"
+    },
+    {
+      "path": "layoutId",
+      "reason": "not represented in .klc (the short name comes from layoutId)"
+    },
+    {
+      "path": "version",
+      "reason": "not represented in .klc (the short name comes from layoutId)"
+    },
+    {
+      "path": "description",
+      "reason": "free-text description, not part of any target's mapping model"
+    },
+    {
+      "path": "conformance",
+      "reason": "OKLM conformance claims are not expressed by target formats"
+    },
+    {
+      "path": "exports",
+      "reason": "OKLM export declarations are input to this tooling, not output data"
+    },
+    {
+      "path": "metadata",
+      "reason": "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"
+    }
+  ],
+  "lossyMappings": [
+    {
+      "path": "keys[].levels",
+      "detail": "Ctrl column filled with the standard control codes; CapsLock reduced to the Cap column"
+    }
+  ],
+  "warnings": [
+    "MSKLC was not available: the .klc was never compiled; it is checked by an in-repo parser only"
+  ],
+  "errors": [],
+  "generator": {
+    "name": "oklm-exporters",
+    "version": "0.2"
+  },
+  "roundTripConfidence": "low"
+}

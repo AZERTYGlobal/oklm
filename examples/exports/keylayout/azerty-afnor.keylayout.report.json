@@ -4,7 +4,7 @@
   "source": {
     "format": "oklm",
     "file": "azerty-afnor.oklm.json",
-    "version": "0.1"
+    "version": "0.2"
   },
   "target": {
     "format": "apple-keylayout"
@@ -87,7 +87,7 @@
   "errors": [],
   "generator": {
     "name": "oklm-exporters",
-    "version": "0.1"
+    "version": "0.2"
   },
   "roundTripConfidence": "medium"
 }

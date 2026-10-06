@@ -19,10 +19,10 @@ VALIDATORS = ROOT / "validators"
 if str(VALIDATORS) not in sys.path:
     sys.path.insert(0, str(VALIDATORS))
 
-from validate import load_validator, manifest_consistency_errors  # noqa: E402
+from validate import analyze, load_schema, load_validator  # noqa: E402
 
 GENERATOR_NAME = "oklm-exporters"
-GENERATOR_VERSION = "0.1"
+GENERATOR_VERSION = "0.2"
 
 # Default functional qualifiers per ISO/IEC 9995 level, used when a manifest
 # omits levelSelectors (SPEC.md "Level Selectors"). Levels 5-8 have no
@@ -45,13 +45,11 @@ def load_manifest(path):
     except (OSError, ValueError) as exc:
         raise ExportError(f"cannot read {path} as JSON: {exc}") from exc
 
-    validator = load_validator("oklm-manifest.schema.json")
     problems = [
-        f"{'/'.join(str(p) for p in error.path) or '(root)'}: {error.message}"
-        for error in sorted(validator.iter_errors(manifest), key=lambda e: list(e.path))
+        f"{finding.code} {finding.path}: {finding.message}"
+        for finding in analyze(manifest, load_schema("oklm-manifest.schema.json"))
+        if finding.severity == "error"
     ]
-    if not problems:
-        problems = manifest_consistency_errors(manifest)
     if problems:
         raise ExportError(f"{path} is not a valid OKLM manifest: " + "; ".join(problems))
     return manifest
@@ -77,6 +75,27 @@ def levels_used_by(manifest):
     for key in manifest.get("keys", []):
         used.update(key.get("levels", {}).keys())
     return used
+
+
+def without_modifier_keys(report, manifest):
+    """Return the manifest minus its role:modifier keys (E22), which carry no output.
+
+    Every exporter works on the returned copy. The skipped keys are declared in the report:
+    a modifier key is a functional declaration, the target formats place their own modifier
+    keys through levelSelectors.
+    """
+    modifiers = [key for key in manifest.get("keys", []) if key.get("role") == "modifier"]
+    if not modifiers:
+        return manifest
+    for key in modifiers:
+        report.skip(
+            f"keys[{key['id']}]",
+            f"modifier key (role: modifier, {key['modifier']}): carries no output; the target "
+            "binds its own modifier keys",
+        )
+    prepared = dict(manifest)
+    prepared["keys"] = [key for key in manifest["keys"] if key.get("role") != "modifier"]
+    return prepared
 
 
 def xml_escape(text):
@@ -109,6 +128,7 @@ class ReportBuilder:
         self.warnings = []
         self.errors = []
         self.round_trip_confidence = None
+        self.unsupported = False
 
     def mapped(self, path):
         if path not in self.mapped_fields:
@@ -123,12 +143,19 @@ class ReportBuilder:
     def warn(self, message):
         self.warnings.append(message)
 
+    def mark_unsupported(self, message):
+        """The source is valid but nothing usable can be produced (D33)."""
+        self.unsupported = True
+        self.warnings.append(message)
+
     def error(self, message):
         self.errors.append(message)
 
     def compatibility_level(self):
         if self.errors:
             return "failed"
+        if self.unsupported:
+            return "unsupported"
         if self.lossy_mappings:
             return "lossy-mapping"
         if self.skipped_fields:
@@ -186,6 +213,9 @@ def skip_oklm_only_metadata(report, manifest):
         ("exports", "OKLM export declarations are input to this tooling, not output data"),
         ("metadata", "OKLM metadata envelope (pedagogy, AI, accessibility, links) has no target equivalent"),
         ("extensions", "OKLM extension namespaces are OKLM-specific by definition"),
+        ("extensionsUsed", "OKLM capability list, not part of any target's mapping model"),
+        ("extensionsRequired", "OKLM capability list, not part of any target's mapping model"),
+        ("featuresRequired", "OKLM capability list, not part of any target's mapping model"),
     ):
         if field in manifest:
             report.skip(field, reason)

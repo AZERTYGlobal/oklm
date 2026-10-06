@@ -1,14 +1,14 @@
 {
-  "schemaVersion": "0.1",
+  "schemaVersion": "0.2",
   "layoutId": "azerty-global",
   "name": "AZERTY Global",
-  "version": "2026",
+  "version": "2026.0.0",
   "license": "EUPL-1.2",
   "authors": [
     "Antoine OLIVIER",
     "AMCF"
   ],
-  "description": "Complete OKLM description of the AZERTY Global layout (49 graphic keys, 8 ISO levels, 29 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "description": "Complete OKLM description of the AZERTY Global layout (49 graphic keys, 8 ISO levels, 29 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.2 core.",
   "locales": [
     "fr",
     "fr-FR"

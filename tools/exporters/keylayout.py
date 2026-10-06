@@ -33,6 +33,7 @@ from .common import (
     ReportBuilder,
     resolve_level_modifiers,
     levels_used_by,
+    without_modifier_keys,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
     xml_escape,
@@ -104,6 +105,7 @@ def export(manifest, source_file=None):
 
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
+    manifest = without_modifier_keys(report, manifest)
 
     unmapped_hid = [
         (key["id"], key["hid"]) for key in manifest.get("keys", []) if key["hid"] not in HID_TO_MACVK

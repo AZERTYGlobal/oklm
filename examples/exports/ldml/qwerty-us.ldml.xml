@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="en" conformsTo="45">
-  <version number="ANSI (US 104-key)"/>
+<keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="en-t-k0-qwerty-us" conformsTo="45">
+  <version number="1.0.0"/>
   <info name="QWERTY US"/>
   <keys>
     <key id="k_E00_1" output="`"/>
@@ -63,7 +63,7 @@
     <key id="k_D11_2" output="{"/>
     <key id="k_D12_1" output="]"/>
     <key id="k_D12_2" output="}"/>
-    <key id="k_D13_1" output="\"/>
+    <key id="k_D13_1" output="\u{5C}"/>
     <key id="k_D13_2" output="|"/>
     <key id="k_C01_1" output="a"/>
     <key id="k_C01_2" output="A"/>
@@ -126,16 +126,7 @@
     <key id="k_A03_1" output=" "/>
     <key id="k_A03_2" output=" "/>
   </keys>
-  <forms>
-    <form id="qwerty-us-form">
-      <scanCodes codes="29 02 03 04 05 06 07 08 09 0A 0B 0C 0D"/>
-      <scanCodes codes="10 11 12 13 14 15 16 17 18 19 1A 1B 2B"/>
-      <scanCodes codes="1E 1F 20 21 22 23 24 25 26 27 28"/>
-      <scanCodes codes="2C 2D 2E 2F 30 31 32 33 34 35"/>
-      <scanCodes codes="39"/>
-    </form>
-  </forms>
-  <layers formId="qwerty-us-form">
+  <layers formId="us">
     <layer modifiers="none">
       <row keys="k_E00_1 k_E01_1 k_E02_1 k_E03_1 k_E04_1 k_E05_1 k_E06_1 k_E07_1 k_E08_1 k_E09_1 k_E10_1 k_E11_1 k_E12_1"/>
       <row keys="k_D01_1 k_D02_1 k_D03_1 k_D04_1 k_D05_1 k_D06_1 k_D07_1 k_D08_1 k_D09_1 k_D10_1 k_D11_1 k_D12_1 k_D13_1"/>

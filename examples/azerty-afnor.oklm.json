@@ -1,13 +1,13 @@
 {
-  "schemaVersion": "0.1",
+  "schemaVersion": "0.2",
   "layoutId": "azerty-afnor",
   "name": "French (Standard, AZERTY)",
-  "version": "NF Z71-300:2019 (AZERTY option)",
+  "version": "2019.0.0",
   "license": "NOASSERTION",
   "authors": [
     "AFNOR NF Z71-300 working group"
   ],
-  "description": "Complete OKLM description of the improved AZERTY layout standardized by AFNOR NF Z71-300 (49 graphic keys, 8 ISO levels, 22 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.1 core.",
+  "description": "Complete OKLM description of the improved AZERTY layout standardized by AFNOR NF Z71-300 (49 graphic keys, 8 ISO levels, 22 dead keys), generated from the azerty.global web tester data and verified field-by-field against it. Frame keys (function row, navigation, numpad) are out of the draft 0.2 core.",
   "locales": [
     "fr",
     "fr-FR"
@@ -1501,6 +1501,7 @@
         "B10": "right_pinky",
         "A03": "thumb"
       }
-    }
+    },
+    "versionLabel": "NF Z71-300:2019 (AZERTY option)"
   }
 }

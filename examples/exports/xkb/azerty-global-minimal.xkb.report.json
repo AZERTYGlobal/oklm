@@ -4,7 +4,7 @@
   "source": {
     "format": "oklm",
     "file": "azerty-global-minimal.oklm.json",
-    "version": "0.1"
+    "version": "0.2"
   },
   "target": {
     "format": "xkb-symbols"
@@ -62,7 +62,7 @@
   "errors": [],
   "generator": {
     "name": "oklm-exporters",
-    "version": "0.1"
+    "version": "0.2"
   },
   "roundTripConfidence": "medium"
 }

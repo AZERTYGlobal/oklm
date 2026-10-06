@@ -106,7 +106,7 @@ Gate 1 of [ROADMAP.md](ROADMAP.md) compared the 0.1 schema field by field
 with the four references above (review of 2026-09-03; 26 effective gaps,
 6 of them heavy). The schema was **not** changed by the review. The gaps
 below are the ones a user of the LDML export should know about now; they
-are inputs to schema 0.2, not decisions. IDs are those of the review.
+were the inputs to schema 0.2. The "exporter today" column is the state of 2026-09-15; the section below the table gives the state after schema 0.2 (2026-10-05). IDs are those of the review.
 
 | ID | Gap | What the v1 exporter does today |
 |---|---|---|
@@ -114,7 +114,7 @@ are inputs to schema 0.2, not decisions. IDs are those of the review.
 | **E21** | **Silent levels.** OKLM says "a level with no output is simply omitted"; LDML says keystrokes are ignored where no layer matches, unless a layer `other` exists. The two are not the same, and the schema cannot express `other`. | **Fixed 2026-09-15:** a key without output at a level is emitted as LDML's implicit `gap` key, so every `<row>` has as many entries as the form has scan codes. Before the fix the row was shorter and every following key shifted one position (measured: `azerty-global.ldml.xml`, layer `altR`, row D had 8 keys for 12 scan codes). The semantic difference stays: the schema cannot express a layer `other`. |
 | **E20** | **No rule for the LDML identifier.** keyboard3 expects `locale="fr-CH-t-k0-azerty"`-style identifiers; OKLM has `locales[0]` and `layoutId` but no derivation rule, and `locales[1..]` are not checked for the forbidden `-k0-` subtag. | Emits `locale="<locales[0]>"` and drops the layout variant. |
 | **E13** | **Escaping in compositions.** LDML `transform@from` is a regex-like pattern where `. ( ) ? [ \ ] { } * / ^ + \| $` must be escaped. The schema does not say whether a composition base is a literal string or a pattern. | Concatenates `\m{id}` and the base **without escaping**. A base such as `^` or `.` produces an invalid or wrong transform. |
-| **E8** | **Groups.** `keys[].groups` (2–9) is an ISO/IEC 9995 concept; LDML has no groups (a different arrangement is "two different keyboards"). | Rejects any manifest that uses `groups` (v1 scope). |
+| **E8** | **Groups.** `keys[].groups` (2–9) is an ISO/IEC 9995 concept; LDML has no groups (a different arrangement is "two different keyboards"). | Rejects any manifest that uses `groups`. Decided with schema 0.2: `groups` stays reserved, and OKLM expresses variants as separate manifests. |
 | **E7** | **Levels 5–8.** ISO/IEC 9995-1:2026 allows level 4 "albeit not recommended" and its labelling clause covers "up to four levels" (foreword and contents of the public preview). No reference knows a fifth level or a `Level5Shift` qualifier; they are an OKLM extension. | Exports levels 5–8 only when `levelSelectors` resolves them to `shift`, `altR` and `caps`; `Level5Shift` and `NumLock` have no LDML component and skip the level. |
 | E6, E22 | `NumLock` as a level selector and `{ "modifier": … }` as a key output: LDML treats modifier keys as frame keys that cannot generate output, and the numpad as out of scope. | Skips them and reports the skip. |
 | E15 | `fallback`: LDML has no fallback or cancellation; all markers are removed from the final text. | Approximated as a transform matching the bare marker, reported as lossy. |
@@ -128,6 +128,22 @@ Not gaps: `output` strings, `{ "deadKey": id }` → `\m{id}`, `deadKeys[].id`
 aliases, the Windows and macOS targets, and LDML constructs OKLM 0.1 does
 not attempt (`backspace` transforms, `reorder`, `variables`, `flicks`,
 `longPress`, `multiTap`, touch layers).
+
+### State after schema 0.2 (2026-10-05)
+
+| ID | Resolution in 0.2 |
+|---|---|
+| E1 | The exporter uses the CLDR implied form (`us`, `iso`, `abnt2`, `jis`, `ks`) when the keys cover it exactly, otherwise a custom form. |
+| E2 | `version` is SemVer; the free label moves to `metadata.versionLabel`. |
+| E13 | Escaping implemented, in `from` (metacharacters and non-printing characters) and in `to` (`$`). A real bug is fixed: a raw backslash was written unescaped. |
+| E15 | `fallback` is an explicit transform, no longer a lossy mapping. |
+| E20 | Locale derived as `<locales[0]>-t-k0-<layoutId>`, subtags cut to 8 characters, the cut reported. |
+| E21 | Omitted level means no output; exported as `gap`. |
+| E22 | Modifier keys carry `role` and `modifier`; the output form `{ "modifier": ... }` is removed. |
+| E8 | `groups` stays reserved and rejected. |
+| E12 | `geometry` is no longer a closed enum; the validator checks the family and accepts `us` for `ansi` and `abnt2` for `abnt`. |
+
+Still open: E3, E4 (no `info@attribution`, `info@layout`, `info@indicator`), E7 (levels 5-8 beyond `shift`, `altR`, `caps`), E14 (`display` rule), and the layer `other` of E21.
 
 ## Positioning
 

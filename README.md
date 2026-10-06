@@ -8,26 +8,26 @@
 
 ## Status
 
-**Draft 0.1, public, in the open.** Not a published or adopted standard.
+**Draft 0.2, public, in the open.** Not a published or adopted standard.
 
 What exists today:
 
-- a manifest JSON Schema (0.1) and a conversion-report schema (0.2);
+- a manifest JSON Schema (0.2, open: extensions carry a vendor prefix) and a conversion-report schema (0.2), with a 0.1 to 0.2 migration tool;
 - six example manifests: AZERTY Global, the AFNOR NF Z71-300 AZERTY, BÉPO,
   the legacy Windows French AZERTY, US QWERTY, and a minimal teaching
   subset;
 - a reference validator and a schema test suite;
-- three one-way exporters with loss reports: LDML Keyboard 3 (keyboard3),
-  Linux `xkb_symbols`, macOS `.keylayout`; 18 committed reference exports
+- an LDML Keyboard 3 importer (`tools/import_ldml.py`, round trip measured) and five one-way exporters with loss reports: LDML Keyboard 3 (keyboard3),
+  Linux `xkb_symbols`, macOS `.keylayout`, Windows `.klc`, Stream Deck profile; reference exports
   checked for determinism;
 - [oklm.org](https://oklm.org), a demo rendered from the real manifests.
 
-What does not exist yet: any importer, the Windows `.klc` export, any
-device profile export, and any use of OKLM by a project we did not write.
+What does not exist yet: an importer for xkb, keylayout or `.klc`, and any
+use of OKLM by a project we did not write.
 
 Progress is measured by four gates, not by dates. Gates 1 (gap review
 against the reference standards) and 2 (reproducible checks) are passed;
-gates 3 (LDML round trip) and 4 (independent use) are open. Details and
+gate 3 (LDML round trip) is measured and passed on a branch, gate 4 (independent use) is open. Details and
 the ordered work list: [ROADMAP.md](ROADMAP.md).
 
 ## Role: a bridge, used first by its authors
@@ -79,16 +79,18 @@ when prose and schema disagree.
 
 ## Exporters
 
-`tools/export.py` converts an `.oklm.json` manifest to one of three one-way
+`tools/export.py` converts an `.oklm.json` manifest to one of five one-way
 targets, each producing a target file plus a conversion report:
 
 ```text
-python tools/export.py --target ldml|xkb|keylayout FILE.oklm.json [FILE ...]
+python tools/export.py --target ldml|xkb|keylayout|streamdeck|klc FILE.oklm.json [FILE ...]
 ```
 
 - `ldml`: CLDR/UTS #35 Part 7 `keyboard3` XML;
 - `xkb`: a standalone `xkb_symbols` block for Linux (levels 1–4);
-- `keylayout`: an Apple `.keylayout` file for macOS.
+- `keylayout`: an Apple `.keylayout` file for macOS;
+- `klc`: a Microsoft Keyboard Layout Creator source for Windows (never compiled, see CONVERSIONS.md);
+- `streamdeck`: an Elgato `.streamDeckProfile` of Text buttons (untested with the Stream Deck software, see CONVERSIONS.md).
 
 Every export writes `<name>.<ext>` and `<name>.<ext>.report.json`, the
 latter validating against
@@ -101,19 +103,40 @@ lists what the LDML export gets wrong or cannot express today.
 `tools/tests/run_tests.py` checks them for regressions, determinism and
 schema validity.
 
+## LDML importer
+
+```text
+python tools/import_ldml.py [--out DIR] [--license SPDX] [--author NAME] [--layout-id ID] FILE.xml [FILE.xml ...]
+```
+
+Reads a CLDR `keyboard3` file and writes `<name>.oklm.json` and
+`<name>.import.report.json` (direction `ldml-to-oklm`: mapped fields, what is
+preserved as an extension, what is unsupported, enrichment tasks, round-trip
+confidence). What the core cannot express goes verbatim into
+`extensions.OKLM_ldml`. The CLDR key imports (`keys-Latn-implied`,
+`keys-Zyyy-punctuation`, `keys-Zyyy-currency`, release 47, Unicode license) are
+bundled in `tools/importers/data/`, so nothing is fetched. Three third-party
+CLDR keyboards (`tools/tests/fixtures/ldml/`) and their imports
+(`examples/imports/ldml/`) are the reference cases; rules and measured round
+trip are in [CONVERSIONS.md](CONVERSIONS.md).
+
 ## Checks
 
 ```text
 python validators/validate.py examples/*.oklm.json
 python validators/validate.py --strict examples/*.oklm.json
-python validators/validate_v0_1.py
+python validators/validate_v0_2.py
 python tools/tests/run_tests.py
+python tools/tests/test_qwerty_global.py
+python tools/tests/test_streamdeck.py
+python tools/tests/test_klc.py
+python tools/tests/test_ldml_import.py
 ```
 
 The first, third and fourth ran green on a clean machine on 2026-09-02 (gate 2).
 `--strict` (added 2026-09-15, decided 2026-09-02 as a prerequisite of schema 0.2)
 lints what the schema does not: unknown members and extension prefixes, HID
-usage ranges, W3C `code` values, one physical code per key. They need
+usage ranges, W3C `code` values, one physical code per key. `--strict` turns the warnings `W_UNKNOWN_MEMBER` and `W_GEOMETRY_UNKNOWN` into errors; `--json` prints the findings with stable codes. `python tools/migrate_0_1_to_0_2.py FILE.oklm.json` migrates a 0.1 manifest. They need
 Python 3 and `jsonschema`.
 
 ## What this is not
@@ -128,7 +151,7 @@ documents those outputs.
 ```text
 oklm/
 ├── README.md
-├── SPEC.md               manifest specification, draft 0.1
+├── SPEC.md               manifest specification, draft 0.2
 ├── CLDR-LDML.md          relationship with LDML Keyboard, reference versions, known gaps
 ├── CONVERSIONS.md        conversion policy and reports
 ├── INDUSTRY-ADOPTION.md  who could use this, and in which order we will find out
@@ -137,9 +160,11 @@ oklm/
 ├── docs/                 oklm.org site (GitHub Pages)
 ├── examples/             six example manifests
 │   └── exports/          committed reference exports (ldml/xkb/keylayout)
+├── extensions/           PREFIXES.md, the extension prefix registry
+├── qwerty-global/        chassis + module diffs, composed into one manifest per module
 ├── research/             deep-research journal and decisions D1–D44 (French)
-├── schemas/              manifest 0.1 and conversion-report 0.2 JSON Schemas
-├── tools/                export.py, exporters/, tests/
+├── schemas/              manifest and conversion-report 0.2 JSON Schemas
+├── tools/                export.py, qwerty_global.py, migrate_0_1_to_0_2.py, exporters/, tests/
 └── validators/           reference validation scripts
 ```
 
