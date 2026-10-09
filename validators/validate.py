@@ -22,6 +22,7 @@ Codes (stable):
   E_DEADKEY_UNDEFINED         an output references a dead key that deadKeys does not define
   E_LAYERS_UNSUPPORTED        a `layers` member, at any depth: OKLM outputs live in keys[].levels (D2, D14)
   E_LEVEL_RANGE               level key outside 1-8, group key outside 2-9, levelSelectors key outside 2-8
+  E_CONTROL_CHAR              line break or C0/C1 control character (also U+2028/2029) in a name, text or output
   E_SCHEMA_VERSION_MAJOR      schemaVersion MAJOR is not 0
   W_SCHEMA_VERSION_MINOR      schemaVersion MINOR is above 2: valid, not supported
   E_EXTENSIONS_REQUIRED       extensionsRequired is not a subset of extensionsUsed
@@ -368,6 +369,74 @@ def unknown_member_findings(manifest, schema, strict):
     return out
 
 
+CONTROL_CHARS = re.compile("[\x00-\x1f\x7f-\x9f  ]")
+
+
+def _escaped(text):
+    """`text` with every control character written as \\uXXXX, safe to print and to put in a path."""
+    return CONTROL_CHARS.sub(lambda m: f"\\u{ord(m.group()):04x}", text)
+
+
+def control_char_findings(manifest):
+    """No line break and no C0 / C1 control character (nor U+2028 / U+2029) in the text fields and in the
+    outputs (B-03): a newline in a key output, a name or a composition breaks line-based targets (.klc,
+    xkb, .keylayout, .XCompose) and is never a legitimate output. Free-form metadata blocks (training,
+    accessibility, extensions...) are not looked into. Zero-width joiners, no-break spaces, combining
+    marks and astral characters are not controls and stay valid."""
+    found = []
+    if not isinstance(manifest, dict):
+        return found
+
+    def check(value, path):
+        if isinstance(value, str):
+            match = CONTROL_CHARS.search(value)
+            if match:
+                found.append(Finding("E_CONTROL_CHAR", "error", path,
+                                     f"contains control character U+{ord(match.group()):04X}: "
+                                     "no line break or control character in names, texts and outputs"))
+
+    def check_list(value, path):
+        for index, item in enumerate(value if isinstance(value, list) else []):
+            check(item, f"{path}[{index}]")
+
+    for name in ("name", "description", "license"):
+        check(manifest.get(name), name)
+    check_list(manifest.get("authors"), "authors")
+    metadata = manifest.get("metadata")
+    if isinstance(metadata, dict):
+        for name in ("description", "versionLabel", "layoutPattern", "indicator"):
+            check(metadata.get(name), f"metadata.{name}")
+        links = metadata.get("links")
+        for name, value in (links.items() if isinstance(links, dict) else []):
+            check(value, f"metadata.links.{_escaped(name)}")
+    for index, key in enumerate(manifest.get("keys") if isinstance(manifest.get("keys"), list) else []):
+        if not isinstance(key, dict):
+            continue
+        check(key.get("name"), f"keys[{index}].name")
+        check_list(key.get("categories"), f"keys[{index}].categories")
+        levels = key.get("levels")
+        for level, out in (levels.items() if isinstance(levels, dict) else []):
+            check(out, f"keys[{index}].levels.{_escaped(level)}")
+        groups = key.get("groups")
+        for group, table in (groups.items() if isinstance(groups, dict) else []):
+            for level, out in (table.items() if isinstance(table, dict) else []):
+                check(out, f"keys[{index}].groups.{_escaped(group)}.{_escaped(level)}")
+    for index, dead in enumerate(manifest.get("deadKeys") if isinstance(manifest.get("deadKeys"), list) else []):
+        if not isinstance(dead, dict):
+            continue
+        for name in ("name", "display", "fallback"):
+            check(dead.get(name), f"deadKeys[{index}].{name}")
+        compositions = dead.get("compositions")
+        for base, output in (compositions.items() if isinstance(compositions, dict) else []):
+            check(base, f"deadKeys[{index}].compositions.{_escaped(base)}")
+            check(output, f"deadKeys[{index}].compositions.{_escaped(base)}")
+    for index, claim in enumerate(manifest.get("conformance") if isinstance(manifest.get("conformance"), list) else []):
+        if isinstance(claim, dict):
+            for name in ("reference", "scope", "notes"):
+                check(claim.get(name), f"conformance[{index}].{name}")
+    return found
+
+
 LEVEL_KEY = re.compile(r"[1-8]")
 GROUP_KEY = re.compile(r"[2-9]")
 SELECTOR_KEY = re.compile(r"[2-8]")
@@ -466,6 +535,7 @@ def analyze(manifest, schema=None, validator=None, strict=False):
     stages = [lambda: schema_findings(manifest, validator),
               lambda: consistency_findings(manifest),
               lambda: level_range_findings(manifest),
+              lambda: control_char_findings(manifest),
               lambda: unknown_member_findings(manifest, schema, strict)]
     if strict:
         stages.append(lambda: strict_findings(manifest))

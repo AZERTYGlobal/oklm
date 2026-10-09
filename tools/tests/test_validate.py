@@ -395,6 +395,53 @@ def section_schemas():
 
 
 # ---------------------------------------------------------------------------------------------
+# B-03 : pas de saut de ligne ni de caractere de controle dans les textes et les sorties
+# ---------------------------------------------------------------------------------------------
+def section_b03():
+    fields = {
+        "name": (lambda m, s: m.update(name="AZERTY" + s), "name"),
+        "description": (lambda m, s: m.update(description="d" + s), "description"),
+        "license": (lambda m, s: m.update(license="EUPL" + s), "license"),
+        "authors": (lambda m, s: m.update(authors=["A" + s]), "authors[0]"),
+        "metadata.description": (lambda m, s: m["metadata"].update(description="d" + s), "metadata.description"),
+        "metadata.versionLabel": (lambda m, s: m["metadata"].update(versionLabel="v" + s), "metadata.versionLabel"),
+        "metadata.layoutPattern": (lambda m, s: m["metadata"].update(layoutPattern="p" + s), "metadata.layoutPattern"),
+        "metadata.indicator": (lambda m, s: m["metadata"].update(indicator="F" + s), "metadata.indicator"),
+        "metadata.links": (lambda m, s: m["metadata"]["links"].update(home="https://example.org/" + s), "metadata.links.home"),
+        "key.name": (lambda m, s: m["keys"][0].update(name="Q" + s), "keys[0].name"),
+        "key.categories": (lambda m, s: m["keys"][0].update(categories=["letter" + s]), "keys[0].categories[0]"),
+        "sortie de niveau": (lambda m, s: m["keys"][0]["levels"].update({"1": "a" + s}), "keys[0].levels.1"),
+        "sortie de groupe": (lambda m, s: m["keys"][0].update(groups={"2": {"1": "a" + s}}), "keys[0].groups.2.1"),
+        "deadKey.name": (lambda m, s: m["deadKeys"][0].update(name="Circonflexe" + s), "deadKeys[0].name"),
+        "deadKey.display": (lambda m, s: m["deadKeys"][0].update(display="^" + s), "deadKeys[0].display"),
+        "deadKey.fallback": (lambda m, s: m["deadKeys"][0].update(fallback="^" + s), "deadKeys[0].fallback"),
+        "composition (valeur)": (lambda m, s: m["deadKeys"][0]["compositions"].update({"a": "â" + s}), "deadKeys[0].compositions.a"),
+        "composition (base)": (lambda m, s: m["deadKeys"][0]["compositions"].update({"z" + s: "ẑ"}), None),
+        "conformance.reference": (lambda m, s: m["conformance"][0].update(reference="ISO" + s), "conformance[0].reference"),
+        "conformance.scope": (lambda m, s: m["conformance"][0].update(scope="grid" + s), "conformance[0].scope"),
+        "conformance.notes": (lambda m, s: m["conformance"][0].update(notes="n" + s), "conformance[0].notes"),
+    }
+    controls = {"LF": "\n", "CR": "\r", "NUL": "\x00", "TAB": "\t", "ESC": "\x1b", "DEL": "\x7f", "C1 NEL": "\x85", "LS": " "}
+    for label, (fn, path) in fields.items():
+        for cname, char in controls.items():
+            manifest = mutated(lambda m, fn=fn, char=char: fn(m, char))
+            hits = [f for f in findings(manifest) if f.code == "E_CONTROL_CHAR"]
+            check(len(hits) == 1 and hits[0].severity == "error", f"B-03 {label} + {cname} : un E_CONTROL_CHAR ({len(hits)})")
+            if hits and path:
+                check(hits[0].path == path, f"B-03 {label} : chemin {hits[0].path!r} attendu {path!r}")
+            if hits:
+                check(char not in hits[0].path and char not in hits[0].message, f"B-03 {label} + {cname} : le constat n'embarque pas le caractere brut")
+    # texte legitime : ZWJ, ZWNJ, espace insecable, combinants, emoji, texte multilingue
+    legit = "é ‍‌ \U0001F600 日本語 ÿ"
+    manifest = mutated(lambda m: (m["keys"][0]["levels"].update({"1": legit}), m.update(name="Nom " + legit),
+                                  m["deadKeys"][0]["compositions"].update({"q" + "́": legit})))
+    check("E_CONTROL_CHAR" not in codes(manifest, True), "B-03 ZWJ, espace insecable, combinants et emoji restent acceptes")
+    check("E_CONTROL_CHAR" not in codes(mutated(lambda m: m["metadata"].update(training={"note": "a\nb"})), True),
+          "B-03 les blocs metadata libres (training...) ne sont pas controles")
+    check("E_CONTROL_CHAR" not in codes(BASE, True), "B-03 temoin : le manifeste de reference est propre")
+
+
+# ---------------------------------------------------------------------------------------------
 def main():
     section_a01()
     section_files()
@@ -402,6 +449,7 @@ def main():
     section_a07_a08()
     section_a09()
     section_schemas()
+    section_b03()
     if failures:
         print(f"ECHEC : {len(failures)} sur {counter['n']} verifications")
         for message in failures:
