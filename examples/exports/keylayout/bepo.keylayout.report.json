@@ -132,6 +132,10 @@
       "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
     },
     {
+      "path": "deadKeys[superscript]",
+      "detail": "no 'fallback', 'display' or built-in terminator; the result of the dead key followed by a space is used as the macOS terminator output"
+    },
+    {
       "path": "deadKeys[tilde]",
       "detail": "no 'fallback' or 'display' declared; the built-in terminator character of the exporter is used (macOS output of the dead key pressed then a non-composing key)"
     },
@@ -141,8 +145,7 @@
     }
   ],
   "warnings": [
-    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 88 key output(s) filled this way",
-    "deadKeys[superscript]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS"
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 88 key output(s) filled this way"
   ],
   "errors": [],
   "generator": {

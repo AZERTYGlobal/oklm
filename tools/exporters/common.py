@@ -128,14 +128,18 @@ DEAD_KEY_STANDALONE = {
 
 def standalone_char(dead_key):
     """(character, origin) of a dead key's standalone character, one policy for every exporter:
-    `fallback`, else `display`, else DEAD_KEY_STANDALONE. origin is "fallback", "display", "default",
-    or None (character None) when the dead key has none of them."""
+    `fallback`, else `display`, else DEAD_KEY_STANDALONE, else the result the manifest gives for the
+    dead key followed by a space (the conventional "dead key + Space"). origin is "fallback",
+    "display", "default", "space", or None (character None) when the dead key has none of them."""
     if "fallback" in dead_key:
         return dead_key["fallback"], "fallback"
     if "display" in dead_key:
         return dead_key["display"], "display"
     if dead_key["id"] in DEAD_KEY_STANDALONE:
         return DEAD_KEY_STANDALONE[dead_key["id"]], "default"
+    space = dead_key.get("compositions", {}).get(" ")
+    if isinstance(space, str) and space:
+        return space, "space"
     return None, None
 
 

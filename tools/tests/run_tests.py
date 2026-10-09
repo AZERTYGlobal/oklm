@@ -109,14 +109,22 @@ def main():
         if golden.exists():
             fresh = (compose + "\n").encode("utf-8") if not compose.endswith("\n") else compose.encode("utf-8")
             check(golden.read_bytes() == fresh, f"{stem}/XCompose: golden does not match fresh export (regression)")
-        dead_ids = set() if stem != "azerty-global" else {dk["id"] for dk in manifest.get("deadKeys", [])}
-        check(dead_ids <= set(xkb.DEAD_KEYSYMS), f"{stem}/xkb: dead keys without dead_* keysym: {sorted(dead_ids - set(xkb.DEAD_KEYSYMS))}")
+        # B-05: every dead key of the six examples has a dead_* keysym (table or spare carrier), a Compose block
+        # with all its compositions, and no dead key is dropped from the xkb file
+        dead_map = xkb.dead_keysym_map(manifest)
+        dead_ids = {dk["id"] for dk in manifest.get("deadKeys", [])}
+        check(dead_ids <= set(dead_map), f"{stem}/xkb: dead keys without dead_* keysym: {sorted(dead_ids - set(dead_map))}")
+        check(len(set(dead_map.values())) == len(dead_map), f"{stem}/xkb: two dead keys share a dead_* keysym")
+        for dk in manifest.get("deadKeys", []):
+            rules = [line for line in compose.splitlines() if line.startswith(f"<{dead_map[dk['id']]}> ")]
+            check(len(rules) == len([b for b in dk.get("compositions", {}) if xkb.compose_keysym(b)]),
+                  f"{stem}/XCompose: dead key {dk['id']} has {len(rules)} rules, manifest has {len(dk.get('compositions', {}))} compositions")
+        check(not any(s["path"].startswith("deadKeys[") for s in results[(stem, "xkb")][1]["skippedFields"]),
+              f"{stem}/xkb: a dead key is skipped")
 
     # .keylayout: every used dead key has a terminator and an own-state entry
     for path in EXAMPLES:
         stem = path.name[: -len(".oklm.json")]
-        if stem != "azerty-global":
-            continue
         text, _ = results[(stem, "keylayout")]
         used = set(re.findall(r'<action id="dk_([^"]+)"', text))
         terminators = set(re.findall(r'<when state="([^"]+)" output="[^"]*"/>', text.split("<terminators>")[-1])) if "<terminators>" in text else set()

@@ -15,9 +15,10 @@ approximations (see CONVERSIONS.md and the generated report):
 - Dead keys map to `dead_*` keysyms. Where X11 has no direct `dead_*` for an
   OKLM dead key, a spare, otherwise unused `dead_*` keysym is used as a
   carrier (see DEAD_KEYSYMS); `export_compose()` writes the matching
-  `.XCompose` rules, which define the real outputs. Dead keys with no
-  `dead_*` entry at all fall back to their `display` character (composition
-  lost) or are skipped entirely if no `display` is available.
+  `.XCompose` rules, which define the real outputs. A dead key id in no table
+  gets the next spare carrier (SPARE_CARRIERS, declared lossy); only when those
+  run out does the dead key fall back to its `display` character (composition
+  lost) or is skipped entirely if no `display` is available.
 - `export_compose()` re-emits every OKLM `compositions` table as XCompose
   rules (`<dead_x> <base> : "result"`); tools/export.py writes it next to the
   xkb file as `<name>.XCompose`.
@@ -88,7 +89,27 @@ DEAD_KEYSYMS = {
     "extended-latin": "dead_voiced_sound",
     "misc-symbols": "dead_belowmacron",
     "phonetic": "dead_belowbreve",
+    "superscript": "dead_abovereversedcomma",
 }
+
+# Spare dead_* keysyms (not in DEAD_KEYSYMS) handed out, in this order, to the dead keys of a manifest
+# whose id is in no table: the id stays usable (B-05), the .XCompose carries the real outputs. All of
+# them exist in libxkbcommon's keysym list.
+SPARE_CARRIERS = [
+    "dead_abovecomma", "dead_lowline", "dead_aboveverticalline", "dead_belowverticalline",
+    "dead_longsolidusoverlay", "dead_belowcircumflex", "dead_belowdiaeresis",
+]
+
+
+def dead_keysym_map(manifest):
+    """dead-key id -> dead_* keysym for every dead key of the manifest that can have one: the tables
+    first, then a spare carrier per unknown id (none left: the id is absent from the result)."""
+    mapping = {dk["id"]: DEAD_KEYSYMS[dk["id"]] for dk in manifest.get("deadKeys", []) if dk["id"] in DEAD_KEYSYMS}
+    spare = [keysym for keysym in SPARE_CARRIERS if keysym not in DEAD_KEYSYMS.values()]
+    for dk in manifest.get("deadKeys", []):
+        if dk["id"] not in mapping and spare:
+            mapping[dk["id"]] = spare.pop(0)
+    return mapping
 
 # Characters -> canonical keysym names in .XCompose sequences (ported from
 # json_to_xkb.py); other non-ASCII characters use the `U<hex>` form.
@@ -148,8 +169,9 @@ def export_compose(manifest, source_file=None):
         'include "%L"',
         "",
     ]
+    dead_map = dead_keysym_map(manifest)
     for dk in sorted(manifest.get("deadKeys", []), key=lambda d: d["id"]):
-        keysym = DEAD_KEYSYMS.get(dk["id"])
+        keysym = dead_map.get(dk["id"])
         table = dk.get("compositions", {})
         if not keysym or not table:
             continue
@@ -192,6 +214,14 @@ def export(manifest, source_file=None):
         )
 
     dead_keys = {dk["id"]: dk for dk in manifest.get("deadKeys", [])}
+    dead_map = dead_keysym_map(manifest)
+    for dk_id, keysym in dead_map.items():
+        if dk_id not in DEAD_KEYSYMS:
+            report.lossy(
+                f"deadKeys[{dk_id}]",
+                f"no known dead_* keysym for this id; the spare carrier {keysym} stands in and the "
+                "companion .XCompose defines its outputs",
+            )
     lossy_dead_reported = set()
     unsupported_dead_reported = set()
 
@@ -221,7 +251,7 @@ def export(manifest, source_file=None):
                 symbols.append(keysym_for_char(out))
             else:
                 dk_id = out["deadKey"]
-                keysym = DEAD_KEYSYMS.get(dk_id)
+                keysym = dead_map.get(dk_id)
                 if keysym:
                     symbols.append(keysym)
                 else:

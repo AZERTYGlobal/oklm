@@ -1215,6 +1215,7 @@
   </action>
   <action id="dk_superscript">
     <when state="none" next="superscript"/>
+    <when state="superscript" output="ᵉ"/>
   </action>
   <action id="dk_tilde">
     <when state="none" next="tilde"/>
@@ -1241,6 +1242,7 @@
     <when state="ring-above" output="˚"/>
     <when state="scientific" output="±"/>
     <when state="stroke" output="/"/>
+    <when state="superscript" output="ᵉ"/>
     <when state="tilde" output="~"/>
   </terminators>
 </keyboard>

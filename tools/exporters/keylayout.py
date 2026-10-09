@@ -205,6 +205,12 @@ def export(manifest, source_file=None):
                 "no 'fallback' declared; the dead key's 'display' character is used as the "
                 "macOS terminator output instead",
             )
+        elif origin == "space":
+            report.lossy(
+                f"deadKeys[{dk['id']}]",
+                "no 'fallback', 'display' or built-in terminator; the result of the dead key followed "
+                "by a space is used as the macOS terminator output",
+            )
         elif origin == "default":
             report.lossy(
                 f"deadKeys[{dk['id']}]",

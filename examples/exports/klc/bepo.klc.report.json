@@ -48,10 +48,6 @@
   ],
   "lossyMappings": [
     {
-      "path": "deadKeys[superscript]",
-      "detail": "no usable standalone character: private-use U+E000 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
       "path": "keys[].levels",
       "detail": "Ctrl column filled with the standard control codes; CapsLock reduced to the Cap column"
     }

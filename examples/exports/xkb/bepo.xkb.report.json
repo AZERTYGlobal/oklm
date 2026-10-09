@@ -32,10 +32,6 @@
       "reason": "xkb key symbol lists support at most 4 shift levels per key (FOUR_LEVEL key types); CapsLock-conditioned levels are handled by the X server via key type and locale ctype rules, not per-key declarations"
     },
     {
-      "path": "deadKeys[superscript]",
-      "reason": "no xkb dead_* keysym equivalent and no display fallback available"
-    },
-    {
       "path": "description",
       "reason": "free-text description, not part of any target's mapping model"
     },
