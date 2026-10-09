@@ -2,7 +2,7 @@
 
 > An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.
 
-OKLM is a public draft (0.2, 2026-10-05), not yet a published or adopted standard. It does not compete with Unicode CLDR/LDML Keyboard: LDML Keyboard is the standards-oriented interchange export; OKLM is the source model and tooling layer around it. Its first users are its own reference layouts, AZERTY Global and QWERTY Global; external adoption is observed, not solicited. Progress is measured by four gates without dates: gap review against LDML Keyboard 48.2, ISO/IEC 9995-1:2026, W3C KeyboardEvent.code (2025) and USB HID Usage Tables 1.7 (passed 2026-09-03, known gaps published), reproducible checks (passed 2026-09-02), LDML round trip (open), independent use (open). Canonical format: JSON, extension `.oklm.json`. Licenses: EUPL 1.2 (schemas, validators, tools) and CC BY 4.0 (documentation).
+OKLM is a public draft (0.2, 2026-10-05), not yet a published or adopted standard. It does not compete with Unicode CLDR/LDML Keyboard: LDML Keyboard is the standards-oriented interchange export; OKLM is the source model and tooling layer around it. Its first users are its own reference layouts, AZERTY Global and QWERTY Global; external adoption is observed, not solicited. Progress is measured by four gates without dates: gap review against LDML Keyboard 48.2, ISO/IEC 9995-1:2026, W3C KeyboardEvent.code (2025) and USB HID Usage Tables 1.7 (passed 2026-09-03, known gaps published), reproducible checks (passed 2026-09-02), LDML round trip (passed 2026-10-05, merged 2026-10-06), independent use (open). Canonical format: JSON, extension `.oklm.json`. Licenses: EUPL 1.2 (schemas, validators, tools) and CC BY 4.0 (documentation).
 
 ## Documentation
 
@@ -13,6 +13,9 @@ OKLM is a public draft (0.2, 2026-10-05), not yet a published or adopted standar
 - [GOVERNANCE](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/GOVERNANCE.md): stewardship, decision record, version and compatibility policy
 - [ROADMAP](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/ROADMAP.md): the four gates and the ordered work list, no dates
 - [INDUSTRY-ADOPTION](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/INDUSTRY-ADOPTION.md): possible adopters, what is known of the landscape, and the sequence before any outreach
+- [CONTRIBUTING](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CONTRIBUTING.md): how to propose a change
+- [SECURITY](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/SECURITY.md): how to report a vulnerability
+- [CHANGELOG](https://raw.githubusercontent.com/AZERTYGlobal/oklm/main/CHANGELOG.md): what changed, by date
 
 ## Schemas and examples
 
@@ -23,7 +26,7 @@ OKLM is a public draft (0.2, 2026-10-05), not yet a published or adopted standar
 
 ## Exporters
 
-One-way exporters with conversion reports are available in [tools/](https://github.com/AZERTYGlobal/oklm/tree/main/tools): OKLM to LDML Keyboard 3.0, OKLM to xkb (levels 1-4), OKLM to macOS keylayout. Reference exports are committed under [examples/exports/](https://github.com/AZERTYGlobal/oklm/tree/main/examples/exports).
+Five one-way exporters with conversion reports are available in [tools/](https://github.com/AZERTYGlobal/oklm/tree/main/tools): OKLM to LDML Keyboard 3.0, OKLM to xkb (levels 1-4, with a .XCompose companion), OKLM to macOS keylayout, OKLM to Windows .klc (never compiled with MSKLC) and OKLM to a Stream Deck profile (not opened in the Stream Deck software). An importer, tools/import_ldml.py, reads LDML Keyboard 3.0 files into OKLM manifests; its round trip is measured. Reference exports are committed under [examples/exports/](https://github.com/AZERTYGlobal/oklm/tree/main/examples/exports).
 
 ## Website
 
