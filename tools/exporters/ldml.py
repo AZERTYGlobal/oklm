@@ -22,8 +22,10 @@ approximations (see CONVERSIONS.md and the generated report):
   CLDR repository (a partial manifest covers only part of a physical keyboard).
 - Dead keys compile to LDML markers (`\\m{id}`) and simple <transform>
   rules, one per composition entry, in manifest document order. `fallback`
-  is an explicit transform matching the bare marker (E15): that is what the
-  field means in OKLM, so it is not a lossy mapping.
+  is an explicit transform written after the compositions of its dead key, on
+  the marker followed by any character: `from="\\m{id}(.)" to="<fallback>$1"`
+  (E15, C-03). A transform on the bare marker would apply as soon as the dead
+  key is pressed, before any composition. It is not a lossy mapping.
 - The composition base is a literal string (E13): it is escaped before it is
   written as a transform `from` (a regular expression), and every output is
   escaped (backslash, control, format, combining and non-ASCII space
@@ -82,8 +84,9 @@ ROW_ORDER = "EDCBA"
 IMPLIED_FORMS_FILE = Path(__file__).resolve().parent / "data" / "scanCodes-implied.xml"
 IMPLIED_FORM_ORDER = ["us", "iso", "abnt2", "jis", "ks"]
 
-# Metacharacters of the regular expression in a transform `from`.
-FROM_METACHARACTERS = set("\\^$.|?*+()[]{}")
+# Characters the transform `from` grammar requires escaped (UTS #35 "Escapes":
+# \. \( \) \? \[ \\ \] \{ \} \* \/ \^ \+ \| \$ -- 15 characters, the slash included).
+FROM_METACHARACTERS = set("\\^$.|?*+()[]{}/")
 
 # Functional qualifier (SPEC.md "Level Selectors") -> LDML modifier component
 # (UTS #35 Part 7 valid components: none, alt, altL, altR, caps, ctrl,
@@ -331,7 +334,11 @@ def export(manifest, source_file=None):
         for base, result in dk.get("compositions", {}).items():
             transforms.append((marker + ldml_escape(base, regex=True), ldml_escape(result, replacement=True)))
         if "fallback" in dk:
-            transforms.append((marker, ldml_escape(dk["fallback"], replacement=True)))
+            # After the compositions (the first matching rule wins): the marker followed by any
+            # other character gives the fallback then that character. A rule on the bare marker
+            # would match as soon as the dead key is pressed (a match is tried against the end of
+            # the context) and no composition would ever apply (audit C-03).
+            transforms.append((marker + "(.)", ldml_escape(dk["fallback"], replacement=True) + "$1"))
     if dead_keys:
         report.mapped("deadKeys")
     if caps_filled:

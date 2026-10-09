@@ -57,6 +57,26 @@ def main():
         check(all(3 <= len(t) <= 8 for t in subtags), f"locale_subtags({layout_id!r}): subtag length out of 3-8")
         check(bool(changes) == (expected != layout_id), f"locale_subtags({layout_id!r}): changes {changes}")
 
+    # C-04: the slash is escaped in a transform `from`; C-03: fallback = marker + (.) after the compositions
+    manifest = minimal()
+    circumflex = next(d for d in manifest["deadKeys"] if d["id"] == "circumflex")
+    circumflex["compositions"]["/"] = "\u2044"
+    text, _ = ldml.export(manifest, source_file="x")
+    froms = [t.get("from") for t in parse_xml(text, "slash/ldml").iter("transform")]
+    check("\\m{circumflex}\\u{2F}" in froms and "\\m{circumflex}/" not in froms, f"C-04: slash base escaped in from, got {froms[:12]}")
+    mine = [f for f in froms if f.startswith("\\m{circumflex}")]
+    check(mine and mine[-1] == "\\m{circumflex}(.)" and mine.count("\\m{circumflex}(.)") == 1, "C-03: the fallback rule comes last for its marker")
+    check("\\m{circumflex}" not in froms, "C-03: no rule on the bare marker")
+    check(any(t.get("to") == "^$1" for t in parse_xml(text, "fallback/ldml").iter("transform")), "C-03: fallback keeps the typed character ($1)")
+    if etree is not None:
+        problems = dtd_problems(text)
+        check(not problems, f"slash/fallback manifest: LDML not valid against the DTD: {problems[:1]}")
+    # the importer reads that rule back as the dead key fallback
+    from importers import ldml as importer
+    imported, _ = importer.import_ldml(text.encode("utf-8"), source_file="x.ldml.xml")
+    dead = {d["id"]: d for d in imported["deadKeys"]}
+    check(dead["circumflex"].get("fallback") == "^" and dead["diaeresis"].get("fallback") == "\u00a8", "C-03: re-import gives the fallback back")
+
     # <displays> comes before <keys> (DTD: displays?, keys?), checked without lxml too
     root = parse_xml(ldml.export(minimal(), source_file="x")[0], "minimal/ldml")
     order = [child.tag for child in root]

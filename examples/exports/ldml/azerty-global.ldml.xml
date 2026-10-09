@@ -813,7 +813,7 @@
       <transform from="\m{stroke}t" to="ⱦ"/>
       <transform from="\m{stroke}T" to="Ⱦ"/>
       <transform from="\m{stroke}=" to="≠"/>
-      <transform from="\m{stroke}/" to="\u{337}"/>
+      <transform from="\m{stroke}\u{2F}" to="\u{337}"/>
       <transform from="\m{stroke} " to="/"/>
       <transform from="\m{horizontal-stroke}b" to="ƀ"/>
       <transform from="\m{horizontal-stroke}B" to="Ƀ"/>
@@ -1168,7 +1168,7 @@
       <transform from="\m{cyrillic}&lt;" to="љ"/>
       <transform from="\m{cyrillic}&gt;" to="Љ"/>
       <transform from="\m{cyrillic}:" to="њ"/>
-      <transform from="\m{cyrillic}/" to="Њ"/>
+      <transform from="\m{cyrillic}\u{2F}" to="Њ"/>
       <transform from="\m{cyrillic}\u{2A}" to="ђ"/>
       <transform from="\m{cyrillic}\u{7B}" to="ѓ"/>
       <transform from="\m{cyrillic}\u{7D}" to="Ѓ"/>
@@ -1304,7 +1304,7 @@
       <transform from="\m{scientific}\u{5B}" to="⊆"/>
       <transform from="\m{scientific}\u{5D}" to="⊇"/>
       <transform from="\m{scientific}:" to="≔"/>
-      <transform from="\m{scientific}/" to="÷"/>
+      <transform from="\m{scientific}\u{2F}" to="÷"/>
       <transform from="\m{scientific}°" to="∘"/>
       <transform from="\m{scientific}\u{2E}" to="∙"/>
       <transform from="\m{scientific}\u{24}" to="⊗"/>
@@ -1394,7 +1394,7 @@
       <transform from="\m{punctuation}6" to="\u{AD}"/>
       <transform from="\m{punctuation}\u{5E}" to="‸"/>
       <transform from="\m{punctuation}:" to="•"/>
-      <transform from="\m{punctuation}/" to="‣"/>
+      <transform from="\m{punctuation}\u{2F}" to="‣"/>
       <transform from="\m{punctuation}q" to="¶"/>
       <transform from="\m{punctuation}Q" to="¶"/>
       <transform from="\m{punctuation}r" to="※"/>

@@ -50,7 +50,7 @@
       <transform from="\m{circumflex}o" to="ô"/>
       <transform from="\m{circumflex}u" to="û"/>
       <transform from="\m{circumflex} " to="^"/>
-      <transform from="\m{circumflex}" to="^"/>
+      <transform from="\m{circumflex}(.)" to="^$1"/>
       <transform from="\m{diaeresis}a" to="ä"/>
       <transform from="\m{diaeresis}e" to="ë"/>
       <transform from="\m{diaeresis}i" to="ï"/>
@@ -58,7 +58,7 @@
       <transform from="\m{diaeresis}u" to="ü"/>
       <transform from="\m{diaeresis}y" to="ÿ"/>
       <transform from="\m{diaeresis} " to="¨"/>
-      <transform from="\m{diaeresis}" to="¨"/>
+      <transform from="\m{diaeresis}(.)" to="¨$1"/>
     </transformGroup>
   </transforms>
 </keyboard3>

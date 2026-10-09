@@ -915,7 +915,7 @@
       <transform from="\m{stroke}o" to="ø"/>
       <transform from="\m{stroke}O" to="Ø"/>
       <transform from="\m{stroke}T" to="Ⱦ"/>
-      <transform from="\m{stroke}/" to="/"/>
+      <transform from="\m{stroke}\u{2F}" to="/"/>
       <transform from="\m{stroke}&lt;" to="≮"/>
       <transform from="\m{stroke}=" to="≠"/>
       <transform from="\m{stroke}&gt;" to="≯"/>

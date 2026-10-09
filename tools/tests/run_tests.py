@@ -180,8 +180,9 @@ def v02_checks(minimal, report_validator):
     check(ldml.ldml_escape("(", regex=True) == "\\u{28}" and ldml.ldml_escape("(") == "(",
           "E13: regex metacharacter escaped in `from` only")
     check(ldml.ldml_escape("$", replacement=True) == "\\u{24}", "E13: `$` escaped in `to`")
-    metas = "\\^$.|?*+()[]{}"
-    check(all(ldml.ldml_escape(ch, regex=True).startswith("\\u{") for ch in metas), "E13: all 14 metacharacters escaped in `from`")
+    metas = "\\^$.|?*+()[]{}/"
+    check(all(ldml.ldml_escape(ch, regex=True).startswith("\\u{") for ch in metas), "E13/C-04: all 15 escaped characters (slash included) escaped in `from`")
+    check(ldml.ldml_escape("/") == "/", "C-04: the slash is escaped in `from` only")
 
     # E20: derived locale, 8-character subtags
     check(ldml.derived_locale(minimal) == ("fr-t-k0-azerty-global-minimal", []), "E20: derived locale")
@@ -200,7 +201,8 @@ def v02_checks(minimal, report_validator):
 
     # E15: fallback is a transform, not a lossy mapping
     text, report = ldml.export(minimal, source_file="x")
-    check('from="\\m{circumflex}" to="^"' in text, "E15: fallback exported as a bare-marker transform")
+    check('from="\\m{circumflex}(.)" to="^$1"' in text, "E15/C-03: fallback exported as marker + (.) -> fallback + $1")
+    check('from="\\m{circumflex}" to=' not in text, "C-03: no transform on the bare marker")
     check(not any("fallback" in m["path"] for m in report["lossyMappings"]), "E15: fallback not reported as lossy")
 
     # E22: modifier keys carry no output and are skipped by every exporter
