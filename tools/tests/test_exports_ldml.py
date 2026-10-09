@@ -45,6 +45,13 @@ def main():
             problems = dtd_problems(text)
             check(not problems, f"{stem}/ldml: not valid against the CLDR DTD: {problems[:1]}")
 
+    # the escaping does not depend on the interpreter's unicodedata (3.9/3.10 know Unicode 13 only)
+    check(ldml.ldml_escape("⃀") == "⃀", "U+20C0 (SOM SIGN, Unicode 14) is written as is on every Python")
+    check(ldml.ldml_escape("́") == "\\u{301}" and ldml.ldml_escape("\U0001e08f") == "\\u{1E08F}",
+          "combining marks are escaped, including U+1E08F added in Unicode 15")
+    check(ldml.ldml_escape(" ") == "\\u{A0}" and ldml.ldml_escape("\U000e0001") == "\\u{E0001}" and ldml.ldml_escape("a b") == "a b",
+          "no-break space and format characters escaped, ASCII space kept")
+
     # C-02: the derived locale is a valid RFC 6497 t-extension (field = tkey 1*("-" 3*8alphanum))
     tfield = re.compile(r"^[a-z][0-9](-[a-z0-9]{3,8})+$")
     for stem, manifest in examples():

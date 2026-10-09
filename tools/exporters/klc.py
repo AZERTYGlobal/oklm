@@ -30,11 +30,13 @@ VERIFICATION STATUS: MSKLC was not available, so the output was never compiled. 
 parser of the format as documented by Microsoft samples (`kbdus.klc`); treat the file as untested.
 """
 import re
+import unicodedata
 import zlib
 
 from .common import ExportError, ReportBuilder, caps_base_levels, effective_output, reject_duplicate_hid, reject_unsafe_text, \
     reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, standalone_char, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
+from .unicode_frozen import NAMES_AFTER_UNICODE_13
 
 STATES = [0, 1, 2, 6, 7]
 LOCALES = {  # BCP 47 -> (LCID hex, language name)
@@ -73,8 +75,9 @@ def _cell(output):
 
 
 def _name(ch):
-    import unicodedata
-    return unicodedata.name(ch, f"U+{ord(ch):04X}")
+    """Character name for the comments of the file: the frozen table first, so the golden files do not
+    depend on the Unicode version of the interpreter, then unicodedata, else the code point."""
+    return NAMES_AFTER_UNICODE_13.get(ord(ch)) or unicodedata.name(ch, f"U+{ord(ch):04X}")
 
 
 def assign_vks(keys):

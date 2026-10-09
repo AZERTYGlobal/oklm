@@ -39,7 +39,6 @@ approximations (see CONVERSIONS.md and the generated report):
   written (E19); it is always recorded as skipped.
 - Modifier keys (role: modifier) carry no output and are not exported (E22).
 """
-import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -57,6 +56,7 @@ from .common import (
     without_modifier_keys,
     xml_escape,
 )
+from .unicode_frozen import needs_ldml_escape
 
 # USB HID keyboard-usage-page (0x07) -> PC/AT Set 1 scan code, for the
 # alphanumeric-section keys covered by OKLM v1 (Microsoft "Keyboard Scan
@@ -116,12 +116,9 @@ def load_implied_forms():
 
 
 def _needs_escape(ch):
-    if ch == "\\":
-        return True
-    category = unicodedata.category(ch)
-    if category in ("Cc", "Cf", "Cs", "Co", "Cn", "Mn", "Mc", "Me", "Zl", "Zp"):
-        return True
-    return category == "Zs" and ch != " "
+    # Frozen Unicode 15.1 categories (unicode_frozen): the escaping must not depend on the Python
+    # version, whose unicodedata may predate a character the manifest uses.
+    return ch == "\\" or needs_ldml_escape(ch)
 
 
 def ldml_escape(text, regex=False, replacement=False):
