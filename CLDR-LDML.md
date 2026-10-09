@@ -24,7 +24,7 @@ exports), OKLM adds a layer above it and strips that layer on LDML export.
 
 | Reference | Version used | Read as |
 |---|---|---|
-| LDML Keyboard, UTS #35 Part 7 | **48.2** (CLDR 48.2). CLDR 49 alpha was published on 2026-09-04, beta announced for 2026-09-23; this document will be re-checked against 49 when it is final. | Full text |
+| LDML Keyboard, UTS #35 Part 7 | **48.2** (CLDR 48.2). CLDR 49 alpha was published on 2026-09-04 and its final release is targeted for October 2026 (not re-checked on 2026-10-10); this document will be re-checked against 49 when it is final. | Full text |
 | ISO/IEC 9995-1 | **:2026**, fourth edition, published 2026-01-16, 16 pages. It cancels and replaces ISO/IEC 9995-1:2009. | **Public preview only** (foreword, contents, abstract). No clause text has been read; every ISO-related statement below is limited to what the preview and secondary literature say. |
 | W3C UI Events `KeyboardEvent.code` | Recommendation of **2025-04-22** | Full text |
 | USB HID Usage Tables | **1.7**, 2026-01-26 (incorporates Review Request 117, Keyboard Backlight) | Full text, section 10 (Keyboard/Keypad page 0x07) |
@@ -49,11 +49,12 @@ Measured in September 2026, from public sources:
   the browser is planned through its Keyman Core "web-core" work (version
   19 in the March 2026 roadmap, which states it "is predicated on reaching
   our funding goals for the project").
-- **No other layout tool exports LDML.** kalamine (TOML → klc, keylayout,
-  xkb, ahk, web, SVG), klfc (imports XKB/PKL/KLC) and the QMK/VIA/ZMK
-  firmware ecosystem do not. The nearest neighbours are `hickford/xkb_ldml`
-  (xkeyboard-config → LDML, MIT) and Keyman's own `kmc-ldml` (LDML → `.kmx`
-  and `.js`).
+- **No layout authoring tool we found exports LDML.** kalamine (TOML → klc,
+  keylayout, xkb, ahk, web, SVG), klfc (imports XKB/PKL/KLC) and the
+  QMK/VIA/ZMK firmware ecosystem do not. The nearest neighbours are
+  `hickford/xkb_ldml`, a converter from the xkeyboard-config data to LDML
+  (MIT) rather than an authoring tool, and Keyman's own `kmc-ldml` (LDML →
+  `.kmx` and `.js`).
 
 So the "bridge to LDML" niche is empty, and demand for it is unproven. OKLM
 exports LDML because it is the one vendor-neutral interchange format that
@@ -77,16 +78,16 @@ layout.oklm.json
       v
 OKLM tooling  (validators/, tools/export.py)
       |
-      +--> LDML Keyboard XML          exists (one-way, with loss report)
-      +--> Linux xkb_symbols          exists (levels 1-4)
+      +--> LDML Keyboard XML          exists (with loss report)
+      +--> Linux xkb_symbols          exists (levels 1-4, plus a .XCompose companion)
       +--> macOS .keylayout           exists
-      +--> Windows .klc               planned (ROADMAP item 6)
+      +--> Windows .klc               exists (never compiled with MSKLC)
+      +--> Stream Deck profile        exists (never opened in the Stream Deck software)
       +--> web tester data            planned (ROADMAP item 2)
-      +--> Stream Deck profile        planned (ROADMAP item 5)
       +--> keyboard map images, legend packs, sticker maps,
            character indexes, assistant knowledge, conformance tests
                                       not started
-LDML Keyboard XML --> layout.oklm.json  planned (ROADMAP item 7, gate 3)
+LDML Keyboard XML --> layout.oklm.json  exists (tools/import_ldml.py, gate 3)
 ```
 
 ## Boundary
@@ -106,7 +107,7 @@ Gate 1 of [ROADMAP.md](ROADMAP.md) compared the 0.1 schema field by field
 with the four references above (review of 2026-09-03; 26 effective gaps,
 6 of them heavy). The schema was **not** changed by the review. The gaps
 below are the ones a user of the LDML export should know about now; they
-were the inputs to schema 0.2. The "exporter today" column is the state of 2026-09-15; the section below the table gives the state after schema 0.2 (2026-10-05). IDs are those of the review.
+were the inputs to schema 0.2. The "exporter today" column is the state of 2026-09-15; the section below the table gives the state after schema 0.2 (2026-10-05). The IDs (`E1`, `E21`...) are the labels of the review; this section is where the repository defines them, and the other documents cite them.
 
 | ID | Gap | What the v1 exporter does today |
 |---|---|---|
@@ -135,15 +136,22 @@ not attempt (`backspace` transforms, `reorder`, `variables`, `flicks`,
 |---|---|
 | E1 | The exporter uses the CLDR implied form (`us`, `iso`, `abnt2`, `jis`, `ks`) when the keys cover it exactly, otherwise a custom form. |
 | E2 | `version` is SemVer; the free label moves to `metadata.versionLabel`. |
+| E3, E4 | `metadata.attribution`, `metadata.layoutPattern` and `metadata.indicator` exist in the manifest; the exporter does not write `info@attribution`, `@layout` or `@indicator` yet. |
+| E5 | Normalization (`settings@normalization`; LDML normalizes keyboard output and matches transforms on decomposed text): OKLM exports outputs as written, without normalization, and declares the difference as a loss. |
+| E6 | `NumLock` stays a level selector; the LDML export skips it and reports the skip. |
+| E7 | Levels 5-8 stay in the core as an OKLM extension beyond ISO; a missing CapsLock level takes the output of the matching level without CapsLock. |
+| E9 | `key.id` is limited to the rows `A` to `E` with two digits; any other physical key is a frame key, outside the core. |
+| E10, E11 | `hid` ranges and the W3C `code` list are checked by `validate.py --strict`. |
 | E13 | Escaping implemented, in `from` (metacharacters and non-printing characters) and in `to` (`$`). A real bug is fixed: a raw backslash was written unescaped. |
 | E15 | `fallback` is an explicit transform, no longer a lossy mapping. |
 | E20 | Locale derived as `<locales[0]>-t-k0-<layoutId>`, subtags cut to 8 characters, the cut reported. |
-| E21 | Omitted level means no output; exported as `gap`. |
+| E19 | `extensions` (OKLM's counterpart of LDML `special` and vendor data) are never exported; the report declares them as skipped. Extensions found by the LDML importer are preserved in `OKLM_ldml`. |
+| E21 | Omitted level 1-4 means no output; exported as `gap`. |
 | E22 | Modifier keys carry `role` and `modifier`; the output form `{ "modifier": ... }` is removed. |
 | E8 | `groups` stays reserved and rejected. |
 | E12 | `geometry` is no longer a closed enum; the validator checks the family and accepts `us` for `ansi` and `abnt2` for `abnt`. |
 
-Still open: E3, E4 (no `info@attribution`, `info@layout`, `info@indicator`), E7 (levels 5-8 beyond `shift`, `altR`, `caps`), E14 (`display` rule), and the layer `other` of E21.
+Still open: E3, E4 (the manifest members are not exported to `info@attribution`, `info@layout`, `info@indicator`), E7 (levels 5-8 beyond `shift`, `altR`, `caps`), E14 (`display` rule), and the layer `other` of E21.
 
 ## Positioning
 
@@ -160,4 +168,4 @@ chassis and layer local modules on it.
 
 ---
 
-*Last updated: 2026-09-15*
+*Last updated: 2026-10-10*

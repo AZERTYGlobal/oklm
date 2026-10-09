@@ -1,7 +1,12 @@
 # OKLM examples
 
 Six manifests, all validating against `schemas/oklm-manifest.schema.json`
-(check with `python validators/validate.py examples/*.oklm.json`).
+(check with `python validators/validate.py examples/*.oklm.json`; in Windows
+PowerShell, which does not expand the pattern, pass
+`(Get-ChildItem examples/*.oklm.json).FullName` instead, as explained in the
+[README](../README.md#install)).
+
+Run every command from the repository root.
 
 | Manifest | Layout | Keys / levels / dead keys | Provenance | License of the layout |
 |---|---|---|---|---|
@@ -12,7 +17,7 @@ Six manifests, all validating against `schemas/oklm-manifest.schema.json`
 | `qwerty-us.oklm.json` | US QWERTY (ANSI baseline) | 48 / 3 / 0 | Hand-written | Public-domain heritage; manifest under CC0-1.0 |
 | `azerty-global-minimal.oklm.json` | Illustrative 6-key subset | 6 / 2 / 2 | Hand-written teaching example, cited by `SPEC.md` | EUPL-1.2 |
 
-Together they exercise the draft 0.1 schema across its range: ISO and ANSI
+Together they exercise the draft 0.2 schema across its range: ISO and ANSI
 geometries (with and without the B00 key), 2 to 8 ISO levels including
 CapsLock variants via `levelSelectors`, zero to 29 dead keys (up to 1016
 compositions), scoped conformance declarations, and four different licensing
@@ -23,14 +28,33 @@ each manifest's `metadata.description` states its provenance.
 
 ## Exports
 
-[`exports/`](exports/) holds committed reference exports of all six
-manifests to the three v1 exporter targets (`ldml/`, `xkb/`, `keylayout/`),
-each with its conversion report. Regenerate with:
+[`exports/`](exports/) holds committed reference exports of the six
+manifests to the five exporter targets (`ldml/`, `xkb/`, `keylayout/`,
+`klc/`, `streamdeck/`), each with its conversion report; `xkb/` also holds
+the `.XCompose` companion of each layout. The minimal example has no
+Stream Deck file: its outputs are all plain ASCII, so that export is
+`unsupported` and only its report is written. Regenerate one target with
+(the `--out` directory must exist):
 
 ```bash
-python tools/export.py --target ldml|xkb|keylayout --out examples/exports/<target> examples/*.oklm.json
+python tools/export.py --target ldml --out examples/exports/ldml examples/*.oklm.json
 ```
 
-`tools/tests/run_tests.py` fails if a fresh export no longer matches these
-committed files (regression) or if a report stops validating against
+and the others the same way, with `--target` set to `xkb`, `keylayout`,
+`klc` or `streamdeck`. The `streamdeck` run exits with status 1 because of the
+minimal example, as explained in the [README](../README.md#exporters). In
+PowerShell, replace `examples/*.oklm.json` as described there.
+
+`tools/tests/run_tests.py` (LDML, xkb and keylayout), `test_klc.py` and
+`test_streamdeck.py` fail if a fresh export no longer matches these committed
+files (regression) or if a report stops validating against
 `schemas/oklm-conversion-report.schema.json`.
+
+## Imports
+
+[`imports/ldml/`](imports/ldml/) holds three third-party CLDR keyboards
+(French AZERTY, Portuguese ABNT2, Maltese 47-key; sources in
+`tools/tests/fixtures/ldml/`) imported by `tools/import_ldml.py`, each with
+its import report. They are derived from Unicode CLDR data, so they are under
+the Unicode License, not under one of the layout licenses in the table above.
+`tools/tests/test_ldml_import.py` checks them.
