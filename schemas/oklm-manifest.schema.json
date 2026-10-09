@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oklm.org/schemas/0.2/oklm-manifest.schema.json",
-  "$comment": "Draft 0.2, dated 2026-10-05. Open schema (decision D32): no object is closed with additionalProperties:false. Typos are caught by `validate.py --strict` (W_UNKNOWN_MEMBER); the only members the schema itself refuses are prefixed members outside an `extensions` object (decision D34/D38: one notation per concept).",
+  "$comment": "Draft 0.2, dated 2026-10-05. Open schema (decision D32): no object is closed with additionalProperties:false. Typos are caught by `validate.py --strict` (W_UNKNOWN_MEMBER); the only members the schema itself refuses are prefixed members outside an `extensions` object (decision D34/D38: one notation per concept). Every pattern ends with (?!\\n)$: in Python `$` also matches before a final newline, in ECMA 262 it does not; the lookahead makes both engines refuse \"1.0\\n\".",
   "title": "OKLM Manifest",
   "description": "JSON Schema for an Open Keyboard Layout Model manifest (.oklm.json), draft 0.2. An OKLM manifest must remain readable, correctable and versionable by a human without a proprietary generator: stable field order (follow the order of this schema's properties), explicit names, compact notation for simple mappings. The text core of a manifest is designed to compile to LDML Keyboard 3.0 (UTS #35 Part 7, root element keyboard3); OKLM does not reinvent LDML transforms, reorders, markers or UnicodeSet notation. Reading rule (D31): a reader ignores what it does not know, except what the manifest lists in extensionsRequired or featuresRequired. Design decisions referenced as D1..D44 live in research/Décisions de conception — deep research.md.",
   "type": "object",
@@ -20,12 +20,12 @@
     "schemaVersion": {
       "description": "Version of the OKLM manifest schema this file targets, MAJOR.MINOR. A reader refuses a MAJOR it does not know and treats a higher MINOR as valid but not supported (validator rule, D33).",
       "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+$"
+      "pattern": "^[0-9]+\\.[0-9]+(?!\\n)$"
     },
     "layoutId": {
       "description": "Stable machine identifier of the layout, lowercase kebab-case.",
       "type": "string",
-      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(?!\\n)$"
     },
     "name": {
       "description": "Human-readable layout name.",
@@ -35,7 +35,7 @@
     "version": {
       "description": "Version of the layout itself (not of the schema), Semantic Versioning 2.0.0 (E2). A human label that is not SemVer (a standard's edition, say) goes to metadata.versionLabel.",
       "type": "string",
-      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(?!\\n)$"
     },
     "license": {
       "description": "License of the layout data. SPDX identifier recommended (e.g. EUPL-1.2, CC-BY-4.0).",
@@ -58,7 +58,7 @@
       "minItems": 1,
       "items": {
         "type": "string",
-        "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$"
+        "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*(?!\\n)$"
       }
     },
     "geometry": {
@@ -67,14 +67,14 @@
       "minItems": 1,
       "items": {
         "type": "string",
-        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(?!\\n)$"
       }
     },
     "levelSelectors": {
       "description": "Optional declaration of how levels 2..8 are selected, using functional qualifier names (D2/D14): modifiers are named by function, never by the physical key that activates them. Defaults when omitted: level 2 = [Level2Shift], level 3 = [Level3Shift], level 4 = [Level2Shift, Level3Shift]. A level that is omitted from a key means no output (E21). Platform details (AltGr vs Ctrl+Alt, macOS Option) are export concerns. NumLock is kept here, without LDML export (E6); it serves the .klc exporter.",
       "type": "object",
       "patternProperties": {
-        "^[2-8]$": {
+        "^[2-8](?!\\n)$": {
           "type": "array",
           "minItems": 1,
           "items": {
@@ -82,7 +82,7 @@
             "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock"]
           }
         },
-        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
       },
       "properties": {
         "extensions": { "$ref": "#/$defs/extensions" }
@@ -154,7 +154,7 @@
         "extensions": { "$ref": "#/$defs/extensions" }
       },
       "patternProperties": {
-        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
       }
     },
     "extensionsUsed": {
@@ -172,7 +172,7 @@
     "featuresRequired": {
       "description": "Names of the core features a reader must support to read this manifest correctly. May be empty.",
       "type": "array",
-      "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$" },
+      "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*(?!\\n)$" },
       "uniqueItems": true
     },
     "extensions": {
@@ -181,12 +181,12 @@
     }
   },
   "patternProperties": {
-    "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+    "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
   },
   "$defs": {
     "extensionName": {
       "type": "string",
-      "pattern": "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$"
+      "pattern": "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$"
     },
     "extensions": {
       "description": "Extension container (D34, D38): an object whose every key is a prefixed extension name and whose value is an object. Present at the root and on every object of the model.",
@@ -210,22 +210,22 @@
         "id": {
           "description": "Canonical physical key identifier: ISO/IEC 9995-1 key number (D1), e.g. D01 (QWERTY Q position), C00 (Caps Lock), B00 (ISO extra key), E01 (digit row). ISO 9995-1 is the de jure position standard used by national layout norms.",
           "type": "string",
-          "pattern": "^[A-E][0-9]{2}$"
+          "pattern": "^[A-E][0-9]{2}(?!\\n)$"
         },
         "hid": {
           "description": "Mandatory USB HID Usage ID from keyboard usage page 0x07, as a hex string (D1). Unambiguous machine anchor: disambiguates internationally (e.g. ABNT Ro 0x87 is not the ISO B00 key, HID 0x64).",
           "type": "string",
-          "pattern": "^0x[0-9A-Fa-f]{2,4}$"
+          "pattern": "^0x[0-9A-Fa-f]{2,4}(?!\\n)$"
         },
         "xkb": {
           "description": "Optional XKB key name alias for Linux export (D1), e.g. AD01, LSGT, SPCE. Note that XKB naming differs from the ISO grid (section prefix, column offsets).",
           "type": "string",
-          "pattern": "^[A-Z][A-Z0-9+]{1,7}$"
+          "pattern": "^[A-Z][A-Z0-9+]{1,7}(?!\\n)$"
         },
         "code": {
           "description": "Optional W3C UI Events KeyboardEvent.code cross-reference (D24), e.g. KeyQ, IntlBackslash, Space.",
           "type": "string",
-          "pattern": "^[A-Za-z0-9]+$"
+          "pattern": "^[A-Za-z0-9]+(?!\\n)$"
         },
         "name": {
           "description": "Optional human-readable key label for documentation.",
@@ -246,18 +246,18 @@
           "type": "object",
           "minProperties": 1,
           "patternProperties": {
-            "^[1-8]$": { "$ref": "#/$defs/output" }
+            "^[1-8](?!\\n)$": { "$ref": "#/$defs/output" }
           }
         },
         "groups": {
           "description": "Reserved (D3, D37: never removed). Additional ISO groups: complete alternative keymaps, a distinct axis from levels. Group 1 is the levels property above; entries here start at \"2\". Not exported by any v0.2 exporter, which rejects a manifest that uses it; a group would be exported as a separate LDML file (CONVERSIONS.md E8).",
           "type": "object",
           "patternProperties": {
-            "^[2-9]$": {
+            "^[2-9](?!\\n)$": {
               "type": "object",
               "minProperties": 1,
               "patternProperties": {
-                "^[1-8]$": { "$ref": "#/$defs/output" }
+                "^[1-8](?!\\n)$": { "$ref": "#/$defs/output" }
               }
             }
           }
@@ -270,7 +270,7 @@
         "extensions": { "$ref": "#/$defs/extensions" }
       },
       "patternProperties": {
-        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
       }
     },
     "output": {
@@ -287,12 +287,12 @@
             "deadKey": {
               "description": "Id of a dead key defined in the top-level deadKeys array.",
               "type": "string",
-              "pattern": "^[a-z][a-z0-9-]*$"
+              "pattern": "^[a-z][a-z0-9-]*(?!\\n)$"
             },
             "extensions": { "$ref": "#/$defs/extensions" }
           },
           "patternProperties": {
-            "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+            "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
           }
         }
       ]
@@ -304,7 +304,7 @@
         "id": {
           "description": "Dead-key identifier; compiles to the LDML marker \\m{id}.",
           "type": "string",
-          "pattern": "^[a-z][a-z0-9-]*$"
+          "pattern": "^[a-z][a-z0-9-]*(?!\\n)$"
         },
         "name": {
           "description": "Optional human-readable name.",
@@ -329,7 +329,7 @@
         "extensions": { "$ref": "#/$defs/extensions" }
       },
       "patternProperties": {
-        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
       }
     },
     "conformanceClaim": {
@@ -349,7 +349,7 @@
         "extensions": { "$ref": "#/$defs/extensions" }
       },
       "patternProperties": {
-        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
       }
     },
     "exportTarget": {
@@ -359,12 +359,12 @@
         "target": {
           "description": "Export target kind, e.g. ldml-keyboard-3, web-tester, xkb, windows-klc, macos-keylayout, keymap-image, streamdeck-profile.",
           "type": "string",
-          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(?!\\n)$"
         },
         "id": {
           "description": "Optional stable id for this export declaration; must be unique across exports.",
           "type": "string",
-          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(?!\\n)$"
         },
         "options": {
           "description": "Target-specific options (free-form; per-exporter schemas will come with the exporter research prompts). For ldml-keyboard-3, conformsTo must be a whole number of 45 or greater per UTS #35 Part 7.",
@@ -373,7 +373,7 @@
         "extensions": { "$ref": "#/$defs/extensions" }
       },
       "patternProperties": {
-        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+$": false
+        "^(OKLM|EXT|[A-Z][A-Z0-9]*)_[A-Za-z0-9]+(?!\\n)$": false
       }
     }
   }

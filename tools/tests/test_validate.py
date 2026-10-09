@@ -220,9 +220,42 @@ def section_files():
 
 
 # ---------------------------------------------------------------------------------------------
+# A-03 : un motif en `$` ne doit pas accepter un saut de ligne final
+# ---------------------------------------------------------------------------------------------
+def section_a03():
+    cases = {
+        "schemaVersion 1.0\\n (MAJOR 1)": lambda m: m.update(schemaVersion="1.0\n"),
+        "schemaVersion 0.2\\n": lambda m: m.update(schemaVersion="0.2\n"),
+        "layoutId": lambda m: m.update(layoutId="abc\n"),
+        "version": lambda m: m.update(version="1.0.0\n"),
+        "locale": lambda m: m.update(locales=["fr\n"]),
+        "geometry": lambda m: m.update(geometry=["iso-full\n"]),
+        "id de touche": lambda m: m["keys"][0].update(id="D01\n"),
+        "hid": lambda m: m["keys"][0].update(hid="0x14\n"),
+        "xkb": lambda m: m["keys"][0].update(xkb="AD01\n"),
+        "code": lambda m: m["keys"][0].update(code="KeyQ\n"),
+        "id de deadKey": lambda m: m["deadKeys"][0].update(id="circumflex\n"),
+        "reference deadKey": lambda m: m["keys"][2]["levels"].update({"1": {"deadKey": "circumflex\n"}}),
+        "cible d'export": lambda m: m["exports"][0].update(target="xkb\n"),
+        "extensionsUsed": lambda m: m.update(extensionsUsed=["OKLM_a\n"]),
+        "featuresRequired": lambda m: m.update(featuresRequired=["feat\n"]),
+    }
+    for label, fn in cases.items():
+        manifest = mutated(fn)
+        for strict in (False, True):
+            check("E_SCHEMA" in errors(manifest, strict), f"A-03 {label} + saut de ligne final refuse (strict={strict})")
+    check("E_SCHEMA_VERSION_MAJOR" in errors(mutated(lambda m: m.update(schemaVersion="1.0"))), "A-03 temoin : 1.0 donne E_SCHEMA_VERSION_MAJOR")
+    # aucun motif du schema ne se termine par un `$` nu
+    for name in ("oklm-manifest.schema.json", "oklm-conversion-report.schema.json"):
+        text = (ROOT / "schemas" / name).read_text(encoding="utf-8")
+        check('$"' not in text.replace('(?!\\\\n)$"', ""), f"A-03 {name} : aucun motif ne finit par un `$` nu")
+
+
+# ---------------------------------------------------------------------------------------------
 def main():
     section_a01()
     section_files()
+    section_a03()
     if failures:
         print(f"ECHEC : {len(failures)} sur {counter['n']} verifications")
         for message in failures:
