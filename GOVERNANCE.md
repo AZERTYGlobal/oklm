@@ -2,10 +2,14 @@
 
 ## Stewardship
 
-Open Keyboard Layout Model is stewarded by the AMCF (the French association
-behind [AZERTY Global](https://azerty.global)) through its two layout
-projects, AZERTY Global and QWERTY Global. One person writes most of it
-today; that is a fact about the project's size, not a design.
+Open Keyboard Layout Model is stewarded by the AMCF, the French association
+behind [AZERTY Global](https://azerty.global) ("AMCF" is the association's
+abbreviation as the project uses it), through its two layout projects,
+AZERTY Global and QWERTY Global. One person writes most of it today; that is
+a fact about the project's size, not a design. The maintainers decide, in
+public, on the issues and pull requests of the repository
+[AZERTYGlobal/oklm](https://github.com/AZERTYGlobal/oklm); this file names no
+individual maintainer.
 
 The intended end state is a neutral open specification usable by anyone
 who describes, validates or ships keyboard layouts. Getting there is
@@ -48,7 +52,9 @@ before it.
 - **Design decisions** are numbered (D1, D2, …) and recorded with their
   evidence in the research journal under [`research/`](research/), in
   French. Forty-four are recorded as of September 2026. `SPEC.md` cites
-  them by number.
+  them by number and states each rule in English, so reading the journal is
+  never required. A decision that changes the specification or the schema is
+  also listed in [CHANGELOG.md](CHANGELOG.md).
 - **Order of work and gates** live in [ROADMAP.md](ROADMAP.md). A work
   item is not reopened once decided there; a new fact goes into the
   journal first, and the roadmap changes when a gate is passed or a
@@ -61,17 +67,21 @@ before it.
 
 ## Version and compatibility policy
 
-- **0.1 is frozen.** It is the draft described by `SPEC.md` and
-  `schemas/oklm-manifest.schema.json` today. Bugs in the prose are fixed;
-  the schema is not changed.
-- **0.2 is the next revision, and the only one planned before 1.0.** Its
-  structural choices are already decided (see ROADMAP.md, item 4): open
-  schema plus a strict validator mode, prefixed extension namespaces with a
-  public registry, capability arrays at the root. It absorbs the gate 1
-  findings and what the first real uses teach.
+- **0.2 is the current draft.** It is the revision described by `SPEC.md`
+  and `schemas/oklm-manifest.schema.json`, and the only one planned before
+  1.0. Its structural choices (see ROADMAP.md, item 4): open schema plus a
+  strict validator mode, prefixed extension namespaces with a public
+  registry, capability arrays at the root. It absorbed the gate 1 findings
+  and what the first real uses taught.
+- **0.1 is frozen and historical.** It was the first draft and is not
+  maintained. `tools/migrate_0_1_to_0_2.py` migrates a 0.1 manifest to 0.2;
+  [`schemas/Zones instables v0.1.md`](schemas/Zones%20instables%20v0.1.md) is
+  the design note that went with it.
+- **1.0 is the next milestone.** It has no date; work toward it is ordered
+  by the gates of [ROADMAP.md](ROADMAP.md).
 - Before 1.0, breaking changes are allowed, must be documented in
-  `SPEC.md`, and every example manifest and committed export is updated
-  in the same change.
+  `SPEC.md` and `CHANGELOG.md`, and every example manifest and committed
+  export is updated in the same change.
 - After 1.0, breaking changes require a major version bump, exporters
   declare the schema versions they support, and deprecated fields stay
   documented for at least one major cycle.
@@ -80,8 +90,9 @@ before it.
 
 ## Contribution model
 
-There is no formal contribution process for the 0.1 draft. Use GitHub
-issues on the public repository for:
+The process is in [CONTRIBUTING.md](CONTRIBUTING.md); vulnerabilities go
+through [SECURITY.md](SECURITY.md). Use GitHub issues on the public
+repository for:
 
 - schema and specification issues;
 - example manifests of other layouts;
@@ -91,14 +102,18 @@ issues on the public repository for:
 - compatibility reports from OS, hardware, application, remote-desktop,
   education or enterprise contexts.
 
-With schema 0.2, extension prefixes will be registered by pull request in
-a public registry file; until then, propose a namespace in an issue.
+Extension prefixes are registered by pull request in a public registry
+file, [`extensions/PREFIXES.md`](extensions/PREFIXES.md); an issue is
+accepted when you cannot open a pull request.
 
 ## Licensing
 
 Specification and documentation (`*.md`): CC BY 4.0. Schemas, validators,
 tooling and reference exporters: EUPL 1.2. A layout described with OKLM
-keeps its own license, declared in the manifest's `license` field.
+keeps its own license, declared in the manifest's `license` field. The
+copyright notice and the license of each part of the repository (the site,
+the examples, the Unicode data, the archived research reports) are in the
+Licensing section of [README.md](README.md#licensing).
 
 ## Naming
 
@@ -109,4 +124,4 @@ Domains: `oklm.org` (canonical) and `openkeyboardlayoutmodel.org`
 
 ---
 
-*Last updated: 2026-09-15*
+*Last updated: 2026-10-10*
