@@ -141,6 +141,7 @@
     }
   ],
   "warnings": [
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 88 key output(s) filled this way",
     "deadKeys[superscript]: no 'fallback' or 'display' declared; no terminator emitted, behavior when input matches no composition is undefined on macOS"
   ],
   "errors": [],

@@ -12,7 +12,8 @@ Mapping:
 - CapsLock levels (a level whose qualifiers include CapsLock) are not columns: they set the `Cap` column.
   Cap = 1 when CapsLock swaps states 0 and 1, +4 when it swaps states 6 and 7. A caps level that matches
   neither "no effect" nor "swap" (MSKLC would need an SGCap line) is reported as lossy and ignored. Levels
-  omitted by the manifest are read as "no CapsLock data" (no effect), not as E21 "no output".
+  omitted by the manifest read as the matching level without CapsLock (no effect), not as E21 "no output";
+  keylayout and LDML apply the same rule (common.effective_output).
 - Levels needing Level5Shift or NumLock, or without a levelSelectors entry, are skipped and reported.
 - Every output is written as 4 hexadecimal digits, except ASCII letters and digits, which are written as is;
   a dead key output is `<hex>@`. Only BMP single code point outputs fit: a ligature (several code points)
@@ -29,8 +30,8 @@ parser of the format as documented by Microsoft samples (`kbdus.klc`); treat the
 """
 import re
 
-from .common import ReportBuilder, reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, \
-    without_modifier_keys
+from .common import ReportBuilder, caps_base_levels, effective_output, reject_unsupported_v1_scope, \
+    resolve_level_modifiers, skip_oklm_only_metadata, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
 
 STATES = [0, 1, 2, 6, 7]
@@ -154,6 +155,7 @@ def export(manifest, source_file=None):
     keys = sorted(manifest["keys"], key=lambda k: int(HID_TO_SCANCODE1[k["hid"]], 16))
     vks = assign_vks(keys)
     levels = classify_levels(manifest, report)
+    caps_base = caps_base_levels(resolve_level_modifiers(manifest))
 
     # dead keys: standalone character, blocks
     dead_char, dead_blocks = {}, {}
@@ -175,7 +177,9 @@ def export(manifest, source_file=None):
         return None, report.build()
 
     def output_of(key, level):
-        out = key.get("levels", {}).get(level)
+        # A CapsLock level the key does not define reads as the matching level without CapsLock
+        # (same rule as the keylayout and LDML exporters): CapsLock has no effect on that key.
+        out, _ = effective_output(key.get("levels", {}), level, caps_base)
         if out is None:
             return None
         if isinstance(out, dict):

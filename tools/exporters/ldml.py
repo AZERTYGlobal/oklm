@@ -41,7 +41,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from .common import (
+    CAPS_FALLBACK_WARNING,
     ReportBuilder,
+    caps_base_levels,
+    effective_output,
     resolve_level_modifiers,
     levels_used_by,
     reject_unsupported_v1_scope,
@@ -265,16 +268,19 @@ def export(manifest, source_file=None):
 
     key_elements = []  # (id, output)
     layer_rows = {level: [] for _, level in layers}
+    caps_base = caps_base_levels(resolved)
+    caps_filled = 0
     for row in placement_rows:
         for level in layer_rows:
             layer_rows[level].append([])
         for key in row:
             for _, level in layers:
-                out = key.get("levels", {}).get(level)
+                out, filled = effective_output(key.get("levels", {}), level, caps_base)
                 if out is None:
                     # E21: keep the row aligned with the form scan codes (LDML implicit key).
                     layer_rows[level][-1].append("gap")
                     continue
+                caps_filled += filled
                 elem_id = f"k_{key['id']}_{level}"
                 if isinstance(out, str):
                     output = ldml_escape(out)
@@ -295,6 +301,8 @@ def export(manifest, source_file=None):
             transforms.append((marker, ldml_escape(dk["fallback"], replacement=True)))
     if dead_keys:
         report.mapped("deadKeys")
+    if caps_filled:
+        report.warn(CAPS_FALLBACK_WARNING.format(count=caps_filled))
 
     skip_oklm_only_metadata(report, manifest)
 

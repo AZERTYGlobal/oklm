@@ -30,7 +30,10 @@ known approximations (see CONVERSIONS.md and the generated report):
 import zlib
 
 from .common import (
+    CAPS_FALLBACK_WARNING,
     ReportBuilder,
+    caps_base_levels,
+    effective_output,
     resolve_level_modifiers,
     levels_used_by,
     without_modifier_keys,
@@ -163,13 +166,16 @@ def export(manifest, source_file=None):
     key_lines = []  # per (level) -> list of key XML lines
     per_level_lines = {level: [] for level, _ in exportable}
     max_output_len = 1
+    caps_base = caps_base_levels(resolved)
+    caps_filled = 0
 
     for key in manifest.get("keys", []):
         vk = HID_TO_MACVK[key["hid"]]
         for level, _ in exportable:
-            out = key.get("levels", {}).get(level)
+            out, filled = effective_output(key.get("levels", {}), level, caps_base)
             if out is None:
                 continue
+            caps_filled += filled
             if isinstance(out, str):
                 max_output_len = max(max_output_len, len(out.encode("utf-16-le")) // 2)
                 if out in base_to_compositions:
@@ -183,6 +189,8 @@ def export(manifest, source_file=None):
 
     if dead_keys:
         report.mapped("deadKeys")
+    if caps_filled:
+        report.warn(CAPS_FALLBACK_WARNING.format(count=caps_filled))
 
     action_blocks = []
     for base in sorted(base_to_compositions, key=lambda c: [ord(ch) for ch in c]):

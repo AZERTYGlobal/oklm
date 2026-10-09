@@ -5,30 +5,43 @@
   <keys>
     <key id="k_E00_1" output="`"/>
     <key id="k_E00_2" output="~"/>
+    <key id="k_E00_5" output="`"/>
     <key id="k_E01_1" output="1"/>
     <key id="k_E01_2" output="!"/>
+    <key id="k_E01_5" output="1"/>
     <key id="k_E02_1" output="2"/>
     <key id="k_E02_2" output="@"/>
+    <key id="k_E02_5" output="2"/>
     <key id="k_E03_1" output="3"/>
     <key id="k_E03_2" output="#"/>
+    <key id="k_E03_5" output="3"/>
     <key id="k_E04_1" output="4"/>
     <key id="k_E04_2" output="$"/>
+    <key id="k_E04_5" output="4"/>
     <key id="k_E05_1" output="5"/>
     <key id="k_E05_2" output="%"/>
+    <key id="k_E05_5" output="5"/>
     <key id="k_E06_1" output="6"/>
     <key id="k_E06_2" output="^"/>
+    <key id="k_E06_5" output="6"/>
     <key id="k_E07_1" output="7"/>
     <key id="k_E07_2" output="&amp;"/>
+    <key id="k_E07_5" output="7"/>
     <key id="k_E08_1" output="8"/>
     <key id="k_E08_2" output="*"/>
+    <key id="k_E08_5" output="8"/>
     <key id="k_E09_1" output="9"/>
     <key id="k_E09_2" output="("/>
+    <key id="k_E09_5" output="9"/>
     <key id="k_E10_1" output="0"/>
     <key id="k_E10_2" output=")"/>
+    <key id="k_E10_5" output="0"/>
     <key id="k_E11_1" output="-"/>
     <key id="k_E11_2" output="_"/>
+    <key id="k_E11_5" output="-"/>
     <key id="k_E12_1" output="="/>
     <key id="k_E12_2" output="+"/>
+    <key id="k_E12_5" output="="/>
     <key id="k_D01_1" output="q"/>
     <key id="k_D01_2" output="Q"/>
     <key id="k_D01_5" output="Q"/>
@@ -61,10 +74,13 @@
     <key id="k_D10_5" output="P"/>
     <key id="k_D11_1" output="["/>
     <key id="k_D11_2" output="{"/>
+    <key id="k_D11_5" output="["/>
     <key id="k_D12_1" output="]"/>
     <key id="k_D12_2" output="}"/>
+    <key id="k_D12_5" output="]"/>
     <key id="k_D13_1" output="\u{5C}"/>
     <key id="k_D13_2" output="|"/>
+    <key id="k_D13_5" output="\u{5C}"/>
     <key id="k_C01_1" output="a"/>
     <key id="k_C01_2" output="A"/>
     <key id="k_C01_5" output="A"/>
@@ -94,8 +110,10 @@
     <key id="k_C09_5" output="L"/>
     <key id="k_C10_1" output=";"/>
     <key id="k_C10_2" output=":"/>
+    <key id="k_C10_5" output=";"/>
     <key id="k_C11_1" output="'"/>
     <key id="k_C11_2" output="&quot;"/>
+    <key id="k_C11_5" output="'"/>
     <key id="k_B01_1" output="z"/>
     <key id="k_B01_2" output="Z"/>
     <key id="k_B01_5" output="Z"/>
@@ -119,12 +137,16 @@
     <key id="k_B07_5" output="M"/>
     <key id="k_B08_1" output=","/>
     <key id="k_B08_2" output="&lt;"/>
+    <key id="k_B08_5" output=","/>
     <key id="k_B09_1" output="."/>
     <key id="k_B09_2" output="&gt;"/>
+    <key id="k_B09_5" output="."/>
     <key id="k_B10_1" output="/"/>
     <key id="k_B10_2" output="?"/>
+    <key id="k_B10_5" output="/"/>
     <key id="k_A03_1" output=" "/>
     <key id="k_A03_2" output=" "/>
+    <key id="k_A03_5" output=" "/>
   </keys>
   <layers formId="us">
     <layer modifiers="none">
@@ -142,11 +164,11 @@
       <row keys="k_A03_2"/>
     </layer>
     <layer modifiers="caps">
-      <row keys="gap gap gap gap gap gap gap gap gap gap gap gap gap"/>
-      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5 gap gap gap"/>
-      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5 gap gap"/>
-      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5 k_B07_5 gap gap gap"/>
-      <row keys="gap"/>
+      <row keys="k_E00_5 k_E01_5 k_E02_5 k_E03_5 k_E04_5 k_E05_5 k_E06_5 k_E07_5 k_E08_5 k_E09_5 k_E10_5 k_E11_5 k_E12_5"/>
+      <row keys="k_D01_5 k_D02_5 k_D03_5 k_D04_5 k_D05_5 k_D06_5 k_D07_5 k_D08_5 k_D09_5 k_D10_5 k_D11_5 k_D12_5 k_D13_5"/>
+      <row keys="k_C01_5 k_C02_5 k_C03_5 k_C04_5 k_C05_5 k_C06_5 k_C07_5 k_C08_5 k_C09_5 k_C10_5 k_C11_5"/>
+      <row keys="k_B01_5 k_B02_5 k_B03_5 k_B04_5 k_B05_5 k_B06_5 k_B07_5 k_B08_5 k_B09_5 k_B10_5"/>
+      <row keys="k_A03_5"/>
     </layer>
   </layers>
 </keyboard3>

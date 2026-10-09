@@ -69,6 +69,44 @@ def resolve_level_modifiers(manifest):
     return resolved
 
 
+def caps_base_levels(resolved):
+    """Map each CapsLock level to the level without CapsLock that has the same other qualifiers.
+
+    With the default selectors this is 5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4. A CapsLock level whose
+    non-CapsLock counterpart is not declared (explicitly or by default) is absent from the result.
+    """
+    by_qualifiers = {frozenset(): "1"}
+    for level in sorted(resolved, key=int):
+        if "CapsLock" not in resolved[level]:
+            by_qualifiers.setdefault(frozenset(resolved[level]), level)
+    return {
+        level: by_qualifiers[frozenset(q for q in qualifiers if q != "CapsLock")]
+        for level, qualifiers in resolved.items()
+        if "CapsLock" in qualifiers and frozenset(q for q in qualifiers if q != "CapsLock") in by_qualifiers
+    }
+
+
+def effective_output(levels, level, caps_base):
+    """Output of a key at `level`; a CapsLock level the key does not define falls back on the
+    matching level without CapsLock (decision of the 2026-10 audit, batch 1, B-02).
+
+    `levels` is the key's levels object, `caps_base` the result of caps_base_levels().
+    Returns (output or None, True when the fallback was used).
+    """
+    out = levels.get(level)
+    if out is None and level in caps_base:
+        base = levels.get(caps_base[level])
+        if base is not None:
+            return base, True
+    return out, False
+
+
+CAPS_FALLBACK_WARNING = (
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock "
+    "(5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): {count} key output(s) filled this way"
+)
+
+
 def levels_used_by(manifest):
     """Every level number (as string) referenced by any key's levels object."""
     used = set()

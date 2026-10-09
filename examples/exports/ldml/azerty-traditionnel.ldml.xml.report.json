@@ -61,7 +61,9 @@
       "detail": "exported as LDML modifier component 'altR' (AltGr); actual physical binding (AltGr vs Ctrl+Alt vs macOS Option) is platform-specific per SPEC.md"
     }
   ],
-  "warnings": [],
+  "warnings": [
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 4 key output(s) filled this way"
+  ],
   "errors": [],
   "generator": {
     "name": "oklm-exporters",
