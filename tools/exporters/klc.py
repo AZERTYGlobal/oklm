@@ -18,7 +18,8 @@ Mapping:
 - Every output is written as 4 hexadecimal digits, except ASCII letters and digits, which are written as is;
   a dead key output is `<hex>@`. Only BMP single code point outputs fit: a ligature (several code points)
   or a character outside the BMP is skipped and reported (the LIGATURE section is not generated).
-- A dead key becomes a DEADKEY block named by its standalone character: `display`, else `fallback`.
+- A dead key becomes a DEADKEY block named by its standalone character (common.standalone_char, the policy
+  of the keylayout exporter: `fallback`, else `display`, else a built-in table by dead-key id).
   Compositions whose base or result is not a single BMP character are skipped and reported. The space
   base is added (space gives the standalone character) when the manifest does not define it.
 - VK names: an ASCII letter or digit at level 1 gives its own VK; other keys get the OEM name of their
@@ -29,9 +30,10 @@ VERIFICATION STATUS: MSKLC was not available, so the output was never compiled. 
 parser of the format as documented by Microsoft samples (`kbdus.klc`); treat the file as untested.
 """
 import re
+import zlib
 
 from .common import ExportError, ReportBuilder, caps_base_levels, effective_output, reject_duplicate_hid, reject_unsafe_text, \
-    reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, without_modifier_keys
+    reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, standalone_char, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
 
 STATES = [0, 1, 2, 6, 7]
@@ -52,12 +54,6 @@ CODE_TO_VK = {
 SPARE_VK = ["OEM_1", "OEM_2", "OEM_3", "OEM_4", "OEM_5", "OEM_6", "OEM_7", "OEM_8", "OEM_102",
             "OEM_COMMA", "OEM_PERIOD", "OEM_PLUS", "OEM_MINUS"]
 CTRL_OEM = {"OEM_4": "001b", "OEM_5": "001c", "OEM_6": "001d", "OEM_MINUS": "001f", "SPACE": "0020"}
-STANDALONE = {  # dead key id -> conventional standalone (spacing) character
-    "acute": "´", "grave": "`", "circumflex": "^", "diaeresis": "¨",
-    "tilde": "~", "caron": "ˇ", "breve": "˘", "cedilla": "¸",
-    "macron": "¯", "ogonek": "˛", "ring-above": "˚", "dot-above": "˙",
-    "double-acute": "˝",
-}
 PRIVATE_USE_START = 0xE000
 ALNUM = re.compile(r"^[A-Za-z0-9]$")
 
@@ -133,8 +129,14 @@ def classify_levels(manifest, report):
 
 
 def short_name(layout_id):
-    name = re.sub(r"[^a-z0-9]", "", layout_id.lower())[:8]
-    return name or "oklm"
+    """The KBD short name (8 characters at most, the name of the keyboard DLL): the layoutId reduced
+    to lower-case letters and digits when that fits, else its first 4 characters followed by 4 hexadecimal
+    digits of a CRC-32 of the whole layoutId, so two layouts sharing a long prefix (azerty-global and
+    azerty-global-minimal) do not get the same name."""
+    name = re.sub(r"[^a-z0-9]", "", layout_id.lower())
+    if len(name) <= 8:
+        return name or "oklm"
+    return name[:4] + f"{zlib.crc32(layout_id.encode('utf-8')) & 0xFFFF:04x}"
 
 
 def export(manifest, source_file=None):
@@ -170,7 +172,7 @@ def export(manifest, source_file=None):
     dead_char, dead_blocks = {}, {}
     private = PRIVATE_USE_START
     for dk in manifest.get("deadKeys", []):
-        standalone = dk.get("display") or dk.get("fallback") or STANDALONE.get(dk["id"])
+        standalone, _ = standalone_char(dk)
         if standalone is None or standalone in dead_blocks:
             while chr(private) in dead_blocks:
                 private += 1

@@ -108,6 +108,37 @@ CAPS_FALLBACK_WARNING = (
 )
 
 
+# Standalone (spacing) character of a dead key, by OKLM dead-key id: what the key types when the
+# sequence does not compose (macOS terminator, Windows DEADKEY name). Used by keylayout and klc, in
+# that order of preference: the dead key's `fallback`, its `display`, then this table. Provenance: the
+# `<terminators>` of the shipped AZERTY Global.keylayout (azerty-global release audit 2026-09-05), keyed
+# by OKLM dead-key id; ported 2026-10-06 (decision D29 of IA/operations/2026-10-04-outils-maison-vs-en-
+# ligne). The entries for cyrillic and extended-latin are U+0020, as in that file.
+DEAD_KEY_STANDALONE = {
+    "acute": "´", "double-acute": "˝", "grave": "`", "double-grave": "̏",
+    "cyrillic": " ", "greek": "µ", "phonetic": "ʁ", "stroke": "/",
+    "horizontal-stroke": "-", "breve": "˘", "inverted-breve": "̑",
+    "caron": "ˇ", "circumflex": "^", "horn": "̛", "hook": "̉",
+    "cedilla": "¸", "extended-latin": " ", "macron": "¯", "ogonek": "˛",
+    "dot-above": "˙", "dot-below": "̣", "punctuation": "§",
+    "ring-above": "˚", "misc-symbols": "→", "currencies": "¤",
+    "scientific": "±", "tilde": "~", "diaeresis": "¨", "comma": "̦",
+}
+
+
+def standalone_char(dead_key):
+    """(character, origin) of a dead key's standalone character, one policy for every exporter:
+    `fallback`, else `display`, else DEAD_KEY_STANDALONE. origin is "fallback", "display", "default",
+    or None (character None) when the dead key has none of them."""
+    if "fallback" in dead_key:
+        return dead_key["fallback"], "fallback"
+    if "display" in dead_key:
+        return dead_key["display"], "display"
+    if dead_key["id"] in DEAD_KEY_STANDALONE:
+        return DEAD_KEY_STANDALONE[dead_key["id"]], "default"
+    return None, None
+
+
 def levels_used_by(manifest):
     """Every level number (as string) referenced by any key's levels object."""
     used = set()

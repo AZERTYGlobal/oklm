@@ -48,42 +48,6 @@
   ],
   "lossyMappings": [
     {
-      "path": "deadKeys[comma]",
-      "detail": "no usable standalone character: private-use U+E000 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[currencies]",
-      "detail": "no usable standalone character: private-use U+E001 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[dot-below]",
-      "detail": "no usable standalone character: private-use U+E002 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[double-grave]",
-      "detail": "no usable standalone character: private-use U+E003 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[extended-latin]",
-      "detail": "no usable standalone character: private-use U+E004 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[greek]",
-      "detail": "no usable standalone character: private-use U+E005 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[horizontal-stroke]",
-      "detail": "no usable standalone character: private-use U+E006 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[inverted-breve]",
-      "detail": "no usable standalone character: private-use U+E007 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
-      "path": "deadKeys[stroke]",
-      "detail": "no usable standalone character: private-use U+E008 names the DEADKEY and would be typed if the sequence does not compose"
-    },
-    {
       "path": "keys[].levels",
       "detail": "Ctrl column filled with the standard control codes; CapsLock reduced to the Cap column"
     }
