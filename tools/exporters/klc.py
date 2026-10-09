@@ -33,7 +33,7 @@ import re
 import unicodedata
 import zlib
 
-from .common import ExportError, ReportBuilder, caps_base_levels, effective_output, reject_duplicate_hid, reject_unsafe_text, \
+from .common import ExportError, ReportBuilder, caps_base_levels, declare_unmapped_fields, effective_output, reject_duplicate_hid, reject_unsafe_text, \
     reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, standalone_char, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
 from .unicode_frozen import NAMES_AFTER_UNICODE_13
@@ -307,6 +307,8 @@ def export(manifest, source_file=None):
     for field in ("geometry", "layoutId", "version"):
         if field in manifest:
             report.skip(field, "not represented in .klc (the short name comes from layoutId)")
+    declare_unmapped_fields(report, manifest, ".klc (`code` only names the VK)", {"id", "hid", "code", "levels", "role", "modifier"},
+                            {"id", "display", "compositions", "fallback"})
     skip_oklm_only_metadata(report, manifest)
     report.warn("MSKLC was not available: the .klc was never compiled; it is checked by an in-repo parser only")
 

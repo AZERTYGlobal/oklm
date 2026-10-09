@@ -25,7 +25,7 @@ import re
 import uuid
 import zipfile
 
-from .common import (ReportBuilder, reject_unsafe_text, reject_unsupported_v1_scope, skip_oklm_only_metadata,
+from .common import (ReportBuilder, declare_unmapped_fields, reject_unsafe_text, reject_unsupported_v1_scope, skip_oklm_only_metadata,
                      without_modifier_keys)
 
 DEVICE_MODEL = "20GBA9911"  # Stream Deck XL, 8 x 4
@@ -133,6 +133,8 @@ def export(manifest, source_file=None):
     for field in ("levelSelectors", "geometry", "locales", "layoutId", "authors", "license", "version"):
         if field in manifest:
             report.skip(field, "not represented in a Stream Deck profile (only the profile name is taken from `name`)")
+    declare_unmapped_fields(report, manifest, "a Stream Deck profile (only the typed characters are exported)",
+                            {"id", "hid", "levels", "role", "modifier"})
     pages = -(-len(characters) // PER_PAGE)
     report.warn(f"{len(characters)} buttons on {pages} page(s) of {COLUMNS}x{ROWS} (Stream Deck XL); "
                 "other models need the profile to be adapted in the Stream Deck software")

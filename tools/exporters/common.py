@@ -383,6 +383,26 @@ def reject_unsupported_v1_scope(report, manifest):
     return False
 
 
+KEY_FIELDS = ("id", "hid", "xkb", "code", "name", "role", "modifier", "levels", "groups", "categories", "extensions")
+DEAD_KEY_FIELDS = ("id", "name", "display", "compositions", "fallback", "extensions")
+
+
+def declare_unmapped_fields(report, manifest, target, key_fields, dead_key_fields=None):
+    """Declare as skipped every key and dead-key field the exporter does not write (audit B-10): a
+    field present in at least one key (or dead key) and absent from the mapped set. `key_fields`
+    and `dead_key_fields` are the field names the exporter reads; dead_key_fields=None means the
+    dead keys are declared elsewhere as a whole. Nothing is dropped without a line in the report."""
+    for fields, mapped, items, label in (
+        (KEY_FIELDS, key_fields, manifest.get("keys", []), "keys[]"),
+        (DEAD_KEY_FIELDS, dead_key_fields, manifest.get("deadKeys", []), "deadKeys[]"),
+    ):
+        if mapped is None:
+            continue
+        for field in fields:
+            if field not in mapped and any(field in item for item in items):
+                report.skip(f"{label}.{field}", f"not represented in {target}")
+
+
 def skip_oklm_only_metadata(report, manifest):
     """Declare the OKLM-only top-level fields that no v1 exporter maps."""
     for field, reason in (

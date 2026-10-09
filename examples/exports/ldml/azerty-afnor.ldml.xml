@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-azerty-afnor" conformsTo="45">
   <version number="2019.0.0"/>
-  <info name="French (Standard, AZERTY)"/>
+  <info name="French (Standard, AZERTY)" author="AFNOR NF Z71-300 working group"/>
   <keys>
     <key id="k_E00_1" output="@"/>
     <key id="k_E00_2" output="#"/>

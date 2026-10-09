@@ -30,6 +30,30 @@
       "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
     },
     {
+      "path": "version",
+      "reason": "no macOS keylayout attribute for the layout version"
+    },
+    {
+      "path": "keys[].xkb",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
+      "path": "keys[].code",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
+      "path": "keys[].name",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
+      "path": "keys[].categories",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
+      "path": "deadKeys[].name",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
       "path": "locales",
       "reason": "macOS keylayout files are not locale-tagged; only the layout name is used"
     },

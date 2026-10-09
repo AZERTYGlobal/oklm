@@ -46,6 +46,7 @@ from .common import (
     CAPS_FALLBACK_WARNING,
     ReportBuilder,
     caps_base_levels,
+    declare_unmapped_fields,
     effective_output,
     resolve_level_modifiers,
     levels_used_by,
@@ -269,8 +270,17 @@ def export(manifest, source_file=None):
     if len(locales) > 1:
         report.lossy("locales", f"only the primary locale '{locales[0]}' is exported; LDML keyboard3 declares one locale")
 
-    for field in ("layoutId", "authors", "license"):
+    for field in ("layoutId", "license"):
         report.skip(field, "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter")
+    authors = [author for author in manifest.get("authors", []) if author]
+    if authors:
+        report.mapped("authors")  # info@author, the authors joined with ", "
+        if len(authors) > 1:
+            report.lossy("authors", "LDML info has one author attribute: the authors are joined with ', '")
+    if "geometry" in manifest:
+        report.skip("geometry", "the physical form comes from the keys' hid (implied or custom <form>); geometry is not read")
+    declare_unmapped_fields(report, manifest, "LDML keyboard3", {"id", "hid", "levels", "role", "modifier"},
+                            {"id", "display", "compositions", "fallback"})
 
     rows = _rows(manifest)
     unmapped_hid = []
@@ -365,7 +375,8 @@ def export(manifest, source_file=None):
         f'locale="{xml_escape(primary_locale)}" conformsTo="{conforms_to}">'
     )
     lines.append(f'  <version number="{xml_escape(str(manifest["version"]))}"/>')
-    lines.append(f'  <info name="{xml_escape(manifest["name"])}"/>')
+    author_attribute = f' author="{xml_escape(", ".join(authors))}"' if authors else ""
+    lines.append(f'  <info name="{xml_escape(manifest["name"])}"{author_attribute}/>')
     # Element order of the CLDR DTD: info, settings?, displays?, keys?, flicks?, forms?, layers*, ...
     if displays:
         lines.append("  <displays>")

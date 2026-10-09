@@ -119,7 +119,7 @@ def main():
             rules = [line for line in compose.splitlines() if line.startswith(f"<{dead_map[dk['id']]}> ")]
             check(len(rules) == len([b for b in dk.get("compositions", {}) if xkb.compose_keysym(b)]),
                   f"{stem}/XCompose: dead key {dk['id']} has {len(rules)} rules, manifest has {len(dk.get('compositions', {}))} compositions")
-        check(not any(s["path"].startswith("deadKeys[") for s in results[(stem, "xkb")][1]["skippedFields"]),
+        check(not any(s["path"].startswith("deadKeys[") and not s["path"].startswith("deadKeys[]") for s in results[(stem, "xkb")][1]["skippedFields"]),
               f"{stem}/xkb: a dead key is skipped")
 
     # .keylayout: every used dead key has a terminator and an own-state entry

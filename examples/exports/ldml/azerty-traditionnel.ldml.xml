@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-azerty-traditio" conformsTo="45">
   <version number="1.0.0"/>
-  <info name="AZERTY Traditionnel Windows"/>
+  <info name="AZERTY Traditionnel Windows" author="Microsoft"/>
   <keys>
     <key id="k_E00_1" output="²"/>
     <key id="k_E00_5" output="²"/>

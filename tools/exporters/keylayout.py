@@ -33,6 +33,7 @@ from .common import (
     CAPS_FALLBACK_WARNING,
     ReportBuilder,
     caps_base_levels,
+    declare_unmapped_fields,
     effective_output,
     resolve_level_modifiers,
     levels_used_by,
@@ -257,6 +258,10 @@ def export(manifest, source_file=None):
 
     for field in ("layoutId", "authors", "license"):
         report.skip(field, "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter")
+    if "version" in manifest:
+        report.skip("version", "no macOS keylayout attribute for the layout version")
+    declare_unmapped_fields(report, manifest, "a macOS keylayout", {"id", "hid", "levels", "role", "modifier"},
+                            {"id", "display", "compositions", "fallback"})
     report.lossy(
         "geometry",
         "the <layouts> hardware-detection range is not modeled per OKLM geometry in v1; "

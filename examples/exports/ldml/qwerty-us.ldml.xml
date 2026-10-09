@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="en-t-k0-qwertyus" conformsTo="45">
   <version number="1.0.0"/>
-  <info name="QWERTY US"/>
+  <info name="QWERTY US" author="Traditional US layout (public domain); manifest by the OKLM project"/>
   <keys>
     <key id="k_E00_1" output="`"/>
     <key id="k_E00_2" output="~"/>

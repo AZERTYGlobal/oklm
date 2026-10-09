@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Manifests the exporters must refuse (audit 2026-10-09: B-08/C-05 conformsTo, B-09 duplicate HID).
+"""Manifests the exporters must refuse and losses they must declare (audit 2026-10-09: B-08/C-05 conformsTo,
+B-09 duplicate HID, B-10 undeclared losses, B-11 authors).
 
     python tools/tests/test_exports_input.py
 
@@ -50,7 +51,35 @@ def main():
     with_modifier = minimal()
     with_modifier["keys"].append({"id": "B99", "hid": with_modifier["keys"][0]["hid"], "role": "modifier", "modifier": "Level2Shift"})
     check(ldml.export(with_modifier, source_file="x")[0] is not None, "a role:modifier key sharing a HID is dropped, not a duplicate")
-    return finish("refused manifests")
+    # B-10: fields no exporter writes are declared as skipped, never dropped silently
+    from test_exports_support import examples
+    for stem, example in examples():
+        for target, module in EXPORTERS.items():
+            text, report = module.export(example, source_file="x")
+            if text is None:
+                continue
+            skipped = {s["path"] for s in report["skippedFields"]}
+            for field in ("keys[].code", "keys[].xkb", "keys[].name", "keys[].categories", "deadKeys[].name"):
+                owner, _, name = field.partition("[].")
+                items = example.get("keys" if owner == "keys" else "deadKeys", [])
+                if not any(name in item for item in items):
+                    continue
+                used_by_target = (target == "klc" and field == "keys[].code") or (target == "xkb" and field == "keys[].xkb")
+                check(used_by_target or field in skipped or target == "streamdeck" and owner == "deadKeys",
+                      f"{stem}/{target}: {field} is present in the manifest but not declared in skippedFields")
+            if target in ("ldml", "xkb"):
+                check("geometry" not in example or "geometry" in skipped, f"{stem}/{target}: geometry not declared")
+            if target in ("xkb", "keylayout"):
+                check("version" in skipped, f"{stem}/{target}: version not declared")
+    # B-11: authors go to info@author in LDML
+    manifest = minimal()
+    manifest["authors"] = ["Ann", 'Bob "B" & Co']
+    text, report = ldml.export(manifest, source_file="x")
+    root = parse_xml(text, "authors/ldml")
+    check(root.find("info").get("author") == 'Ann, Bob "B" & Co', "ldml: authors exported to info@author")
+    check("authors" in report["mappedFields"] and not any(s["path"] == "authors" for s in report["skippedFields"]), "ldml: authors mapped, not skipped")
+    check(any(m["path"] == "authors" for m in report["lossyMappings"]), "ldml: joining several authors is declared lossy")
+    return finish("refused manifests and declared losses")
 
 
 if __name__ == "__main__":
