@@ -12,6 +12,7 @@
   "compatibilityLevel": "lossy-mapping",
   "mappedFields": [
     "locales",
+    "authors",
     "keys",
     "keys[].levels",
     "levelSelectors",
@@ -23,12 +24,24 @@
       "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
     },
     {
-      "path": "authors",
+      "path": "license",
       "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
     },
     {
-      "path": "license",
-      "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
+      "path": "geometry",
+      "reason": "the physical form comes from the keys' hid (implied or custom <form>); geometry is not read"
+    },
+    {
+      "path": "keys[].xkb",
+      "reason": "not represented in LDML keyboard3"
+    },
+    {
+      "path": "keys[].code",
+      "reason": "not represented in LDML keyboard3"
+    },
+    {
+      "path": "deadKeys[].name",
+      "reason": "not represented in LDML keyboard3"
     },
     {
       "path": "description",
@@ -53,11 +66,17 @@
       "detail": "only the primary locale 'fr' is exported; LDML keyboard3 declares one locale"
     },
     {
+      "path": "authors",
+      "detail": "LDML info has one author attribute: the authors are joined with ', '"
+    },
+    {
       "path": "levelSelectors.Level3Shift",
       "detail": "exported as LDML modifier component 'altR' (AltGr); actual physical binding (AltGr vs Ctrl+Alt vs macOS Option) is platform-specific per SPEC.md"
     }
   ],
-  "warnings": [],
+  "warnings": [
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 97 key output(s) filled this way"
+  ],
   "errors": [],
   "generator": {
     "name": "oklm-exporters",

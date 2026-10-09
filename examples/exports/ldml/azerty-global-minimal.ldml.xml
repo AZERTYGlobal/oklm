@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-azerty-global-minimal" conformsTo="45">
   <version number="2026.0.0"/>
-  <info name="AZERTY Global"/>
+  <info name="AZERTY Global" author="AMCF"/>
+  <displays>
+    <display output="\m{circumflex}" display="ˆ"/>
+    <display output="\m{diaeresis}" display="¨"/>
+  </displays>
   <keys>
     <key id="k_D01_1" output="a"/>
     <key id="k_D01_2" output="A"/>
@@ -16,10 +20,6 @@
     <key id="k_A03_1" output=" "/>
     <key id="k_A03_2" output=" "/>
   </keys>
-  <displays>
-    <display output="\m{circumflex}" display="ˆ"/>
-    <display output="\m{diaeresis}" display="¨"/>
-  </displays>
   <forms>
     <form id="azerty-global-minimal-form">
       <scanCodes codes="10 11 1A"/>
@@ -50,7 +50,7 @@
       <transform from="\m{circumflex}o" to="ô"/>
       <transform from="\m{circumflex}u" to="û"/>
       <transform from="\m{circumflex} " to="^"/>
-      <transform from="\m{circumflex}" to="^"/>
+      <transform from="\m{circumflex}(.)" to="^$1"/>
       <transform from="\m{diaeresis}a" to="ä"/>
       <transform from="\m{diaeresis}e" to="ë"/>
       <transform from="\m{diaeresis}i" to="ï"/>
@@ -58,7 +58,7 @@
       <transform from="\m{diaeresis}u" to="ü"/>
       <transform from="\m{diaeresis}y" to="ÿ"/>
       <transform from="\m{diaeresis} " to="¨"/>
-      <transform from="\m{diaeresis}" to="¨"/>
+      <transform from="\m{diaeresis}(.)" to="¨$1"/>
     </transformGroup>
   </transforms>
 </keyboard3>

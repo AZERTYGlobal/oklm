@@ -83,7 +83,22 @@ def main():
         check(golden_report.exists() and json.loads(golden_report.read_text(encoding="utf-8")) == report, f"{stem}: golden report")
     check(exported == 5, f"expected 5 exported examples, got {exported}")
 
+    # B-12: identical bytes whatever the OS (ZipInfo reads sys.platform), entries with fixed metadata
     base = load_manifest(ROOT / "examples" / "azerty-global.oklm.json")
+    real_platform, blobs = sys.platform, {}
+    try:
+        for platform in ("win32", "linux", "darwin"):
+            sys.platform = platform
+            blobs[platform] = streamdeck.export(base, source_file="x")[0]
+    finally:
+        sys.platform = real_platform
+    check(len(set(blobs.values())) == 1, "zip bytes depend on sys.platform")
+    for info in zipfile.ZipFile(io.BytesIO(blobs["linux"])).infolist():
+        check(info.create_system == 3 and info.compress_type == zipfile.ZIP_STORED and info.date_time == (1980, 1, 1, 0, 0, 0)
+              and info.external_attr == 0o644 << 16, f"{info.filename}: zip entry metadata not fixed")
+    golden = ROOT / "examples" / "exports" / "streamdeck" / "azerty-global.streamDeckProfile"
+    check(golden.read_bytes() == blobs["linux"], "the golden is not what a Linux build writes")
+
     check(len(streamdeck.collect_characters(base)) > streamdeck.PER_PAGE, "azerty-global should need several pages")
     grouped = copy.deepcopy(base)
     grouped["keys"][0]["groups"] = {"2": {"1": "b"}}

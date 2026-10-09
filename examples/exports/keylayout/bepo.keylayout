@@ -216,6 +216,7 @@
       <key code="49" output=" "/>
     </keyMap>
     <keyMap index="4">
+      <key code="50" output="$"/>
       <key code="18" action="char_0031"/>
       <key code="19" action="char_0032"/>
       <key code="20" action="char_0033"/>
@@ -226,11 +227,14 @@
       <key code="28" action="char_0038"/>
       <key code="25" action="char_0039"/>
       <key code="29" action="char_0030"/>
+      <key code="27" action="char_003d"/>
+      <key code="24" action="char_0025"/>
       <key code="12" action="char_0042"/>
       <key code="13" output="É"/>
       <key code="14" action="char_0050"/>
       <key code="15" action="char_004f"/>
       <key code="17" output="È"/>
+      <key code="16" action="dk_circumflex"/>
       <key code="32" action="char_0056"/>
       <key code="34" action="char_0044"/>
       <key code="31" action="char_004c"/>
@@ -241,6 +245,7 @@
       <key code="1" action="char_0055"/>
       <key code="2" action="char_0049"/>
       <key code="3" action="char_0045"/>
+      <key code="5" output=","/>
       <key code="4" action="char_0043"/>
       <key code="38" action="char_0054"/>
       <key code="40" action="char_0053"/>
@@ -252,13 +257,17 @@
       <key code="6" output="À"/>
       <key code="7" action="char_0059"/>
       <key code="8" action="char_0058"/>
+      <key code="9" output="."/>
       <key code="11" action="char_004b"/>
+      <key code="45" action="char_2019"/>
       <key code="46" output="Q"/>
       <key code="43" action="char_0047"/>
       <key code="47" action="char_0048"/>
       <key code="44" action="char_0046"/>
+      <key code="49" action="char_0020"/>
     </keyMap>
     <keyMap index="5">
+      <key code="50" output="#"/>
       <key code="18" output="&quot;"/>
       <key code="19" action="char_00ab"/>
       <key code="20" action="char_00bb"/>
@@ -269,11 +278,14 @@
       <key code="28" action="char_002d"/>
       <key code="25" output="/"/>
       <key code="29" output="*"/>
+      <key code="27" output="°"/>
+      <key code="24" output="`"/>
       <key code="12" action="char_0062"/>
       <key code="13" output="é"/>
       <key code="14" action="char_0070"/>
       <key code="15" action="char_006f"/>
       <key code="17" output="è"/>
+      <key code="16" output="!"/>
       <key code="32" action="char_0076"/>
       <key code="34" action="char_0064"/>
       <key code="31" action="char_006c"/>
@@ -284,6 +296,7 @@
       <key code="1" action="char_0075"/>
       <key code="2" action="char_0069"/>
       <key code="3" action="char_0065"/>
+      <key code="5" output=";"/>
       <key code="4" action="char_0063"/>
       <key code="38" action="char_0074"/>
       <key code="40" action="char_0073"/>
@@ -295,21 +308,96 @@
       <key code="6" output="à"/>
       <key code="7" action="char_0079"/>
       <key code="8" action="char_0078"/>
+      <key code="9" output=":"/>
       <key code="11" action="char_006b"/>
+      <key code="45" output="?"/>
       <key code="46" output="q"/>
       <key code="43" action="char_0067"/>
       <key code="47" action="char_0068"/>
       <key code="44" action="char_0066"/>
+      <key code="49" action="char_202f"/>
     </keyMap>
     <keyMap index="6">
+      <key code="50" output="–"/>
+      <key code="18" output="—"/>
+      <key code="19" action="char_003c"/>
+      <key code="20" action="char_003e"/>
+      <key code="21" output="["/>
+      <key code="23" output="]"/>
+      <key code="22" output="^"/>
+      <key code="26" output="±"/>
+      <key code="28" output="−"/>
+      <key code="25" output="÷"/>
+      <key code="29" output="×"/>
+      <key code="27" output="≠"/>
+      <key code="24" output="‰"/>
+      <key code="12" action="char_007c"/>
+      <key code="13" action="dk_acute"/>
+      <key code="14" output="&amp;"/>
       <key code="15" output="Œ"/>
+      <key code="17" action="dk_grave"/>
+      <key code="16" output="¡"/>
+      <key code="32" action="dk_caron"/>
+      <key code="34" action="dk_scientific"/>
+      <key code="31" action="dk_stroke"/>
+      <key code="33" action="dk_horizontal-stroke"/>
       <key code="0" action="char_00c6"/>
       <key code="1" output="Ù"/>
+      <key code="2" action="dk_diaeresis"/>
+      <key code="3" output="€"/>
+      <key code="5" output="'"/>
+      <key code="4" action="dk_cedilla"/>
+      <key code="38" action="dk_superscript"/>
+      <key code="40" action="dk_extended-latin"/>
+      <key code="37" action="dk_breve"/>
+      <key code="41" action="dk_tilde"/>
+      <key code="39" action="dk_macron"/>
+      <key code="10" output="/"/>
+      <key code="6" output="\"/>
+      <key code="7" output="{"/>
+      <key code="8" output="}"/>
+      <key code="9" output="…"/>
+      <key code="11" output="~"/>
+      <key code="45" output="¿"/>
+      <key code="46" action="dk_ring-above"/>
+      <key code="43" action="dk_greek"/>
+      <key code="47" action="dk_dot-below"/>
+      <key code="44" action="dk_ogonek"/>
+      <key code="49" output="_"/>
     </keyMap>
     <keyMap index="7">
+      <key code="50" output="¶"/>
+      <key code="18" output="„"/>
+      <key code="19" output="“"/>
+      <key code="20" output="”"/>
+      <key code="21" action="char_2a7d"/>
+      <key code="23" action="char_2a7e"/>
+      <key code="28" output="¼"/>
+      <key code="25" output="½"/>
+      <key code="29" output="¾"/>
+      <key code="27" output="′"/>
+      <key code="24" output="″"/>
+      <key code="14" output="§"/>
       <key code="15" output="œ"/>
+      <key code="17" output="`"/>
+      <key code="31" output="£"/>
       <key code="0" action="char_00e6"/>
       <key code="1" output="ù"/>
+      <key code="2" action="dk_dot-above"/>
+      <key code="3" action="dk_currencies"/>
+      <key code="5" action="dk_comma"/>
+      <key code="4" output="©"/>
+      <key code="38" output="™"/>
+      <key code="40" action="char_017f"/>
+      <key code="37" action="char_00ae"/>
+      <key code="10" output="^"/>
+      <key code="7" action="char_2018"/>
+      <key code="8" action="char_2019"/>
+      <key code="9" output="·"/>
+      <key code="11" output="‑"/>
+      <key code="43" output="†"/>
+      <key code="47" output="‡"/>
+      <key code="49" output=" "/>
     </keyMap>
   </keyMapSet>
   <actions>
@@ -1127,6 +1215,7 @@
   </action>
   <action id="dk_superscript">
     <when state="none" next="superscript"/>
+    <when state="superscript" output="ᵉ"/>
   </action>
   <action id="dk_tilde">
     <when state="none" next="tilde"/>
@@ -1153,6 +1242,7 @@
     <when state="ring-above" output="˚"/>
     <when state="scientific" output="±"/>
     <when state="stroke" output="/"/>
+    <when state="superscript" output="ᵉ"/>
     <when state="tilde" output="~"/>
   </terminators>
 </keyboard>

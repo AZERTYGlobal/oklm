@@ -30,10 +30,17 @@ known approximations (see CONVERSIONS.md and the generated report):
 import zlib
 
 from .common import (
+    CAPS_FALLBACK_WARNING,
     ReportBuilder,
+    caps_base_levels,
+    declare_unmapped_fields,
+    effective_output,
     resolve_level_modifiers,
     levels_used_by,
+    standalone_char,
     without_modifier_keys,
+    reject_duplicate_hid,
+    reject_unsafe_text,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
     xml_escape,
@@ -53,23 +60,6 @@ HID_TO_MACVK = {
     "0x13": "35", "0x0F": "37", "0x0D": "38", "0x34": "39", "0x0E": "40",
     "0x33": "41", "0x31": "42", "0x36": "43", "0x38": "44", "0x11": "45",
     "0x10": "46", "0x37": "47", "0x2C": "49", "0x35": "50",
-}
-
-# Terminator output (spacing form of the accent) for dead keys that declare
-# neither `fallback` nor `display`. Provenance: the `<terminators>` of the
-# shipped AZERTY Global.keylayout (azerty-global release audit 2026-09-05),
-# keyed by OKLM dead-key id; ported 2026-10-06 (decision D29 of
-# IA/operations/2026-10-04-outils-maison-vs-en-ligne). The entries for
-# cyrillic and extended-latin are U+0020, as in that file.
-DEFAULT_TERMINATORS = {
-    "acute": "´", "double-acute": "˝", "grave": "`", "double-grave": "̏",
-    "cyrillic": " ", "greek": "µ", "phonetic": "ʁ", "stroke": "/",
-    "horizontal-stroke": "-", "breve": "˘", "inverted-breve": "̑",
-    "caron": "ˇ", "circumflex": "^", "horn": "̛", "hook": "̉",
-    "cedilla": "¸", "extended-latin": " ", "macron": "¯", "ogonek": "˛",
-    "dot-above": "˙", "dot-below": "̣", "punctuation": "§",
-    "ring-above": "˚", "misc-symbols": "→", "currencies": "¤",
-    "scientific": "±", "tilde": "~", "diaeresis": "¨", "comma": "̦",
 }
 
 QUALIFIER_TO_MAC = {
@@ -123,6 +113,8 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="xml") | reject_duplicate_hid(report, manifest):
+        return None, report.build()
 
     unmapped_hid = [
         (key["id"], key["hid"]) for key in manifest.get("keys", []) if key["hid"] not in HID_TO_MACVK
@@ -163,13 +155,16 @@ def export(manifest, source_file=None):
     key_lines = []  # per (level) -> list of key XML lines
     per_level_lines = {level: [] for level, _ in exportable}
     max_output_len = 1
+    caps_base = caps_base_levels(resolved)
+    caps_filled = 0
 
     for key in manifest.get("keys", []):
         vk = HID_TO_MACVK[key["hid"]]
         for level, _ in exportable:
-            out = key.get("levels", {}).get(level)
+            out, filled = effective_output(key.get("levels", {}), level, caps_base)
             if out is None:
                 continue
+            caps_filled += filled
             if isinstance(out, str):
                 max_output_len = max(max_output_len, len(out.encode("utf-16-le")) // 2)
                 if out in base_to_compositions:
@@ -183,6 +178,8 @@ def export(manifest, source_file=None):
 
     if dead_keys:
         report.mapped("deadKeys")
+    if caps_filled:
+        report.warn(CAPS_FALLBACK_WARNING.format(count=caps_filled))
 
     action_blocks = []
     for base in sorted(base_to_compositions, key=lambda c: [ord(ch) for ch in c]):
@@ -193,24 +190,29 @@ def export(manifest, source_file=None):
             whens.append(f'    <when state="{dk_id}" output="{xml_escape(result)}"/>')
         action_blocks.append(f'  <action id="{action_id}">\n' + "\n".join(whens) + "\n  </action>")
 
-    # Terminator output of each dead key: its `fallback`, else its `display`,
-    # else the built-in spacing character of DEFAULT_TERMINATORS.
+    # Terminator output of each dead key: the standalone character shared with the other exporters
+    # (common.standalone_char: `fallback`, else `display`, else the built-in table).
     terminator_char = {}
     terminator_lines = []
     for dk in dead_keys:
         if dk["id"] not in dead_ids_used:
             continue
-        if "fallback" in dk:
-            terminator_char[dk["id"]] = dk["fallback"]
-        elif "display" in dk:
-            terminator_char[dk["id"]] = dk["display"]
+        char, origin = standalone_char(dk)
+        if origin is not None:
+            terminator_char[dk["id"]] = char
+        if origin == "display":
             report.lossy(
                 f"deadKeys[{dk['id']}]",
                 "no 'fallback' declared; the dead key's 'display' character is used as the "
                 "macOS terminator output instead",
             )
-        elif dk["id"] in DEFAULT_TERMINATORS:
-            terminator_char[dk["id"]] = DEFAULT_TERMINATORS[dk["id"]]
+        elif origin == "space":
+            report.lossy(
+                f"deadKeys[{dk['id']}]",
+                "no 'fallback', 'display' or built-in terminator; the result of the dead key followed "
+                "by a space is used as the macOS terminator output",
+            )
+        elif origin == "default":
             report.lossy(
                 f"deadKeys[{dk['id']}]",
                 "no 'fallback' or 'display' declared; the built-in terminator character of "
@@ -256,6 +258,10 @@ def export(manifest, source_file=None):
 
     for field in ("layoutId", "authors", "license"):
         report.skip(field, "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter")
+    if "version" in manifest:
+        report.skip("version", "no macOS keylayout attribute for the layout version")
+    declare_unmapped_fields(report, manifest, "a macOS keylayout", {"id", "hid", "levels", "role", "modifier"},
+                            {"id", "display", "compositions", "fallback"})
     report.lossy(
         "geometry",
         "the <layouts> hardware-detection range is not modeled per OKLM geometry in v1; "
