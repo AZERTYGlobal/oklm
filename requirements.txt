@@ -1,0 +1,7 @@
+# Dependances d'execution et de test d'OKLM (validateur, exporteurs, importeurs, tests).
+# Tout le reste est la bibliotheque standard de Python (3.10 ou plus, voir .github/workflows/tests.yml).
+#
+#     pip install -r requirements.txt
+#
+# JSON Schema Draft 2020-12 : validators/validate.py, validate_v0_2.py, tools/exporters/common.py.
+jsonschema>=4.0,<5
