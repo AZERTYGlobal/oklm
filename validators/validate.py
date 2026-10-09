@@ -27,6 +27,11 @@ Codes (stable):
   E_EXTENSIONS_REQUIRED       extensionsRequired is not a subset of extensionsUsed
   W_UNKNOWN_MEMBER            member the schema does not declare (error under --strict)
   W_GEOMETRY_UNKNOWN          geometry family not in the known list (error under --strict)
+  E_DUPLICATE_DEADKEY_ID      two dead keys share an id (same LDML marker)
+  W_DUPLICATE_HID             two keys share a hid, whatever the spelling 0x14 / 0x0014 (error under --strict)
+  W_DUPLICATE_XKB             two keys share an xkb name (error under --strict)
+  W_FEATURE_UNREGISTERED      featuresRequired entry: 0.2 has no feature registry (a warning, even under --strict)
+  W_LEVEL_NO_SELECTOR         level 5-8 used while levelSelectors does not declare it (a warning, even under --strict)
   E_HID_RANGE                 --strict only: hid outside 0x04-0xE7 (E10)
   E_W3C_CODE                  --strict only: code is not a W3C KeyboardEvent.code value (E10)
   E_DUPLICATE_CODE            --strict only: two keys share a code (E11)
@@ -61,6 +66,9 @@ HID_PHYSICAL_MAX = 0xE7
 
 GEOMETRY_FAMILIES = {"iso", "ansi", "jis", "abnt", "ks", "touch", "custom"}
 GEOMETRY_ALIASES = {"us": "ansi", "abnt2": "abnt"}
+
+# warnings that --strict turns into errors (W_UNKNOWN_MEMBER is handled where it is built)
+STRICT_PROMOTED = {"W_GEOMETRY_UNKNOWN", "W_DUPLICATE_HID", "W_DUPLICATE_XKB"}
 
 HINTS = {
     "layers": "OKLM has no `layers`; outputs live in keys[].levels (D2, D14)",
@@ -161,7 +169,51 @@ def consistency_findings(manifest):
     for dup in _duplicates(e.get("id") for e in exports):
         found.append(Finding("E_DUPLICATE_EXPORT_ID", "error", "exports", f"duplicate export id {dup}"))
 
-    dead_ids = {d.get("id") for d in _dicts(manifest.get("deadKeys")) if isinstance(d.get("id"), str)}
+    dead_keys = _dicts(manifest.get("deadKeys"))
+    for dup in _duplicates(d.get("id") for d in dead_keys):
+        found.append(Finding("E_DUPLICATE_DEADKEY_ID", "error", "deadKeys",
+                             f"duplicate dead key id {dup}: both would compile to the same LDML marker \\m{{{dup}}}"))
+
+    by_hid, by_xkb = {}, {}
+    for key in keys:
+        hid, xkb = key.get("hid"), key.get("xkb")
+        if isinstance(hid, str) and re.fullmatch(r"0x[0-9A-Fa-f]{2,4}", hid):
+            by_hid.setdefault(int(hid, 16), []).append(str(key.get("id", "?")))
+        if isinstance(xkb, str):
+            by_xkb.setdefault(xkb, []).append(str(key.get("id", "?")))
+    for usage, ids in sorted(by_hid.items()):
+        if len(ids) > 1:
+            found.append(Finding("W_DUPLICATE_HID", "warning", "keys",
+                                 f"hid 0x{usage:02X} is used by keys {', '.join(ids)}: one HID usage names one physical key"))
+    for name, ids in sorted(by_xkb.items()):
+        if len(ids) > 1:
+            found.append(Finding("W_DUPLICATE_XKB", "warning", "keys",
+                                 f"xkb name '{name}' is used by keys {', '.join(ids)}: one XKB name names one physical key"))
+
+    features = manifest.get("featuresRequired")
+    for name in (features if isinstance(features, list) else []):
+        if isinstance(name, str):
+            found.append(Finding("W_FEATURE_UNREGISTERED", "warning", "featuresRequired",
+                                 f"feature '{name}': no registry of core features exists in 0.2, so a reader "
+                                 "cannot know whether it supports it (D31)"))
+
+    selectors = manifest.get("levelSelectors")
+    declared = set(selectors) if isinstance(selectors, dict) else set()
+    used_above_4 = {}
+    for key in keys:
+        groups = key.get("groups")
+        tables = [key.get("levels")] + (list(groups.values()) if isinstance(groups, dict) else [])
+        for table in tables:
+            for name in (table if isinstance(table, dict) else {}):
+                if name in ("5", "6", "7", "8"):
+                    used_above_4[name] = used_above_4.get(name, 0) + 1
+    for name, count in sorted(used_above_4.items()):
+        if name not in declared:
+            found.append(Finding("W_LEVEL_NO_SELECTOR", "warning", "levelSelectors",
+                                 f"level {name} is used by {count} output table(s) but levelSelectors does not "
+                                 "say how it is selected (only levels 2-4 have a default)"))
+
+    dead_ids = {d.get("id") for d in dead_keys if isinstance(d.get("id"), str)}
     for key in keys:
         for out in _outputs(key):
             if isinstance(out, dict) and isinstance(out.get("deadKey"), str) and out["deadKey"] not in dead_ids:
@@ -424,7 +476,7 @@ def analyze(manifest, schema=None, validator=None, strict=False):
     found = [f for f in found if not (f.code == "W_UNKNOWN_MEMBER" and f.path in out_of_range)]
     if strict:
         for f in found:
-            if f.code == "W_GEOMETRY_UNKNOWN":
+            if f.code in STRICT_PROMOTED:
                 f.severity = "error"
     return found
 

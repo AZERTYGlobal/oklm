@@ -297,11 +297,49 @@ def section_a07_a08():
 
 
 # ---------------------------------------------------------------------------------------------
+# A-09 : unicite des deadKeys, des hid et des xkb ; C-14, C-15 : avertissements de capacite
+# ---------------------------------------------------------------------------------------------
+def section_a09():
+    manifest = mutated(lambda m: m["deadKeys"].append(copy.deepcopy(m["deadKeys"][0])))
+    for strict in (False, True):
+        check("E_DUPLICATE_DEADKEY_ID" in errors(manifest, strict), f"A-09 deadKey de meme id (strict={strict})")
+    check("E_DUPLICATE_DEADKEY_ID" not in codes(BASE, True), "A-09 temoin : ids de deadKeys uniques")
+
+    manifest = mutated(lambda m: m["keys"][1].update(hid=m["keys"][0]["hid"]))
+    check("E_DUPLICATE_HID" not in codes(manifest) and codes(manifest, severity="warning").count("W_DUPLICATE_HID") == 1,
+          f"A-09 hid en double : avertissement hors strict ({codes(manifest)})")
+    check("W_DUPLICATE_HID" in errors(manifest, True), "A-09 hid en double : erreur en strict")
+    other_case = mutated(lambda m: m["keys"][1].update(hid=m["keys"][0]["hid"].replace("0x", "0x00").lower()))
+    check("W_DUPLICATE_HID" in codes(other_case), "A-09 hid en double sous une autre graphie (0x0014 / 0x14)")
+    manifest = mutated(lambda m: (m["keys"][0].update(xkb="AD01"), m["keys"][1].update(xkb="AD01")))
+    check("W_DUPLICATE_XKB" in codes(manifest, severity="warning"), "A-09 xkb en double : avertissement hors strict")
+    check("W_DUPLICATE_XKB" in errors(manifest, True), "A-09 xkb en double : erreur en strict")
+    check(not codes(BASE, True), "A-09 temoin : le manifeste de reference n'a aucun constat en strict")
+
+    # C-15 : featuresRequired n'a pas de registre, un lecteur ne peut pas les honorer
+    manifest = mutated(lambda m: m.update(featuresRequired=["some-feature"]))
+    check(codes(manifest, severity="warning") == ["W_FEATURE_UNREGISTERED"] and not errors(manifest, True),
+          f"C-15 featuresRequired : avertissement, meme en strict ({codes(manifest, True)})")
+    check(not codes(mutated(lambda m: m.update(featuresRequired=[]))), "C-15 featuresRequired vide : rien")
+
+    # C-14 : niveaux 5-8 sans levelSelectors
+    manifest = mutated(lambda m: (m["levelSelectors"].pop("5", None), m["keys"][0]["levels"].update({"5": "x"})))
+    check(codes(manifest, severity="warning") == ["W_LEVEL_NO_SELECTOR"] and not errors(manifest, True),
+          f"C-14 niveau 5 sans selecteur : avertissement ({codes(manifest, True)})")
+    manifest = mutated(lambda m: (m["levelSelectors"].update({"5": ["Level5Shift"]}), m["keys"][0]["levels"].update({"5": "x"})))
+    check(not codes(manifest, True), "C-14 niveau 5 avec selecteur : rien")
+    manifest = mutated(lambda m: (m["levelSelectors"].pop("6", None), m["keys"][0].update(groups={"2": {"6": "x"}})))
+    check("W_LEVEL_NO_SELECTOR" in codes(manifest), "C-14 niveau 6 d'un groupe sans selecteur")
+    check("W_LEVEL_NO_SELECTOR" not in codes(mutated(lambda m: m["keys"][0]["levels"].update({"4": "x"}))), "C-14 niveau 4 : defaut, pas d'avertissement")
+
+
+# ---------------------------------------------------------------------------------------------
 def main():
     section_a01()
     section_files()
     section_a03()
     section_a07_a08()
+    section_a09()
     if failures:
         print(f"ECHEC : {len(failures)} sur {counter['n']} verifications")
         for message in failures:
