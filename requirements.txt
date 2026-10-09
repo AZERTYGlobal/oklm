@@ -1,5 +1,5 @@
 # Dependances d'execution et de test d'OKLM (validateur, exporteurs, importeurs, tests).
-# Tout le reste est la bibliotheque standard de Python (3.10 ou plus, voir .github/workflows/tests.yml).
+# Tout le reste est la bibliotheque standard de Python (3.11 ou plus, voir .github/workflows/tests.yml).
 #
 #     pip install -r requirements.txt
 #
