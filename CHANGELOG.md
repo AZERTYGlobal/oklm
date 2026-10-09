@@ -25,8 +25,50 @@ The short hashes are commits of this repository. The format follows
 ### Added
 
 - `CONTRIBUTING.md`, `SECURITY.md` and this changelog.
+- `tools/tests/run_all.py` runs every check of the repository in one command
+  (`ccf973a`); `requirements.txt` lists the one third-party dependency
+  (`jsonschema`); a GitHub Actions workflow is prepared, nothing is pushed.
+- Validator codes `E_INTERNAL`, `E_DUPLICATE_JSON_KEY`, `E_JSON_CONSTANT`,
+  `E_SURROGATE`, `E_LEVEL_RANGE`, `E_CONTROL_CHAR`, `E_DUPLICATE_DEADKEY_ID`,
+  `W_DUPLICATE_HID`, `W_DUPLICATE_XKB`, `W_FEATURE_UNREGISTERED` and
+  `W_LEVEL_NO_SELECTOR`; the full list is in `SPEC.md`.
+- `tools/oklm_keyboard_tables.py`: the QWERTY Global conversion tables, now in
+  a tracked module (`a0f7adf`).
 
-<!-- TODO-merge: add the entries of the other audit correction lots (validator, exporters, tests) -->
+### Fixed
+
+- Validator: no more crash on a value of an unexpected type (one `E_INTERNAL`
+  per failed stage, the batch goes on); duplicated JSON member names, `NaN`,
+  `Infinity`, lone surrogates and control characters refused; level, group and
+  `levelSelectors` keys out of range refused; `layers` found at any depth;
+  duplicated dead-key ids refused; UTF-8 output and BOM accepted on input;
+  wildcards expanded by the validator itself (PowerShell 5.1 does not).
+- Schemas: `conformsTo` limited to 45-48, official SemVer 2.0.0 pattern, lists
+  without duplicates, `modifier` requires `role: "modifier"`, `role: "key"`
+  requires `levels`; a pattern ending in `$` no longer accepts a final line
+  feed; the conversion report schema checks that `lossless-core` and `failed`
+  agree with the lists.
+- Migration 0.1 to 0.2: migrates 0.1 only, never overwrites a value (stops
+  with `error: <file>: <message>`, status 1, file untouched), validates its
+  output before writing, keeps the old `version` text in `metadata.versionLabel`
+  when the SemVer does not say it back.
+- LDML export: `<displays>` before `<keys>` (CLDR DTD order, checked against the
+  DTD in the tests); derived locale valid under RFC 6497 (short subtags merged
+  or padded, long ones cut, declared as lossy); `\m{x}(.)` fallback written as
+  a transform after the compositions; `/` escaped in `from`; `authors` written
+  to `info@author`; escaping independent of the Python `unicodedata` version.
+- Exporters: a CapsLock level a key does not define takes the output of the
+  matching level without CapsLock (warning in the LDML and keylayout reports);
+  control characters and unwritable text refused with a clear error; `conformsTo`
+  outside the DTD and duplicated HID refused; one standalone character per dead
+  key shared by keylayout and klc, unique KBD names; the BÉPO `superscript` dead
+  key usable in xkb; losses declared in the reports; the Stream Deck zip is
+  identical on every system (stored entries); `export.py` creates `--out` and
+  no longer treats `unsupported` as a failure.
+- QWERTY Global: `build`, `check` and `import` validate everything before
+  writing, and an unknown key or diff field stops the run instead of
+  disappearing; the tests no longer need a private path.
+- CI floor: Python 3.11 is the lowest version the workflow checks.
 
 ## Draft 0.2, merged 2026-10-06
 
