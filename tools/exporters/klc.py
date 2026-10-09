@@ -30,7 +30,7 @@ parser of the format as documented by Microsoft samples (`kbdus.klc`); treat the
 """
 import re
 
-from .common import ExportError, ReportBuilder, caps_base_levels, effective_output, reject_unsafe_text, \
+from .common import ExportError, ReportBuilder, caps_base_levels, effective_output, reject_duplicate_hid, reject_unsafe_text, \
     reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
 
@@ -148,7 +148,7 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
-    if reject_unsafe_text(report, manifest, outputs="any"):
+    if reject_unsafe_text(report, manifest, outputs="any") | reject_duplicate_hid(report, manifest):
         return None, report.build()
 
     unmapped = [(k["id"], k["hid"]) for k in manifest["keys"] if k["hid"] not in HID_TO_SCANCODE1]

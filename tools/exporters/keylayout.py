@@ -37,6 +37,7 @@ from .common import (
     resolve_level_modifiers,
     levels_used_by,
     without_modifier_keys,
+    reject_duplicate_hid,
     reject_unsafe_text,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
@@ -127,7 +128,7 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
-    if reject_unsafe_text(report, manifest, outputs="xml"):
+    if reject_unsafe_text(report, manifest, outputs="xml") | reject_duplicate_hid(report, manifest):
         return None, report.build()
 
     unmapped_hid = [

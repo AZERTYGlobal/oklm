@@ -50,6 +50,7 @@ from .common import (
     effective_output,
     resolve_level_modifiers,
     levels_used_by,
+    reject_duplicate_hid,
     reject_unsafe_text,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
@@ -81,6 +82,9 @@ HID_TO_SCANCODE1 = {
 LDML_SCANCODES = {**HID_TO_SCANCODE1, "0x87": "73", "0x89": "7D"}
 
 ROW_ORDER = "EDCBA"
+
+# `conformsTo` values of the keyboard3 DTD (CLDR release-48-2: conformsTo (45 | 46 | 47 | 48)).
+CONFORMS_TO_VALUES = (45, 46, 47, 48)
 
 IMPLIED_FORMS_FILE = Path(__file__).resolve().parent / "data" / "scanCodes-implied.xml"
 IMPLIED_FORM_ORDER = ["us", "iso", "abnt2", "jis", "ks"]
@@ -239,14 +243,22 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
-    if reject_unsafe_text(report, manifest, outputs="any"):
+    if reject_unsafe_text(report, manifest, outputs="any") | reject_duplicate_hid(report, manifest):
         return None, report.build()
 
     conforms_to = 45
     for export_target in manifest.get("exports", []):
         if export_target.get("target") == "ldml-keyboard-3":
-            conforms_to = export_target.get("options", {}).get("conformsTo", 45)
+            options = export_target.get("options")
+            conforms_to = options.get("conformsTo", 45) if isinstance(options, dict) else 45
             break
+    if type(conforms_to) is not int or conforms_to not in CONFORMS_TO_VALUES:
+        # The value is written in the xmlns and in the conformsTo attribute: only the DTD's own values.
+        report.error(
+            f"exports[].options.conformsTo = {conforms_to!r}: the LDML keyboard3 DTD accepts only "
+            + ", ".join(str(v) for v in CONFORMS_TO_VALUES)
+        )
+        return None, report.build()
 
     locales = manifest["locales"]
     primary_locale, changes = derived_locale(manifest)
