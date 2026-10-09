@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
-"""OKLM exporter CLI (draft v1): OKLM -> LDML Keyboard 3 / xkb / keylayout.
+"""OKLM exporter CLI (draft v1): OKLM -> LDML Keyboard 3 / xkb / keylayout / .klc / Stream Deck.
 
 One-way exports only (see CONVERSIONS.md "Other export targets"). Every
 export writes a target file plus a conversion report validating against
 schemas/oklm-conversion-report.schema.json. If the manifest cannot be
-exported at all (compatibilityLevel "failed"), only the report is written.
+exported at all (compatibilityLevel "failed"), only the report is written. A valid manifest that
+has nothing the target can carry (compatibilityLevel "unsupported", e.g. a layout with only ASCII
+letters for Stream Deck) writes its report too and is not a failure.
+
+--out DIR is created when it does not exist. Exit code: 0 when every file was exported or is
+unsupported, 1 when one failed, 2 when the output directory cannot be created.
 
 Usage:
     python tools/export.py --target ldml|xkb|keylayout|streamdeck|klc [--out DIR] FILE [FILE ...]
@@ -32,7 +37,7 @@ EXPORTERS = {
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Export OKLM manifests to LDML/xkb/keylayout.")
+    parser = argparse.ArgumentParser(description="Export OKLM manifests to LDML, xkb, keylayout, .klc or a Stream Deck profile.")
     parser.add_argument("files", nargs="+", metavar="FILE")
     parser.add_argument("--target", required=True, choices=sorted(EXPORTERS))
     parser.add_argument("--out", metavar="DIR", help="output directory (default: next to each input file)")
@@ -40,6 +45,13 @@ def main():
 
     module, extension = EXPORTERS[args.target]
     report_validator = load_validator("oklm-conversion-report.schema.json")
+
+    if args.out:
+        try:
+            Path(args.out).mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            print(f"ERROR cannot use the output directory {args.out}: {exc}")
+            return 2
 
     exit_code = 0
     for name in args.files:
@@ -58,7 +70,12 @@ def main():
             exit_code = 1
             continue
 
-        text, report = module.export(manifest, source_file=path.name)
+        try:
+            text, report = module.export(manifest, source_file=path.name)
+        except (ExportError, ValueError) as exc:
+            print(f"ERROR {path}: {exc}")
+            exit_code = 1
+            continue
 
         problems = [
             f"{'/'.join(str(p) for p in error.path) or '(root)'}: {error.message}"
@@ -71,24 +88,39 @@ def main():
             exit_code = 1
             continue
 
-        write_text(report_path, json.dumps(report, indent=2, ensure_ascii=False))
+        try:
+            write_text(report_path, json.dumps(report, indent=2, ensure_ascii=False))
+        except OSError as exc:
+            print(f"ERROR {path}: cannot write {report_path}: {exc}")
+            exit_code = 1
+            continue
 
         if text is None:
+            if report["compatibilityLevel"] == "unsupported":
+                print(f"UNSUPPORTED {path} -> {report_path}: nothing the target can carry (not an error)")
+                for warning in report["warnings"]:
+                    print(f"  - {warning}")
+                continue
             print(f"FAILED  {path} -> {report_path} (compatibilityLevel: {report['compatibilityLevel']})")
             for error in report["errors"]:
                 print(f"  - {error}")
             exit_code = 1
             continue
 
-        if isinstance(text, bytes):
-            target_path.write_bytes(text)
-        else:
-            write_text(target_path, text)
         extra = ""
-        if hasattr(module, "export_compose"):
-            compose_path = out_dir / f"{base}.XCompose"
-            write_text(compose_path, module.export_compose(manifest, source_file=path.name))
-            extra = f", {compose_path}"
+        try:
+            if isinstance(text, bytes):
+                target_path.write_bytes(text)
+            else:
+                write_text(target_path, text)
+            if hasattr(module, "export_compose"):
+                compose_path = out_dir / f"{base}.XCompose"
+                write_text(compose_path, module.export_compose(manifest, source_file=path.name))
+                extra = f", {compose_path}"
+        except (OSError, ExportError, ValueError) as exc:
+            print(f"ERROR {path}: {exc}")
+            exit_code = 1
+            continue
         print(f"OK      {path} -> {target_path}, {report_path}{extra} (compatibilityLevel: {report['compatibilityLevel']})")
 
     return exit_code
