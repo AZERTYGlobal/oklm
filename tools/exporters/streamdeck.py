@@ -17,7 +17,8 @@ addressed "column,row") was rebuilt from public sources and community tools, and
 opened with the Stream Deck software. The report says so in `warnings`.
 
 Output is deterministic: UUIDs are derived from the layout id, zip entries are sorted and carry a
-fixed timestamp.
+fixed timestamp, creator system (Unix), attributes and storage method (stored, not deflated): the bytes are
+the same on every OS and Python.
 """
 import io
 import json
@@ -94,10 +95,14 @@ def build_profile(manifest, characters):
             "Name": f"{manifest['name']} {n}/{len(pages)}",
         })
     buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+    # Same bytes on every OS and Python: ZipInfo sets create_system from sys.platform (0 on Windows, 3
+    # elsewhere), and deflate output depends on the zlib build, so both are fixed (stored entries, Unix
+    # attributes, fixed timestamp). The files are small JSON: nothing is gained by compressing them.
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_STORED) as archive:
         for name in sorted(entries):
             info = zipfile.ZipInfo(name, FIXED_TIME)
-            info.compress_type = zipfile.ZIP_DEFLATED
+            info.compress_type = zipfile.ZIP_STORED
+            info.create_system = 3
             info.external_attr = 0o644 << 16
             archive.writestr(info, entries[name])
     return buffer.getvalue()
