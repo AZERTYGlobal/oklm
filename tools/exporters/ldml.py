@@ -314,15 +314,16 @@ def export(manifest, source_file=None):
     )
     lines.append(f'  <version number="{xml_escape(str(manifest["version"]))}"/>')
     lines.append(f'  <info name="{xml_escape(manifest["name"])}"/>')
-    lines.append("  <keys>")
-    for elem_id, output in key_elements:
-        lines.append(f'    <key id="{elem_id}" output="{xml_escape(output)}"/>')
-    lines.append("  </keys>")
+    # Element order of the CLDR DTD: info, settings?, displays?, keys?, flicks?, forms?, layers*, ...
     if displays:
         lines.append("  <displays>")
         for marker, display in displays:
             lines.append(f'    <display output="{xml_escape(marker)}" display="{xml_escape(display)}"/>')
         lines.append("  </displays>")
+    lines.append("  <keys>")
+    for elem_id, output in key_elements:
+        lines.append(f'    <key id="{elem_id}" output="{xml_escape(output)}"/>')
+    lines.append("  </keys>")
     if scancode_rows is not None:
         lines.append("  <forms>")
         lines.append(f'    <form id="{form_id}">')

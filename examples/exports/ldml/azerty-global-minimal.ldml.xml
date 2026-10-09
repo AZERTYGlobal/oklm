@@ -2,6 +2,10 @@
 <keyboard3 xmlns="https://schemas.unicode.org/cldr/45/keyboard3" locale="fr-t-k0-azerty-global-minimal" conformsTo="45">
   <version number="2026.0.0"/>
   <info name="AZERTY Global"/>
+  <displays>
+    <display output="\m{circumflex}" display="ˆ"/>
+    <display output="\m{diaeresis}" display="¨"/>
+  </displays>
   <keys>
     <key id="k_D01_1" output="a"/>
     <key id="k_D01_2" output="A"/>
@@ -16,10 +20,6 @@
     <key id="k_A03_1" output=" "/>
     <key id="k_A03_2" output=" "/>
   </keys>
-  <displays>
-    <display output="\m{circumflex}" display="ˆ"/>
-    <display output="\m{diaeresis}" display="¨"/>
-  </displays>
   <forms>
     <form id="azerty-global-minimal-form">
       <scanCodes codes="10 11 1A"/>
