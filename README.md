@@ -256,8 +256,7 @@ redirect to it; on 2026-10-09 the redirect worked over plain HTTP only, HTTPS wa
 
 ## Licensing
 
-Copyright 2026 the OKLM project and its contributors, stewarded by the AMCF
-(see [GOVERNANCE.md](GOVERNANCE.md)).
+Copyright 2026 The OKLM contributors (see [GOVERNANCE.md](GOVERNANCE.md)).
 
 Dual license by content type. Code, schemas and tooling are licensed under the
 EUPL, Version 1.2 ([LICENSE](LICENSE)); the specification and the

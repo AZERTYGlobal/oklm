@@ -6,10 +6,11 @@ Open Keyboard Layout Model is stewarded by the AMCF, the French association
 behind [AZERTY Global](https://azerty.global) ("AMCF" is the association's
 abbreviation as the project uses it), through its two layout projects,
 AZERTY Global and QWERTY Global. One person writes most of it today; that is
-a fact about the project's size, not a design. The maintainers decide, in
-public, on the issues and pull requests of the repository
-[AZERTYGlobal/oklm](https://github.com/AZERTYGlobal/oklm); this file names no
-individual maintainer.
+a fact about the project's size, not a design. The deciding maintainer is the
+owner of the repository [AZERTYGlobal/oklm](https://github.com/AZERTYGlobal/oklm), the GitHub
+account [AZERTYGlobal](https://github.com/AZERTYGlobal); decisions are taken in public,
+on the issues and pull requests of that repository. This file names no
+person.
 
 The intended end state is a neutral open specification usable by anyone
 who describes, validates or ships keyboard layouts. Getting there is
