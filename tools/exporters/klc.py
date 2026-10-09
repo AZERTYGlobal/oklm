@@ -30,8 +30,8 @@ parser of the format as documented by Microsoft samples (`kbdus.klc`); treat the
 """
 import re
 
-from .common import ReportBuilder, caps_base_levels, effective_output, reject_unsupported_v1_scope, \
-    resolve_level_modifiers, skip_oklm_only_metadata, without_modifier_keys
+from .common import ExportError, ReportBuilder, caps_base_levels, effective_output, reject_unsafe_text, \
+    reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
 
 STATES = [0, 1, 2, 6, 7]
@@ -73,7 +73,7 @@ def _fits(output):
 def _cell(output):
     if output is None:
         return "-1"
-    return output if ALNUM.match(output) else _hex(output)
+    return output if ALNUM.fullmatch(output) else _hex(output)
 
 
 def _name(ch):
@@ -86,7 +86,7 @@ def assign_vks(keys):
     vks, used = {}, set()
     for key in keys:  # pass 1: own VK for ASCII letters and digits at level 1
         base = key.get("levels", {}).get("1")
-        if isinstance(base, str) and ALNUM.match(base) and base.upper() not in used:
+        if isinstance(base, str) and ALNUM.fullmatch(base) and base.upper() not in used:
             vks[key["id"]] = base.upper()
             used.add(base.upper())
     for key in keys:  # pass 2: OEM name of the position
@@ -101,6 +101,9 @@ def assign_vks(keys):
     spare = [v for v in SPARE_VK if v not in used]
     for key in keys:  # pass 3: whatever is left
         if key["id"] not in vks:
+            if not spare:
+                raise ExportError(f"key {key['id']}: no free VK name left (a .klc has 13 spare OEM names; "
+                                  "give the keys a `code` or reduce the non-alphanumeric keys)")
             vks[key["id"]] = spare.pop(0)
             used.add(vks[key["id"]])
     return vks
@@ -145,6 +148,8 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="any"):
+        return None, report.build()
 
     unmapped = [(k["id"], k["hid"]) for k in manifest["keys"] if k["hid"] not in HID_TO_SCANCODE1]
     if unmapped:
@@ -153,7 +158,11 @@ def export(manifest, source_file=None):
         return None, report.build()
 
     keys = sorted(manifest["keys"], key=lambda k: int(HID_TO_SCANCODE1[k["hid"]], 16))
-    vks = assign_vks(keys)
+    try:
+        vks = assign_vks(keys)
+    except ExportError as exc:
+        report.error(str(exc))
+        return None, report.build()
     levels = classify_levels(manifest, report)
     caps_base = caps_base_levels(resolve_level_modifiers(manifest))
 

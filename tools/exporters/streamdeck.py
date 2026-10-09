@@ -25,7 +25,8 @@ import re
 import uuid
 import zipfile
 
-from .common import ReportBuilder, reject_unsupported_v1_scope, skip_oklm_only_metadata, without_modifier_keys
+from .common import (ReportBuilder, reject_unsafe_text, reject_unsupported_v1_scope, skip_oklm_only_metadata,
+                     without_modifier_keys)
 
 DEVICE_MODEL = "20GBA9911"  # Stream Deck XL, 8 x 4
 COLUMNS, ROWS = 8, 4
@@ -48,7 +49,7 @@ def collect_characters(manifest):
         levels = key.get("levels", {})
         for level in sorted(levels, key=int):
             out = levels[level]
-            if isinstance(out, str) and out and not ASCII_PLAIN.match(out) and out not in seen:
+            if isinstance(out, str) and out and not ASCII_PLAIN.fullmatch(out) and out not in seen:
                 seen.add(out)
                 ordered.append(out)
     return ordered
@@ -113,6 +114,8 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="any"):
+        return None, report.build()
 
     characters = collect_characters(manifest)
     if not characters:

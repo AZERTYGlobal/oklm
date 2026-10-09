@@ -50,6 +50,7 @@ from .common import (
     effective_output,
     resolve_level_modifiers,
     levels_used_by,
+    reject_unsafe_text,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
     without_modifier_keys,
@@ -238,6 +239,8 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="any"):
+        return None, report.build()
 
     conforms_to = 45
     for export_target in manifest.get("exports", []):
