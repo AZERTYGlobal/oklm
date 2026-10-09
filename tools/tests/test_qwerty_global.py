@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
 """Tests of the QWERTY Global build (tools/qwerty_global.py). Plain assertions, exit code 0/1.
 
-    python tools/tests/test_qwerty_global.py [--sources "D:/.../projects/qwerty-global"]
+    python tools/tests/test_qwerty_global.py [--sources <dossier des sources QWERTY Global>]
 
 Checks: every committed manifest equals a fresh composition; manifests are valid in strict mode,
 without `groups`; each exports to LDML, xkb and keylayout; composition is deterministic; a module
-diff is minimal (no key identical to the chassis); and, when the QWERTY Global source data is
-reachable, the composed manifests equal a direct conversion of that data, key by key.
+diff is minimal (no key identical to the chassis); an invalid diff or header is an error (unknown key,
+unknown removal, missing header field); build writes nothing when a problem exists; check reports
+orphan manifests and duplicate layoutId; import validates before writing.
+
+Parity with the source data (composed manifests == direct conversion of the site data, key by key) is
+optional: the sources are not in this repository. Point OKLM_QWERTY_SOURCES (or --sources) at the
+folder holding the files listed in SOURCE_FILES; without it the parity part prints "SKIPPED (...)".
 """
 import argparse
 import copy
+import contextlib
+import io
 import json
+import os
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -23,7 +33,8 @@ from exporters import keylayout, ldml, xkb  # noqa: E402
 from exporters.common import load_manifest  # noqa: E402
 from validate import analyze, load_validator  # noqa: E402
 
-DEFAULT_SOURCES = Path("D:/My files/Keyboard Layouts/projects/qwerty-global")
+SOURCES_ENV = "OKLM_QWERTY_SOURCES"
+# Relative paths of the source data inside the folder named by OKLM_QWERTY_SOURCES.
 SOURCE_FILES = {
     "base": "components/layout-data/QWERTY World Base.json",
     "fr": "components/french-website/data/QWERTY Francais.json",
@@ -38,11 +49,128 @@ def check(condition, message):
         failures.append(message)
 
 
+def raises(fn, *args):
+    try:
+        fn(*args)
+    except qg.QwertyGlobalError:
+        return True
+    return False
+
+
+def negative_diff_tests(chassis, files):
+    """E-07: an unknown key or removal in a diff is an error, never silently dropped."""
+    base = qg.load_json(files[0])
+
+    def broken(mutate):
+        mf = copy.deepcopy(base)
+        mutate(mf)
+        return mf
+
+    key = {"id": "Z99", "hid": "0x04", "xkb": "AC01", "code": "KeyA", "levels": {"1": "a"}}
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"]["setKeys"].append(key))),
+          "negative: unknown key id in setKeys must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"]["removeKeys"].append("Z99"))),
+          "negative: unknown key in removeKeys must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"]["removeDeadKeys"].append("no-such-dead-key"))),
+          "negative: unknown dead key in removeDeadKeys must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"]["removeFingers"].append("Z99"))),
+          "negative: unknown finger in removeFingers must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"]["fingers"].update({"Z99": "L1"}))),
+          "negative: finger on an unknown position must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"].update({"surprise": []}))),
+          "negative: unknown diff field must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["diff"].pop("removeKeys"))),
+          "negative: missing diff field must raise")
+    check(raises(qg.compose, chassis, broken(lambda m: m["manifest"].pop("note"))),
+          "negative: missing header field must raise")
+    check(raises(qg.convert_source, {"rows": [{"keys": [{"position": "Z99", "scancode": "SC002"}]}]}),
+          "negative: unknown source position must raise")
+    check(raises(qg.convert_source, {"rows": [{"keys": [{"position": "E01", "scancode": "SC999"}]}]}),
+          "negative: unknown source scancode must raise")
+    check(raises(qg.convert_source, {"rows": [{"keys": [{"position": "E01", "scancode": "SC003"}]}]}),
+          "negative: scancode/position mismatch must raise")
+
+
+def snapshot(folder):
+    return {p.name: p.read_bytes() for p in sorted(Path(folder).glob("*.json")) if p.is_file()}
+
+
+def isolated_build_tests():
+    """E-08, on a temporary copy of qwerty-global/ (the repository is never written)."""
+    real = qg.QG
+    with tempfile.TemporaryDirectory() as tmp:
+        qg.QG = Path(tmp) / "qwerty-global"
+        try:
+            shutil.copytree(real, qg.QG)
+            manifests, modules = qg.QG / "manifests", qg.QG / "modules"
+
+            check(qg.build(check=True) == 0, "isolated copy: check should pass")
+
+            # an orphan manifest fails check
+            orphan = manifests / "qwerty-global-gone.oklm.json"
+            orphan.write_bytes(b"{}\n")
+            check(qg.build(check=True) == 1, "check: orphan manifest not reported")
+            check(qg.build(check=False) == 0 and orphan.exists(), "build: an orphan is a warning, never deleted")
+            orphan.unlink()
+
+            # a problem in one module: build writes nothing (not even the valid modules)
+            before = snapshot(manifests)
+            fr = qg.load_json(modules / "fr.json")
+            fr["manifest"]["layoutId"] = "Not A Kebab"
+            qg.dump_json(modules / "fr.json", fr)
+            stale = manifests / "qwerty-global-base.oklm.json"
+            stale.write_bytes(stale.read_bytes() + b" ")  # would be rewritten if build wrote anything
+            tampered = snapshot(manifests)
+            check(qg.build(check=False) == 1, "build: invalid module must fail")
+            check(snapshot(manifests) == tampered, "build: wrote files despite a problem")
+            stale.write_bytes(before[stale.name])
+
+            # duplicate layoutId: check fails and build writes nothing
+            fr["manifest"]["layoutId"] = "qwerty-global-it"
+            qg.dump_json(modules / "fr.json", fr)
+            check(qg.build(check=True) == 1, "check: duplicate layoutId not reported")
+            check(qg.build(check=False) == 1 and snapshot(manifests) == before, "build: duplicate layoutId wrote files")
+            qg.dump_json(modules / "fr.json", qg.load_json(real / "modules" / "fr.json"))
+
+            # a module whose `module` field differs from its file name
+            it = qg.load_json(modules / "it.json")
+            it["module"] = "xx"
+            qg.dump_json(modules / "it.json", it)
+            check(qg.build(check=True) == 1, "check: module/file name mismatch not reported")
+            qg.dump_json(modules / "it.json", qg.load_json(real / "modules" / "it.json"))
+            check(qg.build(check=True) == 0, "isolated copy: restored copy should pass again")
+
+            # import validates everything before writing the chassis
+            source = Path(tmp) / "source.json"
+            source.write_text(json.dumps({"rows": [{"keys": [
+                {"position": "E01", "scancode": "SC002", "base": "1", "shift": "!", "finger": "L4"}]}]}),
+                encoding="utf-8")
+            chassis_before, fr_before = (qg.QG / "chassis.json").read_bytes(), (modules / "fr.json").read_bytes()
+            args = type("Args", (), {"chassis": str(source), "module": [("fr", str(source)), ("nope", str(source))]})
+            check(raises(qg.import_sources, args), "import: a missing module file must raise")
+            check((qg.QG / "chassis.json").read_bytes() == chassis_before, "import: chassis written before validation")
+            check((modules / "fr.json").read_bytes() == fr_before, "import: module written before validation")
+            headerless = qg.load_json(modules / "fr.json")
+            del headerless["manifest"]["note"]
+            qg.dump_json(modules / "fr.json", headerless)
+            fr_before = (modules / "fr.json").read_bytes()
+            args.module = [("fr", str(source))]
+            check(raises(qg.import_sources, args), "import: an incomplete header must raise")
+            check((qg.QG / "chassis.json").read_bytes() == chassis_before, "import: chassis written despite bad header")
+            check((modules / "fr.json").read_bytes() == fr_before, "import: module written despite bad header")
+            qg.dump_json(modules / "fr.json", qg.load_json(real / "modules" / "fr.json"))
+            check(qg.import_sources(args) == 0, "import: valid import should succeed")
+            check(qg.read_chassis()[0].keys() == {"E01"}, "import: chassis not rewritten from the source")
+        finally:
+            qg.QG = real
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sources", default=str(DEFAULT_SOURCES))
+    ap.add_argument("--sources", default=os.environ.get(SOURCES_ENV),
+                    help=f"folder of the QWERTY Global source data (default: ${SOURCES_ENV}; unset = parity skipped)")
     args = ap.parse_args(argv)
-    sources = Path(args.sources)
+    sources = Path(args.sources) if args.sources else None
 
     chassis = qg.read_chassis()
     files = qg.module_files()
@@ -83,9 +211,20 @@ def main(argv=None):
     found = analyze(qg.compose(chassis, broken), strict=True)
     check(any(f.code == "E_DEADKEY_UNDEFINED" for f in found), "negative: undefined dead key not detected")
 
-    # parity with the source data, when reachable
-    reachable = all((sources / rel).exists() for rel in SOURCE_FILES.values())
-    if reachable:
+    negative_diff_tests(chassis, files)
+    with contextlib.redirect_stdout(io.StringIO()):  # build/check are chatty by design
+        isolated_build_tests()
+
+    # parity with the source data, only when explicitly requested
+    parity_note = None
+    if sources is None:
+        parity_note = f"SKIPPED (parity with the source data: {SOURCES_ENV} is not set)"
+    else:
+        absent = [rel for rel in SOURCE_FILES.values() if not (sources / rel).exists()]
+        check(not absent, f"parity: {SOURCES_ENV}={sources} lacks {absent}")
+        if absent:
+            parity_note = "FAILED (source files missing)"
+    if parity_note is None:
         for mid, rel in SOURCE_FILES.items():
             keys, dead, fingers = qg.convert_source(qg.load_json(sources / rel))
             manifest = composed[mid]
@@ -97,7 +236,7 @@ def main(argv=None):
             check(got_dead == dict(dead), f"parity {mid}: dead keys differ from the source data")
             check(manifest["metadata"]["training"]["fingers"] == dict(fingers), f"parity {mid}: fingers differ")
     else:
-        print("NOTE: QWERTY Global source data not reachable, parity checks skipped")
+        print(parity_note)
 
     if failures:
         print(f"FAILED ({len(failures)} problem(s) over {counter['n']} checks):")
@@ -105,7 +244,7 @@ def main(argv=None):
             print("  -", f)
         return 1
     print(f"OK: 3 QWERTY Global manifests, {counter['n']} checks passed, 0 failed"
-          f"{'' if reachable else ' (parity skipped)'}.")
+          f"{'' if parity_note is None else ' (parity ' + parity_note.split(' (')[0].lower() + ')'}.")
     return 0
 
 
