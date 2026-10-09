@@ -142,8 +142,87 @@ def section_a01():
 
 
 # ---------------------------------------------------------------------------------------------
+# A-11, A-18, A-12, A-20 : lecture du fichier, affichage, jokers
+# ---------------------------------------------------------------------------------------------
+def file_codes(raw, *flags, name="case.oklm.json"):
+    """Write `raw` (bytes) in a temporary file and run the CLI with --json: (rc, set of codes, stdout, stderr)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / name
+        path.write_bytes(raw)
+        rc, out, err = cli("--json", *flags, str(path))
+    try:
+        report = json.loads(out)
+        found = {f["code"] for f in report["results"][0]["findings"]}
+    except (ValueError, KeyError, IndexError):
+        found = {"<pas de JSON>"}
+    return rc, found, out, err
+
+
+def section_files():
+    levels_old = '"levels": { "1": "a", "2": "A" }'
+    check(levels_old in BASE_TEXT, "fixture : le texte de reference contient les niveaux attendus")
+
+    def text_with(replacement, old=levels_old):
+        return BASE_TEXT.replace(old, replacement).encode("utf-8")
+
+    rc, found, out, err = file_codes(BASE_TEXT.encode("utf-8"), "--strict")
+    check(rc == 0 and not found, f"base : valide en strict ({found})")
+
+    # A-11 : cles dupliquees, constantes non JSON, surrogates isoles
+    rc, found, out, err = file_codes(text_with('"levels": { "1": "a", "1": "ZZZ", "2": "A" }'), "--strict")
+    check(rc == 1 and "E_DUPLICATE_JSON_KEY" in found, f"A-11 cle JSON dupliquee refusee ({found})")
+    check("levels" in out and "'1'" in out, "A-11 le message nomme la cle et son objet")
+    rc, found, out, err = file_codes(BASE_TEXT.replace('"links": {', '"training": {"x": NaN}, "links": {').encode("utf-8"))
+    check(rc == 1 and "E_JSON_CONSTANT" in found, f"A-11 NaN refuse ({found})")
+    rc, found, out, err = file_codes(BASE_TEXT.replace('"links": {', '"training": {"x": -Infinity}, "links": {').encode("utf-8"))
+    check(rc == 1 and "E_JSON_CONSTANT" in found, f"A-11 -Infinity refuse ({found})")
+    rc, found, out, err = file_codes(BASE_TEXT.replace('"links": {', '"training": {"x": 1e999}, "links": {').encode("utf-8"))
+    check(rc == 1 and "E_JSON_CONSTANT" in found, f"A-11 nombre hors flottant refuse ({found})")
+    rc, found, out, err = file_codes(text_with('"levels": { "1": "\\ud800", "2": "A" }'), "--strict")
+    check(rc == 1 and "E_SURROGATE" in found, f"A-11 surrogate isole dans une valeur ({found})")
+    manifest = json.loads(BASE_TEXT)
+    manifest["foo\ud800"] = 1
+    rc, found, out, err = file_codes(json.dumps(manifest).encode("ascii"), "--strict")
+    check(rc == 1 and "E_SURROGATE" in found and "Traceback" not in err, f"A-11 surrogate isole dans un nom de membre ({found})")
+    rc, found, out, err = file_codes(text_with('"levels": { "1": "\\ud83d\\ude00", "2": "A" }'))
+    check(rc == 0, f"A-11 une paire de surrogates valide (U+1F600) reste acceptee ({found})")
+
+    # A-18 : BOM, profondeur
+    rc, found, out, err = file_codes(b"\xef\xbb\xbf" + BASE_TEXT.encode("utf-8"), "--strict")
+    check(rc == 0 and not found, f"A-18 BOM UTF-8 accepte ({found})")
+    deep = "[" * 100000 + "]" * 100000
+    rc, found, out, err = file_codes(BASE_TEXT.replace('"links": {', f'"training": {{"x": {deep}}}, "links": {{').encode("utf-8"))
+    check(rc == 1 and "E_READ" in found and "Traceback" not in err, f"A-18 imbrication profonde : E_READ propre ({found})")
+    rc, found, out, err = file_codes(BASE_TEXT.encode("utf-16"))
+    check(rc == 1 and "E_READ" in found, f"A-18 UTF-16 : E_READ ({found})")
+
+    # A-12 : sortie redirigee en cp1252, nom de membre hors cp1252
+    manifest = json.loads(BASE_TEXT)
+    manifest["日本語"] = 1
+    raw = json.dumps(manifest, ensure_ascii=False).encode("utf-8")
+    rc, found, out, err = file_codes(raw, "--strict")
+    check(rc == 1 and "W_UNKNOWN_MEMBER" in found and "Traceback" not in err, f"A-12 --json : CJK sans plantage (rc {rc}, {err[-120:]!r})")
+    check("日本語" in out, "A-12 --json : le nom CJK est ecrit en UTF-8")
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "cjk.oklm.json"
+        path.write_bytes(raw)
+        rc, out, err = cli("--strict", str(path))
+    check(rc == 1 and "Traceback" not in err and "INVALID" in out and "日本語" in out, f"A-12 texte : CJK sans plantage ({err[-120:]!r})")
+
+    # A-20 : les jokers sont developpes par le validateur (PowerShell ne le fait pas)
+    with tempfile.TemporaryDirectory() as tmp:
+        for name in ("one", "two"):
+            (Path(tmp) / f"{name}.oklm.json").write_text(BASE_TEXT, encoding="utf-8")
+        rc, out, err = cli("--strict", str(Path(tmp) / "*.oklm.json"))
+        check(rc == 0 and out.count("VALID") == 2 and "INVALID" not in out, f"A-20 joker developpe ({out!r})")
+        rc, out, err = cli(str(Path(tmp) / "*.nothing.json"))
+        check(rc == 1 and "E_READ" in out and "no file matches" in out, f"A-20 joker sans correspondance : E_READ clair ({out!r})")
+
+
+# ---------------------------------------------------------------------------------------------
 def main():
     section_a01()
+    section_files()
     if failures:
         print(f"ECHEC : {len(failures)} sur {counter['n']} verifications")
         for message in failures:

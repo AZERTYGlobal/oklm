@@ -30,10 +30,15 @@ Codes (stable):
   E_W3C_CODE                  --strict only: code is not a W3C KeyboardEvent.code value (E10)
   E_DUPLICATE_CODE            --strict only: two keys share a code (E11)
   E_INTERNAL                  a validator stage crashed (validator bug); the other stages and files still run
+  E_DUPLICATE_JSON_KEY        a member name appears twice in one JSON object (the last value would silently win)
+  E_JSON_CONSTANT             NaN, Infinity, -Infinity or a number overflowing a float: not JSON
+  E_SURROGATE                 a string or member name holds an unpaired surrogate (not UTF-8 encodable)
+  E_READ                      file unreadable, not UTF-8 (a BOM is accepted) or not JSON; no file matches a pattern
 
 Dependency: pip install jsonschema  (>= 4.x, Draft 2020-12)
 """
 import argparse
+import glob
 import json
 import re
 import sys
@@ -382,21 +387,120 @@ def analyze(manifest, schema=None, validator=None, strict=False):
     return found
 
 
+class JsonConstantError(ValueError):
+    """NaN, Infinity, -Infinity or a number that overflows a float: not JSON (RFC 8259)."""
+
+
+class _Object(dict):
+    """A parsed JSON object that remembers the member names it received more than once."""
+    duplicates = ()
+
+
+def _object_from_pairs(pairs):
+    obj = _Object()
+    duplicates = []
+    for name, value in pairs:
+        if name in obj:
+            duplicates.append(name)
+        obj[name] = value
+    if duplicates:
+        obj.duplicates = tuple(duplicates)
+    return obj
+
+
+def _refuse_constant(name):
+    raise JsonConstantError(f"{name} is not valid JSON")
+
+
+def _finite_float(text):
+    value = float(text)
+    if value in (float("inf"), float("-inf")):
+        raise JsonConstantError(f"number {text[:30]} does not fit in a double-precision float")
+    return value
+
+
+def load_json_text(text):
+    """Parse JSON text strictly: duplicate member names are recorded (see text_findings), NaN / Infinity
+    and overflowing numbers raise JsonConstantError."""
+    return json.loads(text, object_pairs_hook=_object_from_pairs, parse_constant=_refuse_constant,
+                      parse_float=_finite_float)
+
+
+def text_findings(instance):
+    """What the JSON text can hide from a parsed document: member names given twice (the last value
+    silently wins, A-11) and lone surrogates, which no UTF-8 file can carry (A-11). Iterative walk: a
+    deeply nested document must not exhaust the stack."""
+    found = []
+    stack = [(instance, [])]
+    while stack:
+        node, path = stack.pop()
+        if isinstance(node, dict):
+            for name in getattr(node, "duplicates", ()):
+                found.append(Finding("E_DUPLICATE_JSON_KEY", "error", _fmt_path(path),
+                                     f"member '{name}' appears more than once in this object: "
+                                     "only the last value would be kept"))
+            for name, value in node.items():
+                if _has_surrogate(name):
+                    found.append(Finding("E_SURROGATE", "error", _fmt_path(path),
+                                         "a member name contains an unpaired surrogate (not UTF-8 encodable)"))
+                stack.append((value, path + [name]))
+        elif isinstance(node, list):
+            stack.extend((value, path + [index]) for index, value in enumerate(node))
+        elif isinstance(node, str) and _has_surrogate(node):
+            found.append(Finding("E_SURROGATE", "error", _fmt_path(path),
+                                 "string contains an unpaired surrogate (not UTF-8 encodable)"))
+    found.sort(key=lambda f: (f.path, f.code))
+    return found
+
+
+def _has_surrogate(text):
+    try:
+        text.encode("utf-8")
+    except UnicodeEncodeError:
+        return True
+    return False
+
+
 def validate_file(path, schema, validator, strict=False, report=False):
     """All findings for one file. Never raises: a file that cannot be read is E_READ, a crash inside the
     validator is E_INTERNAL, so that a batch always reaches its last file."""
+    path = Path(path)
     try:
-        instance = json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, ValueError) as exc:
+        instance = load_json_text(path.read_bytes().decode("utf-8-sig"))
+    except JsonConstantError as exc:
+        return [Finding("E_JSON_CONSTANT", "error", "(file)", f"not JSON: {exc}")]
+    except OSError as exc:
+        if any(c in str(path) for c in "*?[") and not path.exists():
+            return [Finding("E_READ", "error", "(file)", "no file matches this pattern")]
+        return [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
+    except ValueError as exc:
         return [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
     except RecursionError:
         return [Finding("E_READ", "error", "(file)", "cannot read as JSON: nested too deeply")]
+    found = guarded(lambda: text_findings(instance))
     if report:
-        return guarded(lambda: schema_findings(instance, validator))
-    return analyze(instance, schema, validator, strict=strict)
+        return found + guarded(lambda: schema_findings(instance, validator))
+    return found + analyze(instance, schema, validator, strict=strict)
+
+
+def expand_arguments(names):
+    """Expand wildcards ourselves: PowerShell 5.1 hands `examples/*.oklm.json` over unexpanded (A-20).
+    A name that exists is kept as is; a pattern without match is kept too, validate_file reports it."""
+    expanded = []
+    for name in names:
+        if any(c in name for c in "*?[") and not Path(name).exists():
+            expanded.extend(sorted(glob.glob(name, recursive=True)) or [name])
+        else:
+            expanded.append(name)
+    return expanded
 
 
 def main():
+    for stream in (sys.stdout, sys.stderr):
+        try:  # redirected stdout is cp1252 on Windows: a CJK member name must not abort the report (A-12)
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
     parser = argparse.ArgumentParser(description="Validate OKLM 0.2 files.")
     parser.add_argument("files", nargs="+", metavar="FILE")
     parser.add_argument("--report", action="store_true",
@@ -413,7 +517,7 @@ def main():
 
     exit_code = 0
     results = []
-    for name in args.files:
+    for name in expand_arguments(args.files):
         path = Path(name)
         findings = validate_file(path, schema, validator, strict=args.strict, report=args.report)
         errors = [f for f in findings if f.severity == "error"]
