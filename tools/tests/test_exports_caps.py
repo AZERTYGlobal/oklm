@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """CapsLock levels (5-8) a key does not define: audit 2026-10-09, B-02. Exit code 0/1.
 
     python tools/tests/test_exports_caps.py
@@ -9,7 +10,7 @@ Decision: an absent CapsLock level reads as the matching level without CapsLock 
 """
 import sys
 
-from test_exports_support import check, examples, finish, keylayout, klc, ldml, minimal, parse_xml
+from exports_support import check, examples, finish, keylayout, klc, ldml, minimal, parse_xml
 from exporters.common import caps_base_levels, effective_output, resolve_level_modifiers
 
 CAPS_SELECTORS = {"5": ["CapsLock"], "6": ["CapsLock", "Level2Shift"], "7": ["CapsLock", "Level3Shift"],

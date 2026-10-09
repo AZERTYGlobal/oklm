@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """LDML exporter: validity against the CLDR DTD and the audit 2026-10-09 corrections. Exit code 0/1.
 
     python tools/tests/test_exports_ldml.py
@@ -10,7 +11,7 @@ on the first line of the output) and everything else still runs.
 import re
 import sys
 
-from test_exports_support import FIXTURES, check, examples, finish, ldml, minimal, parse_xml
+from exports_support import FIXTURES, check, examples, finish, ldml, minimal, parse_xml
 
 try:
     from lxml import etree

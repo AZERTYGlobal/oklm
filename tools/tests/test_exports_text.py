@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Escaping and refusal of hostile text in the exports (audit 2026-10-09: B-03, B-07, B-14, B-16, B-17).
 
     python tools/tests/test_exports_text.py
@@ -11,7 +12,7 @@ error in the report (never a traceback, never a silent alteration).
 import re
 import sys
 
-from test_exports_support import (check, examples, finish, keylayout, klc, ldml, minimal, parse_xml, report_errors,
+from exports_support import (check, examples, finish, keylayout, klc, ldml, minimal, parse_xml, report_errors,
                                   streamdeck, xkb)
 from exporters.common import ExportError
 

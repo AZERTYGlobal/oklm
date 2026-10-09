@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Dead keys across the exporters (audit 2026-10-09: B-06, B-18, B-19; B-05 is added with its fix).
 
     python tools/tests/test_exports_deadkeys.py
@@ -10,7 +11,7 @@ policy in keylayout and klc: `fallback`, else `display`, else a built-in table b
 import re
 import sys
 
-from test_exports_support import check, examples, finish, keylayout, klc, minimal, parse_xml, xkb
+from exports_support import check, examples, finish, keylayout, klc, minimal, parse_xml, xkb
 from test_klc import parse as parse_klc
 from exporters.common import standalone_char
 

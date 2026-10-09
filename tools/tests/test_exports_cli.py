@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """The exporter command line, tools/export.py (audit 2026-10-09: B-15). Exit code 0/1.
 
     python tools/tests/test_exports_cli.py
@@ -13,7 +14,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from test_exports_support import ROOT, check, finish, minimal
+from exports_support import ROOT, check, finish, minimal
 
 EXPORT = ROOT / "tools" / "export.py"
 

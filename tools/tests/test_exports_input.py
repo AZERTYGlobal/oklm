@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Manifests the exporters must refuse and losses they must declare (audit 2026-10-09: B-08/C-05 conformsTo,
 B-09 duplicate HID, B-10 undeclared losses, B-11 authors).
 
@@ -9,7 +10,7 @@ so a manifest the validator lets through still gets a clear error and no ambiguo
 """
 import sys
 
-from test_exports_support import check, finish, keylayout, klc, ldml, minimal, parse_xml, report_errors, xkb, streamdeck
+from exports_support import check, finish, keylayout, klc, ldml, minimal, parse_xml, report_errors, xkb, streamdeck
 
 EXPORTERS = {"ldml": ldml, "keylayout": keylayout, "xkb": xkb, "klc": klc, "streamdeck": streamdeck}
 
@@ -52,7 +53,7 @@ def main():
     with_modifier["keys"].append({"id": "B99", "hid": with_modifier["keys"][0]["hid"], "role": "modifier", "modifier": "Level2Shift"})
     check(ldml.export(with_modifier, source_file="x")[0] is not None, "a role:modifier key sharing a HID is dropped, not a duplicate")
     # B-10: fields no exporter writes are declared as skipped, never dropped silently
-    from test_exports_support import examples
+    from exports_support import examples
     for stem, example in examples():
         for target, module in EXPORTERS.items():
             text, report = module.export(example, source_file="x")

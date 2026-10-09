@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Shared helpers of the test_exports_*.py scripts (not a test itself).
 
 Plain assertions, no pytest: each test script collects its failures with `check`, then calls `finish`.
