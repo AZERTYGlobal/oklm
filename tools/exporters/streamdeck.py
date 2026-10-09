@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> Elgato Stream Deck profile exporter (`.streamDeckProfile`, one-way, draft).
 
 What it produces: a profile of "Text" actions, one button per distinct character that a layout

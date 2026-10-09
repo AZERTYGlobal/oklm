@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> LDML Keyboard 3 exporter (draft v1, one-way).
 
 Targets the CLDR/UTS #35 Part 7 "keyboard3" format. Scope and known

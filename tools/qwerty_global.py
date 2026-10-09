@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """QWERTY Global : manifestes OKLM generes depuis un chassis commun et un diff par module.
 
 Decision de cadrage C4 (2026-09-21) : un manifeste par module, compose au build ;

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Migrate an OKLM manifest from schema 0.1 to schema 0.2.
 
     python tools/migrate_0_1_to_0_2.py FILE [FILE ...]            # rewrite in place

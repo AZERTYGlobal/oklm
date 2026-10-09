@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Tables et conversions de base partagees par les outils OKLM.
 
 - POSITION_TABLE : position ISO/IEC 9995-1 -> (HID page 0x07, alias XKB, W3C KeyboardEvent.code)

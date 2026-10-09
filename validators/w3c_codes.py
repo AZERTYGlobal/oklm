@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """KeyboardEvent.code values of the W3C Recommendation UI Events KeyboardEvent code Values.
 
 Source: https://www.w3.org/TR/uievents-code/ (W3C Recommendation, 22 April 2025), the 172

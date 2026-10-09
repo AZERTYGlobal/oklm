@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Tests of tools/migrate_0_1_to_0_2.py (audit 2026-10-09, axis A: A-02, A-04, A-05, A-06, A-12, A-18, A-19
 and the lost version label). Plain assertions, exit code 0/1.
 

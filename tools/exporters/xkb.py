@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> xkb exporter (draft v1, one-way).
 
 Emits a standalone `xkb_symbols` block (not a full keymap). Scope and known

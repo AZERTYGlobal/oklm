@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Shared helpers for OKLM exporters (draft v1: LDML, xkb, keylayout).
 
 All exporters are one-way (OKLM -> target). Every export call must produce a

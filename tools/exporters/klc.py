@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> Microsoft Keyboard Layout Creator source (`.klc`, one-way, draft).
 
 Output: UTF-16 little endian with BOM, CRLF line endings, tab separated, as MSKLC writes it.

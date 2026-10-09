@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Adversarial tests of validators/validate.py (audit 2026-10-09, axis A). Plain assertions, exit code 0/1.
 
     python tools/tests/test_validate.py

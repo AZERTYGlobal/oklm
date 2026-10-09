@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Tests of the Stream Deck exporter. Plain assertions, exit code 0/1.
 
     python tools/tests/test_streamdeck.py

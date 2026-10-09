@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Unicode facts the exporters freeze, so that an export is byte for byte the same on every Python.
 
 `unicodedata` follows the interpreter (Python 3.9 and 3.10 ship Unicode 13, 3.11 Unicode 14, 3.13

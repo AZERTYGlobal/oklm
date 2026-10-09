@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """LDML Keyboard 3 -> OKLM importer (draft, schema 0.2).
 
 Reads a CLDR/UTS #35 Part 7 `keyboard3` file and produces an OKLM manifest plus a conversion report

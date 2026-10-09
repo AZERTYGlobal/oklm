@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM exporter CLI (draft v1): OKLM -> LDML Keyboard 3 / xkb / keylayout / .klc / Stream Deck.
 
 One-way exports only (see CONVERSIONS.md "Other export targets"). Every

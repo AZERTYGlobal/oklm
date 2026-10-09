@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Tests of the QWERTY Global build (tools/qwerty_global.py). Plain assertions, exit code 0/1.
 
     python tools/tests/test_qwerty_global.py [--sources <dossier des sources QWERTY Global>]

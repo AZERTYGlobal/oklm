@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Round-trip measurement for the LDML bridge (gate 3).
 
 `core_view` reduces a manifest to what both formats carry: the keys (id, HID), their outputs addressed by

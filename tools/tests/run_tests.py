@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Test suite for the OKLM v1 exporters (LDML / xkb / keylayout).
 
 No pytest dependency: plain assertions, one process, exit code 0/1. Run

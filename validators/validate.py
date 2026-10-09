@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM validator CLI (draft 0.2).
 
 Validate one or more OKLM files against the draft 0.2 JSON Schemas, plus the

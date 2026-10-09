@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> Apple .keylayout exporter (draft v1, one-way).
 
 Targets the macOS `KeyboardLayout.dtd` format (`<keyboard>` root). Scope and

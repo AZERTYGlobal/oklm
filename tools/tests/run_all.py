@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Lanceur unique des controles du depot OKLM. Code de sortie 0 si tout passe, 1 sinon.
 
     python tools/tests/run_all.py            # depuis n'importe ou ; resume + sortie des suites en echec
