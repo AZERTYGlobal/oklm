@@ -334,12 +334,74 @@ def section_a09():
 
 
 # ---------------------------------------------------------------------------------------------
+# A-10, A-15, C-16, A-17 : le schema lui-meme
+# ---------------------------------------------------------------------------------------------
+def section_schemas():
+    # A-10 : options.conformsTo de la cible ldml
+    def ldml_conforms(value):
+        return mutated(lambda m: m.update(exports=[{"target": "ldml-keyboard-3", "options": {"conformsTo": value}}]))
+
+    for bad in (10, 44, 49, "45", 45.5, True, None, [45]):
+        check("E_SCHEMA" in errors(ldml_conforms(bad)), f"A-10 conformsTo {bad!r} refuse pour ldml-keyboard-3")
+    for good in (45, 46, 47, 48):
+        check(not errors(ldml_conforms(good), True), f"A-10 conformsTo {good} accepte")
+    check(not errors(mutated(lambda m: m.update(exports=[{"target": "xkb", "options": {"conformsTo": 10}}]))),
+          "A-10 la regle ne vise que la cible ldml-keyboard-3")
+    check(not errors(mutated(lambda m: m.update(exports=[{"target": "ldml-keyboard-3"}]))), "A-10 options absentes : accepte")
+
+    # A-15 : SemVer officiel, doublons, modifier => role
+    for bad in ("1.0.0-01", "1.0.0-01.2", "1.0.0-1.01", "1.0.0-", "1.0.0+", "1.0.0-alpha..1", "01.0.0", "1.0", "v1.0.0", "1.0.0-α"):
+        check("E_SCHEMA" in errors(mutated(lambda m, bad=bad: m.update(version=bad))), f"A-15 version {bad!r} refusee")
+    for good in ("0.0.0", "1.0.0-0", "1.0.0-0a", "1.0.0-alpha.1", "1.0.0-x.7.z.92", "1.0.0+001", "1.2.3-rc.1+build.5", "10.20.30"):
+        check(not errors(mutated(lambda m, good=good: m.update(version=good))), f"A-15 version {good!r} acceptee")
+    dups = {
+        "locales": lambda m: m.update(locales=["fr", "fr"]),
+        "authors": lambda m: m.update(authors=["A", "A"]),
+        "geometry": lambda m: m.update(geometry=["iso-full", "iso-full"]),
+        "levelSelectors": lambda m: m["levelSelectors"].update({"2": ["Level2Shift", "Level2Shift"]}),
+    }
+    for label, fn in dups.items():
+        check("E_SCHEMA" in errors(mutated(fn)), f"A-15 doublons refuses dans {label}")
+    check("E_SCHEMA" in errors(mutated(lambda m: m["keys"][0].update(modifier="Level2Shift"))), "A-15 `modifier` sans role: modifier refuse")
+    check("E_SCHEMA" in errors(mutated(lambda m: m["keys"][0].update(role="key", modifier="Level2Shift"))), "A-15 `modifier` avec role: key refuse")
+    check(not errors(mutated(lambda m: (m["keys"][0].pop("levels"), m["keys"][0].update(role="modifier", modifier="Level2Shift")))),
+          "A-15 role modifier + modifier accepte")
+
+    # C-16 : role key = touche graphique, il lui faut des levels
+    check("E_SCHEMA" in errors(mutated(lambda m: (m["keys"][0].pop("levels"), m["keys"][0].update(role="key")))), "C-16 role key sans levels refuse")
+    check(not errors(mutated(lambda m: m["keys"][0].update(role="key"))), "C-16 role key avec levels accepte")
+
+    # A-17 : coherence du rapport de conversion
+    report_schema = v.load_schema("oklm-conversion-report.schema.json")
+    rv = v.Draft202012Validator(report_schema)
+    report = {
+        "schemaVersion": "0.2", "direction": "oklm-to-ldml",
+        "source": {"format": "oklm", "version": "0.2"}, "target": {"format": "ldml-keyboard-3", "conformsTo": 45},
+        "compatibilityLevel": "lossless-core", "mappedFields": ["keys"], "skippedFields": [],
+        "lossyMappings": [], "roundTripConfidence": "high", "warnings": [], "errors": [],
+    }
+
+    def report_ok(**changes):
+        return not list(rv.iter_errors({**report, **changes}))
+
+    check(report_ok(), "A-17 temoin : rapport lossless-core propre")
+    check(not report_ok(lossyMappings=[{"path": "keys", "detail": "x"}]), "A-17 lossless-core + lossyMappings refuse")
+    check(not report_ok(errors=["boom"]), "A-17 lossless-core + errors refuse")
+    check(report_ok(warnings=["w"]), "A-17 lossless-core + warnings accepte")
+    check(report_ok(compatibilityLevel="lossy-mapping", lossyMappings=[{"path": "keys", "detail": "x"}]), "A-17 lossy-mapping + lossyMappings accepte")
+    check(not report_ok(compatibilityLevel="failed"), "A-17 failed sans erreur refuse")
+    check(report_ok(compatibilityLevel="failed", errors=["boom"]), "A-17 failed avec erreur accepte")
+    check(report_ok(compatibilityLevel="unsupported"), "A-17 unsupported : inchange (D33)")
+
+
+# ---------------------------------------------------------------------------------------------
 def main():
     section_a01()
     section_files()
     section_a03()
     section_a07_a08()
     section_a09()
+    section_schemas()
     if failures:
         print(f"ECHEC : {len(failures)} sur {counter['n']} verifications")
         for message in failures:

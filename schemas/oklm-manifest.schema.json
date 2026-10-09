@@ -35,7 +35,7 @@
     "version": {
       "description": "Version of the layout itself (not of the schema), Semantic Versioning 2.0.0 (E2). A human label that is not SemVer (a standard's edition, say) goes to metadata.versionLabel.",
       "type": "string",
-      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(?!\\n)$"
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?(?!\\n)$"
     },
     "license": {
       "description": "License of the layout data. SPDX identifier recommended (e.g. EUPL-1.2, CC-BY-4.0).",
@@ -46,6 +46,7 @@
       "description": "Layout authors or maintaining organizations.",
       "type": "array",
       "minItems": 1,
+      "uniqueItems": true,
       "items": { "type": "string", "minLength": 1 }
     },
     "description": {
@@ -56,6 +57,7 @@
       "description": "Locales this layout is designed for, as BCP 47 language tags (e.g. \"fr\", \"fr-FR\"). The first entry is the primary locale.",
       "type": "array",
       "minItems": 1,
+      "uniqueItems": true,
       "items": {
         "type": "string",
         "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*(?!\\n)$"
@@ -65,6 +67,7 @@
       "description": "Target physical geometries, declared as aliases (D5): the physical form factor family (iso-*, ansi-*, jis-*, abnt-*, ks-*, touch) plus size (e.g. iso-full, iso-tkl, ansi-60, custom). Aliases us (= ansi) and abnt2 (= abnt) are accepted. The family list is checked by the validator, not by an enum, so that a file written for a later MINOR stays valid (D33). Geometry tells consumers which physical keys exist; omitting it would mean silently missing bindings. Canonical key positions remain ISO/IEC 9995-1 key numbers regardless of geometry (D1/D5/D24). A drawable geometry layer (absolute x/y/w/h, D23-D30) is not part of the core; see the OKLM_geometry extension.",
       "type": "array",
       "minItems": 1,
+      "uniqueItems": true,
       "items": {
         "type": "string",
         "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(?!\\n)$"
@@ -77,6 +80,7 @@
         "^[2-8](?!\\n)$": {
           "type": "array",
           "minItems": 1,
+          "uniqueItems": true,
           "items": {
             "type": "string",
             "enum": ["Level2Shift", "Level3Shift", "Level5Shift", "CapsLock", "NumLock"]
@@ -206,6 +210,18 @@
         "properties": { "role": { "const": "modifier" } }
       },
       "then": { "required": ["modifier"] },
+      "allOf": [
+        {
+          "$comment": "A-15: `modifier` names the function of a key whose role is \"modifier\".",
+          "if": { "required": ["modifier"] },
+          "then": { "required": ["role"], "properties": { "role": { "const": "modifier" } } }
+        },
+        {
+          "$comment": "C-16: role \"key\" is a graphic key, described by levels.",
+          "if": { "required": ["role"], "properties": { "role": { "const": "key" } } },
+          "then": { "required": ["levels"] }
+        }
+      ],
       "properties": {
         "id": {
           "description": "Canonical physical key identifier: ISO/IEC 9995-1 key number (D1), e.g. D01 (QWERTY Q position), C00 (Caps Lock), B00 (ISO extra key), E01 (digit row). ISO 9995-1 is the de jure position standard used by national layout norms.",
@@ -355,6 +371,24 @@
     "exportTarget": {
       "type": "object",
       "required": ["target"],
+      "if": {
+        "required": ["target"],
+        "properties": { "target": { "const": "ldml-keyboard-3" } }
+      },
+      "then": {
+        "properties": {
+          "options": {
+            "properties": {
+              "conformsTo": {
+                "description": "LDML Keyboard 3 conformance number (UTS #35 Part 7): a whole number, 45 to 48 in this draft.",
+                "type": "integer",
+                "minimum": 45,
+                "maximum": 48
+              }
+            }
+          }
+        }
+      },
       "properties": {
         "target": {
           "description": "Export target kind, e.g. ldml-keyboard-3, web-tester, xkb, windows-klc, macos-keylayout, keymap-image, streamdeck-profile.",
@@ -367,7 +401,7 @@
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(?!\\n)$"
         },
         "options": {
-          "description": "Target-specific options (free-form; per-exporter schemas will come with the exporter research prompts). For ldml-keyboard-3, conformsTo must be a whole number of 45 or greater per UTS #35 Part 7.",
+          "description": "Target-specific options (free-form; per-exporter schemas will come with the exporter research prompts). For ldml-keyboard-3, options.conformsTo, when present, must be a whole number from 45 to 48 (UTS #35 Part 7; checked by the schema).",
           "type": "object"
         },
         "extensions": { "$ref": "#/$defs/extensions" }
