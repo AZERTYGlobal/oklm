@@ -20,7 +20,8 @@ Codes (stable):
   E_DUPLICATE_KEY_ID          two keys share an id
   E_DUPLICATE_EXPORT_ID       two export declarations share an id
   E_DEADKEY_UNDEFINED         an output references a dead key that deadKeys does not define
-  E_LAYERS_UNSUPPORTED        a `layers` member: OKLM outputs live in keys[].levels (D2, D14)
+  E_LAYERS_UNSUPPORTED        a `layers` member, at any depth: OKLM outputs live in keys[].levels (D2, D14)
+  E_LEVEL_RANGE               level key outside 1-8, group key outside 2-9, levelSelectors key outside 2-8
   E_SCHEMA_VERSION_MAJOR      schemaVersion MAJOR is not 0
   W_SCHEMA_VERSION_MINOR      schemaVersion MINOR is above 2: valid, not supported
   E_EXTENSIONS_REQUIRED       extensionsRequired is not a subset of extensionsUsed
@@ -173,9 +174,6 @@ def consistency_findings(manifest):
                     )
                 )
 
-    if "layers" in manifest:
-        found.append(Finding("E_LAYERS_UNSUPPORTED", "error", "layers", HINTS["layers"]))
-
     version = manifest.get("schemaVersion")
     if isinstance(version, str) and re.fullmatch(r"[0-9]+\.[0-9]+", version):
         major, minor = (_huge_int(part) for part in version.split("."))
@@ -309,15 +307,56 @@ def unknown_member_findings(manifest, schema, strict):
     severity = "error" if strict else "warning"
     out = []
     for here, name in unknown_members(manifest, schema):
-        message = f"unknown member '{name}'"
-        if name in HINTS:
-            message += f" ({HINTS[name]})"
-        elif name != "layers":
-            message += " (a private member goes in an `extensions` object with an OKLM_, EXT_ or <VENDOR>_ prefix)"
-        if name == "layers":
-            continue  # reported as E_LAYERS_UNSUPPORTED
+        if name == "layers":  # at any depth, not only at the root (A-08)
+            out.append(Finding("E_LAYERS_UNSUPPORTED", "error", _fmt_path(here), HINTS["layers"]))
+            continue
+        message = (f"unknown member '{name}' (a private member goes in an `extensions` object "
+                   "with an OKLM_, EXT_ or <VENDOR>_ prefix)")
         out.append(Finding("W_UNKNOWN_MEMBER", severity, _fmt_path(here), message))
     return out
+
+
+LEVEL_KEY = re.compile(r"[1-8]")
+GROUP_KEY = re.compile(r"[2-9]")
+SELECTOR_KEY = re.compile(r"[2-8]")
+
+
+def level_range_findings(manifest):
+    """Level keys 1-8, group keys 2-9 and selector keys 2-8 (SPEC): a key outside the range is an error,
+    strict or not, because every reader would silently ignore its output (A-07). `fullmatch` and an
+    ASCII class: no `01`, no `1\\n`, no full-width digit."""
+    found = []
+    if not isinstance(manifest, dict):
+        return found
+
+    def bad(path, name, expected, what):
+        found.append(Finding("E_LEVEL_RANGE", "error", path,
+                             f"{what} {name!r} is outside {expected}: no reader would use it"))
+
+    selectors = manifest.get("levelSelectors")
+    if isinstance(selectors, dict):
+        for name in selectors:
+            if name not in ("extensions", "layers") and not SELECTOR_KEY.fullmatch(name):
+                bad(f"levelSelectors.{name}", name, "levels 2-8", "level selector")
+    keys = manifest.get("keys")
+    for index, key in enumerate(keys if isinstance(keys, list) else []):
+        if not isinstance(key, dict):
+            continue
+        levels = key.get("levels")
+        if isinstance(levels, dict):
+            for name in levels:
+                if name != "layers" and not LEVEL_KEY.fullmatch(name):
+                    bad(f"keys[{index}].levels.{name}", name, "levels 1-8", "level")
+        groups = key.get("groups")
+        if isinstance(groups, dict):
+            for group, content in groups.items():
+                if group != "layers" and not GROUP_KEY.fullmatch(group):
+                    bad(f"keys[{index}].groups.{group}", group, "groups 2-9 (group 1 is `levels`)", "group")
+                elif isinstance(content, dict):
+                    for name in content:
+                        if name != "layers" and not LEVEL_KEY.fullmatch(name):
+                            bad(f"keys[{index}].groups.{group}.{name}", name, "levels 1-8", "level")
+    return found
 
 
 def strict_findings(manifest):
@@ -374,12 +413,15 @@ def analyze(manifest, schema=None, validator=None, strict=False):
     validator = validator if validator is not None else Draft202012Validator(schema)
     stages = [lambda: schema_findings(manifest, validator),
               lambda: consistency_findings(manifest),
+              lambda: level_range_findings(manifest),
               lambda: unknown_member_findings(manifest, schema, strict)]
     if strict:
         stages.append(lambda: strict_findings(manifest))
     found = []
     for stage in stages:
         found += guarded(stage)
+    out_of_range = {f.path for f in found if f.code == "E_LEVEL_RANGE"}
+    found = [f for f in found if not (f.code == "W_UNKNOWN_MEMBER" and f.path in out_of_range)]
     if strict:
         for f in found:
             if f.code == "W_GEOMETRY_UNKNOWN":

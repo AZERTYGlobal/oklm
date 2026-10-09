@@ -252,10 +252,56 @@ def section_a03():
 
 
 # ---------------------------------------------------------------------------------------------
+# A-07 : bornes des niveaux et des groupes ; A-08 : `layers` a tous les etages
+# ---------------------------------------------------------------------------------------------
+def section_a07_a08():
+    for bad in ["0", "9", "10", "-1", "01", "1.0", "a", "", "1\n", "+1", "１"]:
+        manifest = mutated(lambda m, bad=bad: m["keys"][0]["levels"].update({bad: "x"}))
+        for strict in (False, True):
+            check("E_LEVEL_RANGE" in errors(manifest, strict), f"A-07 niveau {bad!r} hors 1-8 (strict={strict})")
+    for good in "12345678":
+        check(not errors(mutated(lambda m, good=good: m["keys"][0]["levels"].update({good: "x"})), True),
+              f"A-07 niveau {good} accepte")
+    for bad in ["1", "10", "0", "a", "2\n"]:
+        manifest = mutated(lambda m, bad=bad: m["keys"][0].update(groups={bad: {"1": "x"}}))
+        check("E_LEVEL_RANGE" in errors(manifest), f"A-07 groupe {bad!r} hors 2-9")
+    check("E_LEVEL_RANGE" in errors(mutated(lambda m: m["keys"][0].update(groups={"2": {"9": "x"}}))), "A-07 niveau 9 dans un groupe")
+    check(not errors(mutated(lambda m: m["keys"][0].update(groups={"2": {"1": "x"}, "9": {"8": "y"}}))), "A-07 groupes 2 et 9, niveaux 1 et 8 acceptes")
+    for bad in ["1", "9", "0", "x"]:
+        manifest = mutated(lambda m, bad=bad: m["levelSelectors"].update({bad: ["Level2Shift"]}))
+        check("E_LEVEL_RANGE" in errors(manifest), f"A-07 levelSelectors {bad!r} hors 2-8")
+    check(not errors(mutated(lambda m: m["levelSelectors"].update({"5": ["Level5Shift"], "8": ["CapsLock"]})), True), "A-07 levelSelectors 5 et 8 acceptes")
+    # un seul constat par membre : pas de W_UNKNOWN_MEMBER en double
+    found = findings(mutated(lambda m: m["keys"][0]["levels"].update({"9": "x"})))
+    check([f.code for f in found if f.path == "keys[0].levels.9"] == ["E_LEVEL_RANGE"], "A-07 un seul constat pour le niveau 9")
+
+    # A-08 : layers n'est avale nulle part
+    nested = {
+        "racine": (lambda m: m.update(layers=["base"]), "layers"),
+        "touche": (lambda m: m["keys"][0].update(layers={"base": "a"}), "keys[0].layers"),
+        "deadKey": (lambda m: m["deadKeys"][0].update(layers=1), "deadKeys[0].layers"),
+        "levels": (lambda m: m["keys"][0]["levels"].update(layers="a"), "keys[0].levels.layers"),
+        "sortie": (lambda m: m["keys"][2]["levels"].update({"1": {"deadKey": "circumflex", "layers": 1}}), "keys[2].levels.1.layers"),
+        "export": (lambda m: m["exports"][0].update(layers=1), "exports[0].layers"),
+        "metadata": (lambda m: m["metadata"].update(layers=1), "metadata.layers"),
+    }
+    for label, (fn, path) in nested.items():
+        manifest = mutated(fn)
+        for strict in (False, True):
+            hits = [f for f in findings(manifest, strict) if f.code == "E_LAYERS_UNSUPPORTED"]
+            check(len(hits) == 1 and hits[0].path == path and hits[0].severity == "error" and "keys[].levels" in hits[0].message,
+                  f"A-08 layers dans {label} : E_LAYERS_UNSUPPORTED a {path} (strict={strict}) -> {[h.path for h in hits]}")
+        check(not any(f.code == "W_UNKNOWN_MEMBER" and f.path == path for f in findings(manifest)), f"A-08 {label} : pas de W_UNKNOWN_MEMBER en double")
+    check("E_LAYERS_UNSUPPORTED" not in codes(mutated(lambda m: m["metadata"].update(training={"layers": 1})), True),
+          "A-08 `layers` dans un bloc metadata libre reste libre")
+
+
+# ---------------------------------------------------------------------------------------------
 def main():
     section_a01()
     section_files()
     section_a03()
+    section_a07_a08()
     if failures:
         print(f"ECHEC : {len(failures)} sur {counter['n']} verifications")
         for message in failures:
