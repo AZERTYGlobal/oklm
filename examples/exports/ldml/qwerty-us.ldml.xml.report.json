@@ -12,6 +12,7 @@
   "compatibilityLevel": "lossy-mapping",
   "mappedFields": [
     "locales",
+    "authors",
     "keys",
     "keys[].levels",
     "levelSelectors"
@@ -22,12 +23,20 @@
       "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
     },
     {
-      "path": "authors",
+      "path": "license",
       "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
     },
     {
-      "path": "license",
-      "reason": "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter"
+      "path": "geometry",
+      "reason": "the physical form comes from the keys' hid (implied or custom <form>); geometry is not read"
+    },
+    {
+      "path": "keys[].xkb",
+      "reason": "not represented in LDML keyboard3"
+    },
+    {
+      "path": "keys[].code",
+      "reason": "not represented in LDML keyboard3"
     },
     {
       "path": "description",
@@ -48,11 +57,17 @@
   ],
   "lossyMappings": [
     {
+      "path": "layoutId",
+      "detail": "the derived LDML locale identifier 'en-t-k0-qwertyus' needs subtags of 3 to 8 characters (RFC 6497, BCP 47): subtag 'us' (shorter than 3 characters) merged into the previous 'qwerty'"
+    },
+    {
       "path": "locales",
       "detail": "only the primary locale 'en' is exported; LDML keyboard3 declares one locale"
     }
   ],
-  "warnings": [],
+  "warnings": [
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 22 key output(s) filled this way"
+  ],
   "errors": [],
   "generator": {
     "name": "oklm-exporters",

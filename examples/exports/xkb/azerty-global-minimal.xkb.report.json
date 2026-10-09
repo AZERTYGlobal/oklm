@@ -50,6 +50,34 @@
     {
       "path": "levelSelectors",
       "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "geometry",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "version",
+      "reason": "no xkb_symbols construct for this OKLM identity/provenance field in the v1 exporter"
+    },
+    {
+      "path": "keys[].hid",
+      "reason": "not represented in xkb_symbols (keys are named by `xkb`)"
+    },
+    {
+      "path": "keys[].code",
+      "reason": "not represented in xkb_symbols (keys are named by `xkb`)"
+    },
+    {
+      "path": "keys[].name",
+      "reason": "not represented in xkb_symbols (keys are named by `xkb`)"
+    },
+    {
+      "path": "keys[].categories",
+      "reason": "not represented in xkb_symbols (keys are named by `xkb`)"
+    },
+    {
+      "path": "deadKeys[].name",
+      "reason": "not represented in xkb_symbols (keys are named by `xkb`)"
     }
   ],
   "lossyMappings": [

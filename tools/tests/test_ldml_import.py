@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Tests of the LDML -> OKLM importer and of the round trip (gate 3). Plain assertions, exit code 0/1.
 
     python tools/tests/test_ldml_import.py            # check

@@ -18,15 +18,17 @@ hardware vendors happens before gate 4.
 - The one vendor-neutral interchange format, LDML Keyboard (CLDR
   "keyboard3"), is loaded by no operating system; Keyman consumes it on
   desktop, with mobile and web planned and funding-dependent.
-- Among layout tools, none exports LDML; kalamine, klfc, kbdgen and the
-  firmware ecosystems each cover their own targets.
+- Among the layout authoring tools we looked at, none exports LDML;
+  kalamine, klfc, kbdgen and the firmware ecosystems each cover their own
+  targets.
 - Dynamic-key surfaces are few and uneven: Elgato Stream Deck profiles and
   the Logitech Actions SDK are documented; Flux Keyboard is alive but its
   profile format is not public; Nemeio has been silent since 2019–2020.
 - National layout standards (AFNOR NF Z71-300, DIN 2137) are sold as PDFs
-  with no official machine-readable file. Our AFNOR and BÉPO manifests are,
-  as far as we know, the only public machine descriptions of the French
-  standard.
+  with no official machine-readable file. Third parties have described the
+  standardized French AZERTY in machine form (the CLDR `fr` keyboard, which
+  this repository imports as a reference case). Our AFNOR and BÉPO manifests
+  are OKLM descriptions of the same layouts, not the first ones.
 
 Sources and dates are in the research journal under [`research/`](research/).
 
@@ -93,12 +95,12 @@ explicit command definitions, without keylogging or predictive models.
 - Validation tests proving the outputs match the manifest: exporter golden
   tests exist; the website build check comes with the website item.
 
-### Step 2 — Developer tooling (partly done)
+### Step 2 — Developer tooling (done, apart from the web tester data)
 
-Exists: validator, LDML / xkb / keylayout exporters with loss reports.
-Planned, in order: web tester data (with the website item), schema 0.2 with
-a strict validator mode, Stream Deck profile export, Windows `.klc` export,
-LDML importer (gate 3).
+Exists: schema 0.2 with a strict validator mode, validator, LDML / xkb /
+keylayout / Windows `.klc` / Stream Deck exporters with loss reports, and the
+LDML importer (gate 3, measured and merged). Planned: web tester data (with
+the website item).
 
 ### Step 3 — Public demonstrations (not started)
 
@@ -124,12 +126,14 @@ dynamic-key and tooling vendors, and OS/OEM players last.
 ## Success criteria
 
 Early: AZERTY Global generates at least two artifacts from OKLM (the LDML,
-xkb and keylayout exports already count; the website data will be the
-one that matters); QWERTY Global demonstrates one chassis and one module; a
+xkb, keylayout, `.klc` and Stream Deck exports already count; the website
+data will be the one that matters); QWERTY Global demonstrates one chassis and one module; a
 validator catches a real divergence between artifacts.
 
-Credibility: an LDML importer closes the round trip; a dynamic-legend export
-exists; at least one external layout is described in OKLM by someone else.
+Credibility: the LDML importer closes the round trip (measured on 2026-10-05
+and merged); a dynamic-legend export exists (the Stream Deck profile is a
+first, limited one); at least one external layout is described in OKLM by
+someone else.
 
 Industry signal (this is gate 4): one third-party tool consumes OKLM; one
 hardware or dynamic-key vendor shows interest; one open-source ecosystem
@@ -138,4 +142,4 @@ deployment benefits from OKLM-generated documentation or tests.
 
 ---
 
-*Last updated: 2026-09-15*
+*Last updated: 2026-10-10*

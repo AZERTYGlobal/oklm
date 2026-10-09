@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Tests of the .klc exporter, against an in-repo parser of the format. Exit code 0/1.
 
     python tools/tests/test_klc.py

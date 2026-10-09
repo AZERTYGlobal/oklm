@@ -1,5 +1,13 @@
 # Zones instables — schéma OKLM v0.1
 
+> **Document historique (schéma v0.1, figé).** Cette note décrit l'état du schéma en juillet 2026
+> et n'est plus mise à jour. Le schéma courant est le **0.2** (publié le 2026-10-05) : voir
+> [`SPEC.md`](../SPEC.md) et la politique de version de [`GOVERNANCE.md`](../GOVERNANCE.md#version-and-compatibility-policy).
+> Ce qui a changé depuis : `schemaVersion` est un motif et non plus une constante ; le schéma est
+> ouvert, et le champ `layers` est rejeté par le validateur, non plus par le schéma ; les espaces de
+> noms réservés s'écrivent `OKLM_frameKeys`, `OKLM_firmware`, `OKLM_geometry` et `OKLM_ldml` ; les
+> formes localisées (D39) ne sont pas entrées dans le schéma 0.2.
+
 > Note de conception accompagnant `oklm-manifest.schema.json` (draft 0.1,
 > 2026-07-10) et `oklm-conversion-report.schema.json` (draft 0.2 depuis le
 > 2026-07-11 : ajout des directions `oklm-to-xkb` et `oklm-to-keylayout`).
@@ -45,11 +53,11 @@ pas seulement l'enrichir. Pourront bouger :
 - la politique d'enregistrement des namespaces d'`extensions`.
 
 **Prompt 12 traité le 2026-09-02** (D31–D44 du journal, triangulation ChatGPT + Claude + Gemini).
-Ce qui bouge effectivement en v0.2 (arbitré par Antoine le 2026-09-02, pas de `minVersion`, pas d'`extras`) : `schemaVersion` passe de `const` à
+Ce qui bouge effectivement en v0.2 (arbitré par les mainteneurs le 2026-09-02, pas de `minVersion`, pas d'`extras`) : `schemaVersion` passe de `const` à
 motif (D31) ; `additionalProperties: false` s'ouvre au profit d'un mode lint du validateur (D32) ;
 trois tableaux `extensionsUsed` / `extensionsRequired` / `featuresRequired` entrent à la racine
 (D33) ; les namespaces réservés prennent le préfixe `OKLM_` (D34) ; formes localisées
-`nameLocalized` / `descriptionLocalized` (D39). Le bloc `conformance` et la notation compacte ne
+`nameLocalized` / `descriptionLocalized` (D39, finalement non retenues dans le schéma 0.2). Le bloc `conformance` et la notation compacte ne
 sont pas remis en cause. Détail et tensions : journal, section « Prompt 12 ».
 
 ### 2. Prompt 6 — Firmware (fermeture de D10 🔴)
@@ -119,9 +127,9 @@ Validation exécutée avec `jsonschema` 4.26.0 (Python, Draft 2020-12) :
 méta-validation des 2 schémas, exemple `azerty-global-minimal.oklm.json` valide,
 unicité des ids et résolution des références `deadKey` vérifiées hors schéma,
 5 cas invalides de manifeste et 3 cas invalides de rapport correctement rejetés,
-2 instances de rapport (export et import) valides. Script rejouable :
-[`validators/validate_v0_1.py`](../validators/validate_v0_1.py) (15/15 tests OK
-au 2026-07-10).
+2 instances de rapport (export et import) valides. Le script rejouable de l'époque,
+`validators/validate_v0_1.py` (15/15 tests OK au 2026-07-10), n'est plus dans le dépôt : il est
+remplacé par `validators/validate.py` et `validators/validate_v0_2.py`.
 
 ---
 

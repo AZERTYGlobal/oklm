@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Test suite for the OKLM v1 exporters (LDML / xkb / keylayout).
 
 No pytest dependency: plain assertions, one process, exit code 0/1. Run
@@ -109,14 +110,22 @@ def main():
         if golden.exists():
             fresh = (compose + "\n").encode("utf-8") if not compose.endswith("\n") else compose.encode("utf-8")
             check(golden.read_bytes() == fresh, f"{stem}/XCompose: golden does not match fresh export (regression)")
-        dead_ids = set() if stem != "azerty-global" else {dk["id"] for dk in manifest.get("deadKeys", [])}
-        check(dead_ids <= set(xkb.DEAD_KEYSYMS), f"{stem}/xkb: dead keys without dead_* keysym: {sorted(dead_ids - set(xkb.DEAD_KEYSYMS))}")
+        # B-05: every dead key of the six examples has a dead_* keysym (table or spare carrier), a Compose block
+        # with all its compositions, and no dead key is dropped from the xkb file
+        dead_map = xkb.dead_keysym_map(manifest)
+        dead_ids = {dk["id"] for dk in manifest.get("deadKeys", [])}
+        check(dead_ids <= set(dead_map), f"{stem}/xkb: dead keys without dead_* keysym: {sorted(dead_ids - set(dead_map))}")
+        check(len(set(dead_map.values())) == len(dead_map), f"{stem}/xkb: two dead keys share a dead_* keysym")
+        for dk in manifest.get("deadKeys", []):
+            rules = [line for line in compose.splitlines() if line.startswith(f"<{dead_map[dk['id']]}> ")]
+            check(len(rules) == len([b for b in dk.get("compositions", {}) if xkb.compose_keysym(b)]),
+                  f"{stem}/XCompose: dead key {dk['id']} has {len(rules)} rules, manifest has {len(dk.get('compositions', {}))} compositions")
+        check(not any(s["path"].startswith("deadKeys[") and not s["path"].startswith("deadKeys[]") for s in results[(stem, "xkb")][1]["skippedFields"]),
+              f"{stem}/xkb: a dead key is skipped")
 
     # .keylayout: every used dead key has a terminator and an own-state entry
     for path in EXAMPLES:
         stem = path.name[: -len(".oklm.json")]
-        if stem != "azerty-global":
-            continue
         text, _ = results[(stem, "keylayout")]
         used = set(re.findall(r'<action id="dk_([^"]+)"', text))
         terminators = set(re.findall(r'<when state="([^"]+)" output="[^"]*"/>', text.split("<terminators>")[-1])) if "<terminators>" in text else set()
@@ -180,19 +189,29 @@ def v02_checks(minimal, report_validator):
     check(ldml.ldml_escape("(", regex=True) == "\\u{28}" and ldml.ldml_escape("(") == "(",
           "E13: regex metacharacter escaped in `from` only")
     check(ldml.ldml_escape("$", replacement=True) == "\\u{24}", "E13: `$` escaped in `to`")
-    metas = "\\^$.|?*+()[]{}"
-    check(all(ldml.ldml_escape(ch, regex=True).startswith("\\u{") for ch in metas), "E13: all 14 metacharacters escaped in `from`")
+    metas = "\\^$.|?*+()[]{}/"
+    check(all(ldml.ldml_escape(ch, regex=True).startswith("\\u{") for ch in metas), "E13/C-04: all 15 escaped characters (slash included) escaped in `from`")
+    check(ldml.ldml_escape("/") == "/", "C-04: the slash is escaped in `from` only")
 
     # E20: derived locale, 8-character subtags
-    check(ldml.derived_locale(minimal) == ("fr-t-k0-azerty-global-minimal", False), "E20: derived locale")
+    check(ldml.derived_locale(minimal) == ("fr-t-k0-azerty-global-minimal", []), "E20: derived locale")
     traditional = load_manifest(ROOT / "examples" / "azerty-traditionnel.oklm.json")
-    check(ldml.derived_locale(traditional) == ("fr-t-k0-azerty-traditio", True), "E20: subtag cut to 8 characters")
+    identifier, changes = ldml.derived_locale(traditional)
+    check(identifier == "fr-t-k0-azerty-traditio" and len(changes) == 1, "E20: subtag cut to 8 characters")
     text, report = ldml.export(traditional, source_file="x")
     check(any(m["path"] == "layoutId" for m in report["lossyMappings"]), "E20: the cut is declared as lossy")
+    # C-02: subtags shorter than 3 characters are merged or padded (RFC 6497: 3*8alphanum)
+    us = load_manifest(ROOT / "examples" / "qwerty-us.oklm.json")
+    check(ldml.derived_locale(us)[0] == "en-t-k0-qwertyus" and ldml.derived_locale(us)[1],
+          "C-02: 'us' merged into 'qwerty' and declared")
+    text, report = ldml.export(us, source_file="x")
+    check('locale="en-t-k0-qwertyus"' in text, "C-02: qwerty-us exports a valid derived locale")
+    check(any(m["path"] == "layoutId" and "merged" in m["detail"] for m in report["lossyMappings"]), "C-02: the merge is declared as lossy")
 
     # E15: fallback is a transform, not a lossy mapping
     text, report = ldml.export(minimal, source_file="x")
-    check('from="\\m{circumflex}" to="^"' in text, "E15: fallback exported as a bare-marker transform")
+    check('from="\\m{circumflex}(.)" to="^$1"' in text, "E15/C-03: fallback exported as marker + (.) -> fallback + $1")
+    check('from="\\m{circumflex}" to=' not in text, "C-03: no transform on the bare marker")
     check(not any("fallback" in m["path"] for m in report["lossyMappings"]), "E15: fallback not reported as lossy")
 
     # E22: modifier keys carry no output and are skipped by every exporter

@@ -29,6 +29,10 @@
       "reason": "not represented in .klc (the short name comes from layoutId)"
     },
     {
+      "path": "keys[].xkb",
+      "reason": "not represented in .klc (`code` only names the VK)"
+    },
+    {
       "path": "description",
       "reason": "free-text description, not part of any target's mapping model"
     },

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> Elgato Stream Deck profile exporter (`.streamDeckProfile`, one-way, draft).
 
 What it produces: a profile of "Text" actions, one button per distinct character that a layout
@@ -17,7 +18,8 @@ addressed "column,row") was rebuilt from public sources and community tools, and
 opened with the Stream Deck software. The report says so in `warnings`.
 
 Output is deterministic: UUIDs are derived from the layout id, zip entries are sorted and carry a
-fixed timestamp.
+fixed timestamp, creator system (Unix), attributes and storage method (stored, not deflated): the bytes are
+the same on every OS and Python.
 """
 import io
 import json
@@ -25,7 +27,8 @@ import re
 import uuid
 import zipfile
 
-from .common import ReportBuilder, reject_unsupported_v1_scope, skip_oklm_only_metadata, without_modifier_keys
+from .common import (ReportBuilder, declare_unmapped_fields, reject_unsafe_text, reject_unsupported_v1_scope, skip_oklm_only_metadata,
+                     without_modifier_keys)
 
 DEVICE_MODEL = "20GBA9911"  # Stream Deck XL, 8 x 4
 COLUMNS, ROWS = 8, 4
@@ -48,7 +51,7 @@ def collect_characters(manifest):
         levels = key.get("levels", {})
         for level in sorted(levels, key=int):
             out = levels[level]
-            if isinstance(out, str) and out and not ASCII_PLAIN.match(out) and out not in seen:
+            if isinstance(out, str) and out and not ASCII_PLAIN.fullmatch(out) and out not in seen:
                 seen.add(out)
                 ordered.append(out)
     return ordered
@@ -93,10 +96,14 @@ def build_profile(manifest, characters):
             "Name": f"{manifest['name']} {n}/{len(pages)}",
         })
     buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+    # Same bytes on every OS and Python: ZipInfo sets create_system from sys.platform (0 on Windows, 3
+    # elsewhere), and deflate output depends on the zlib build, so both are fixed (stored entries, Unix
+    # attributes, fixed timestamp). The files are small JSON: nothing is gained by compressing them.
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_STORED) as archive:
         for name in sorted(entries):
             info = zipfile.ZipInfo(name, FIXED_TIME)
-            info.compress_type = zipfile.ZIP_DEFLATED
+            info.compress_type = zipfile.ZIP_STORED
+            info.create_system = 3
             info.external_attr = 0o644 << 16
             archive.writestr(info, entries[name])
     return buffer.getvalue()
@@ -113,6 +120,8 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="any"):
+        return None, report.build()
 
     characters = collect_characters(manifest)
     if not characters:
@@ -130,6 +139,8 @@ def export(manifest, source_file=None):
     for field in ("levelSelectors", "geometry", "locales", "layoutId", "authors", "license", "version"):
         if field in manifest:
             report.skip(field, "not represented in a Stream Deck profile (only the profile name is taken from `name`)")
+    declare_unmapped_fields(report, manifest, "a Stream Deck profile (only the typed characters are exported)",
+                            {"id", "hid", "levels", "role", "modifier"})
     pages = -(-len(characters) // PER_PAGE)
     report.warn(f"{len(characters)} buttons on {pages} page(s) of {COLUMNS}x{ROWS} (Stream Deck XL); "
                 "other models need the profile to be adapted in the Stream Deck software")

@@ -30,6 +30,22 @@
       "reason": "no macOS keylayout attribute for this OKLM identity/provenance field in the v1 exporter"
     },
     {
+      "path": "version",
+      "reason": "no macOS keylayout attribute for the layout version"
+    },
+    {
+      "path": "keys[].xkb",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
+      "path": "keys[].code",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
+      "path": "deadKeys[].name",
+      "reason": "not represented in a macOS keylayout"
+    },
+    {
       "path": "locales",
       "reason": "macOS keylayout files are not locale-tagged; only the layout name is used"
     },
@@ -148,7 +164,9 @@
       "detail": "the <layouts> hardware-detection range is not modeled per OKLM geometry in v1; the generic first=0 last=17 mapSet=ANSI range from Apple's reference example is used"
     }
   ],
-  "warnings": [],
+  "warnings": [
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock (5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): 83 key output(s) filled this way"
+  ],
   "errors": [],
   "generator": {
     "name": "oklm-exporters",

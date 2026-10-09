@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """LDML Keyboard 3 -> OKLM importer (draft, schema 0.2).
 
 Reads a CLDR/UTS #35 Part 7 `keyboard3` file and produces an OKLM manifest plus a conversion report
@@ -22,7 +23,8 @@ What is mapped
   dead-key output;
 - simple transforms whose `from` is a marker followed by literal characters or one `$[set]` (captured or
   not) become dead-key compositions; sets are expanded (`$1` and `$[1:set]` in `to`); a bare marker
-  with a literal `to` is the dead key `fallback` (E15). The first rule wins when two give the same base;
+  with a literal `to` is the dead key `fallback` (E15), and so is `\\m{id}(.)` -> `text$1` (what the OKLM
+  exporter writes, C-03). The first rule wins when two give the same base;
 - `<display output="\\m{id}">` -> dead key `display`.
 
 What is preserved in `extensions.OKLM_ldml.unmapped` (verbatim XML) rather than mapped: transforms with
@@ -378,6 +380,13 @@ def expand_rule(from_text, to_text, sets, strings):
     """
     if to_text is None:
         raise Unsupported("a transform without `to` deletes its match")
+    if from_text.endswith("(.)") and to_text.endswith("$1") and not to_text.endswith("$$1"):
+        # The form the OKLM exporter writes for `fallback` (C-03): marker, any character -> text + that
+        # character. Same dead key fallback as a transform on the bare marker.
+        marker, prefix, set_name, suffix = parse_from(from_text[:-3], strings)
+        parts = parse_to(to_text[:-2], strings)
+        if not prefix and set_name is None and not suffix and parts and all(p[0] == "t" for p in parts):
+            return marker, None, "".join(p[1] for p in parts)
     marker, prefix, set_name, suffix = parse_from(from_text, strings)
     parts = parse_to(to_text, strings)
     uses_set = any(p[0] in ("capture", "mapped") for p in parts)

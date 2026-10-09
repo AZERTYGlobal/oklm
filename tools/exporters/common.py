@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Shared helpers for OKLM exporters (draft v1: LDML, xkb, keylayout).
 
 All exporters are one-way (OKLM -> target). Every export call must produce a
@@ -8,6 +9,7 @@ or the filesystem beyond plain read/write of the files it is given.
 """
 import json
 import sys
+import unicodedata
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -69,6 +71,79 @@ def resolve_level_modifiers(manifest):
     return resolved
 
 
+def caps_base_levels(resolved):
+    """Map each CapsLock level to the level without CapsLock that has the same other qualifiers.
+
+    With the default selectors this is 5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4. A CapsLock level whose
+    non-CapsLock counterpart is not declared (explicitly or by default) is absent from the result.
+    """
+    by_qualifiers = {frozenset(): "1"}
+    for level in sorted(resolved, key=int):
+        if "CapsLock" not in resolved[level]:
+            by_qualifiers.setdefault(frozenset(resolved[level]), level)
+    return {
+        level: by_qualifiers[frozenset(q for q in qualifiers if q != "CapsLock")]
+        for level, qualifiers in resolved.items()
+        if "CapsLock" in qualifiers and frozenset(q for q in qualifiers if q != "CapsLock") in by_qualifiers
+    }
+
+
+def effective_output(levels, level, caps_base):
+    """Output of a key at `level`; a CapsLock level the key does not define falls back on the
+    matching level without CapsLock (decision of the 2026-10 audit, batch 1, B-02).
+
+    `levels` is the key's levels object, `caps_base` the result of caps_base_levels().
+    Returns (output or None, True when the fallback was used).
+    """
+    out = levels.get(level)
+    if out is None and level in caps_base:
+        base = levels.get(caps_base[level])
+        if base is not None:
+            return base, True
+    return out, False
+
+
+CAPS_FALLBACK_WARNING = (
+    "CapsLock levels a key does not define take the output of the matching level without CapsLock "
+    "(5 -> 1, 6 -> 2, 7 -> 3, 8 -> 4 with the default selectors): {count} key output(s) filled this way"
+)
+
+
+# Standalone (spacing) character of a dead key, by OKLM dead-key id: what the key types when the
+# sequence does not compose (macOS terminator, Windows DEADKEY name). Used by keylayout and klc, in
+# that order of preference: the dead key's `fallback`, its `display`, then this table. Provenance: the
+# `<terminators>` of the shipped AZERTY Global.keylayout (azerty-global release audit 2026-09-05), keyed
+# by OKLM dead-key id; ported 2026-10-06 (decision D29 of IA/operations/2026-10-04-outils-maison-vs-en-
+# ligne). The entries for cyrillic and extended-latin are U+0020, as in that file.
+DEAD_KEY_STANDALONE = {
+    "acute": "´", "double-acute": "˝", "grave": "`", "double-grave": "̏",
+    "cyrillic": " ", "greek": "µ", "phonetic": "ʁ", "stroke": "/",
+    "horizontal-stroke": "-", "breve": "˘", "inverted-breve": "̑",
+    "caron": "ˇ", "circumflex": "^", "horn": "̛", "hook": "̉",
+    "cedilla": "¸", "extended-latin": " ", "macron": "¯", "ogonek": "˛",
+    "dot-above": "˙", "dot-below": "̣", "punctuation": "§",
+    "ring-above": "˚", "misc-symbols": "→", "currencies": "¤",
+    "scientific": "±", "tilde": "~", "diaeresis": "¨", "comma": "̦",
+}
+
+
+def standalone_char(dead_key):
+    """(character, origin) of a dead key's standalone character, one policy for every exporter:
+    `fallback`, else `display`, else DEAD_KEY_STANDALONE, else the result the manifest gives for the
+    dead key followed by a space (the conventional "dead key + Space"). origin is "fallback",
+    "display", "default", "space", or None (character None) when the dead key has none of them."""
+    if "fallback" in dead_key:
+        return dead_key["fallback"], "fallback"
+    if "display" in dead_key:
+        return dead_key["display"], "display"
+    if dead_key["id"] in DEAD_KEY_STANDALONE:
+        return DEAD_KEY_STANDALONE[dead_key["id"]], "default"
+    space = dead_key.get("compositions", {}).get(" ")
+    if isinstance(space, str) and space:
+        return space, "space"
+    return None, None
+
+
 def levels_used_by(manifest):
     """Every level number (as string) referenced by any key's levels object."""
     used = set()
@@ -99,13 +174,117 @@ def without_modifier_keys(report, manifest):
 
 
 def xml_escape(text):
-    """Escape a string for use as XML text or a double-quoted attribute value."""
+    """Escape a string for use as XML text or a double-quoted attribute value.
+
+    Tab, line feed and carriage return become character references (a raw one in an attribute is
+    normalized to a space by every XML parser). A character XML 1.0 cannot carry (most C0
+    controls, lone surrogates, U+FFFE, U+FFFF) raises ValueError: exporters refuse such text
+    beforehand with reject_unsafe_text, so reaching it here is a bug, never a silent alteration.
+    """
+    for ch in text:
+        if _xml_illegal(ch):
+            raise ValueError(f"U+{ord(ch):04X} cannot be written in an XML 1.0 document")
     return (
         text.replace("&", "&amp;")
         .replace("<", "&lt;")
         .replace(">", "&gt;")
         .replace('"', "&quot;")
+        .replace("\t", "&#x9;")
+        .replace("\n", "&#xA;")
+        .replace("\r", "&#xD;")
     )
+
+
+def _xml_illegal(ch):
+    code = ord(ch)
+    return (code < 0x20 and ch not in "\t\n\r") or 0xD800 <= code <= 0xDFFF or code in (0xFFFE, 0xFFFF)
+
+
+def _char_problem(ch, policy):
+    """Why a character cannot be exported under `policy`, or None.
+
+    policy "line": identity text (name, authors...), written in comments, titles and attributes: no
+    control character and no line or paragraph separator. "refuse": any control character is
+    refused (xkb keysyms and Compose strings). "xml": what XML 1.0 cannot carry, \\t \\n \\r being
+    written as character references. "any": only what no target can hold (NUL, lone surrogates,
+    U+FFFE, U+FFFF).
+    """
+    code = ord(ch)
+    category = unicodedata.category(ch)
+    if code == 0:
+        return "NUL character"
+    if category == "Cs":
+        return "lone surrogate"
+    if code in (0xFFFE, 0xFFFF):
+        return "noncharacter"
+    if policy == "line" and category in ("Cc", "Zl", "Zp"):
+        return "control or line separator character"
+    if policy == "refuse" and category == "Cc":
+        return "control character"
+    if policy == "xml" and _xml_illegal(ch):
+        return "control character XML 1.0 cannot carry"
+    return None
+
+
+def iter_manifest_texts(manifest):
+    """(path, text, kind) of every string an exporter writes: kind "line" for identity text, kind
+    "output" for what keys and dead keys type."""
+    for field in ("name", "version", "license"):
+        if isinstance(manifest.get(field), str):
+            yield field, manifest[field], "line"
+    for index, author in enumerate(manifest.get("authors", [])):
+        if isinstance(author, str):
+            yield f"authors[{index}]", author, "line"
+    for key in manifest.get("keys", []):
+        for level, out in key.get("levels", {}).items():
+            if isinstance(out, str):
+                yield f"keys[{key['id']}].levels.{level}", out, "output"
+    for dead_key in manifest.get("deadKeys", []):
+        base = f"deadKeys[{dead_key['id']}]"
+        for field in ("display", "fallback"):
+            if isinstance(dead_key.get(field), str):
+                yield f"{base}.{field}", dead_key[field], "output"
+        for sequence, result in dead_key.get("compositions", {}).items():
+            yield f"{base}.compositions[{sequence!r}]", sequence, "output"
+            if isinstance(result, str):
+                yield f"{base}.compositions[{sequence!r}] (result)", result, "output"
+
+
+def reject_unsafe_text(report, manifest, outputs="any"):
+    """Refuse text the target cannot carry (audit B-03, B-07, B-16, B-17). Returns True and records one
+    error per offending string when there is any; nothing is altered silently.
+
+    `outputs` is the policy for typed outputs ("any", "xml", "refuse", see _char_problem); identity
+    text is always held to the "line" policy.
+    """
+    found = []
+    for path, text, kind in iter_manifest_texts(manifest):
+        policy = "line" if kind == "line" else outputs
+        for ch in text:
+            reason = _char_problem(ch, policy)
+            if reason:
+                found.append(f"{path}: U+{ord(ch):04X} ({reason}) is not exportable")
+                break
+    for message in found[:20]:
+        report.error(message)
+    if len(found) > 20:
+        report.error(f"... and {len(found) - 20} more unexportable text(s)")
+    return bool(found)
+
+
+def reject_duplicate_hid(report, manifest):
+    """Refuse two keys on the same HID usage (audit B-09): the target would get two entries for one
+    physical key. Returns True and records an error per duplicate when there is any."""
+    seen = {}
+    duplicated = False
+    for key in manifest.get("keys", []):
+        hid = key["hid"].lower()
+        if hid in seen:
+            report.error(f"keys {seen[hid]} and {key['id']} share HID {key['hid']}: one physical key cannot carry two keys")
+            duplicated = True
+        else:
+            seen[hid] = key["id"]
+    return duplicated
 
 
 def write_text(path, text):
@@ -203,6 +382,26 @@ def reject_unsupported_v1_scope(report, manifest):
         )
         return True
     return False
+
+
+KEY_FIELDS = ("id", "hid", "xkb", "code", "name", "role", "modifier", "levels", "groups", "categories", "extensions")
+DEAD_KEY_FIELDS = ("id", "name", "display", "compositions", "fallback", "extensions")
+
+
+def declare_unmapped_fields(report, manifest, target, key_fields, dead_key_fields=None):
+    """Declare as skipped every key and dead-key field the exporter does not write (audit B-10): a
+    field present in at least one key (or dead key) and absent from the mapped set. `key_fields`
+    and `dead_key_fields` are the field names the exporter reads; dead_key_fields=None means the
+    dead keys are declared elsewhere as a whole. Nothing is dropped without a line in the report."""
+    for fields, mapped, items, label in (
+        (KEY_FIELDS, key_fields, manifest.get("keys", []), "keys[]"),
+        (DEAD_KEY_FIELDS, dead_key_fields, manifest.get("deadKeys", []), "deadKeys[]"),
+    ):
+        if mapped is None:
+            continue
+        for field in fields:
+            if field not in mapped and any(field in item for item in items):
+                report.skip(f"{label}.{field}", f"not represented in {target}")
 
 
 def skip_oklm_only_metadata(report, manifest):

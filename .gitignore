@@ -13,3 +13,10 @@ research/results/*.pdf
 # Internal tools tied to the azerty.global site, not part of the public toolchain.
 tools/convert_site_to_oklm.py
 tools/verify_oklm_against_site.py
+
+# Invariant : aucun outil, test ou validateur suivi n'importe les fichiers ignores ci-dessus
+# (tools/tests/run_all.py sur un clone propre le verifie ; tables partagees : tools/oklm_keyboard_tables.py).
+
+# Environnements virtuels locaux
+.venv/
+venv/

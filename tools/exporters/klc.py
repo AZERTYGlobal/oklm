@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> Microsoft Keyboard Layout Creator source (`.klc`, one-way, draft).
 
 Output: UTF-16 little endian with BOM, CRLF line endings, tab separated, as MSKLC writes it.
@@ -12,12 +13,14 @@ Mapping:
 - CapsLock levels (a level whose qualifiers include CapsLock) are not columns: they set the `Cap` column.
   Cap = 1 when CapsLock swaps states 0 and 1, +4 when it swaps states 6 and 7. A caps level that matches
   neither "no effect" nor "swap" (MSKLC would need an SGCap line) is reported as lossy and ignored. Levels
-  omitted by the manifest are read as "no CapsLock data" (no effect), not as E21 "no output".
+  omitted by the manifest read as the matching level without CapsLock (no effect), not as E21 "no output";
+  keylayout and LDML apply the same rule (common.effective_output).
 - Levels needing Level5Shift or NumLock, or without a levelSelectors entry, are skipped and reported.
 - Every output is written as 4 hexadecimal digits, except ASCII letters and digits, which are written as is;
   a dead key output is `<hex>@`. Only BMP single code point outputs fit: a ligature (several code points)
   or a character outside the BMP is skipped and reported (the LIGATURE section is not generated).
-- A dead key becomes a DEADKEY block named by its standalone character: `display`, else `fallback`.
+- A dead key becomes a DEADKEY block named by its standalone character (common.standalone_char, the policy
+  of the keylayout exporter: `fallback`, else `display`, else a built-in table by dead-key id).
   Compositions whose base or result is not a single BMP character are skipped and reported. The space
   base is added (space gives the standalone character) when the manifest does not define it.
 - VK names: an ASCII letter or digit at level 1 gives its own VK; other keys get the OEM name of their
@@ -28,10 +31,13 @@ VERIFICATION STATUS: MSKLC was not available, so the output was never compiled. 
 parser of the format as documented by Microsoft samples (`kbdus.klc`); treat the file as untested.
 """
 import re
+import unicodedata
+import zlib
 
-from .common import ReportBuilder, reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, \
-    without_modifier_keys
+from .common import ExportError, ReportBuilder, caps_base_levels, declare_unmapped_fields, effective_output, reject_duplicate_hid, reject_unsafe_text, \
+    reject_unsupported_v1_scope, resolve_level_modifiers, skip_oklm_only_metadata, standalone_char, without_modifier_keys
 from .ldml import HID_TO_SCANCODE1
+from .unicode_frozen import NAMES_AFTER_UNICODE_13
 
 STATES = [0, 1, 2, 6, 7]
 LOCALES = {  # BCP 47 -> (LCID hex, language name)
@@ -51,12 +57,6 @@ CODE_TO_VK = {
 SPARE_VK = ["OEM_1", "OEM_2", "OEM_3", "OEM_4", "OEM_5", "OEM_6", "OEM_7", "OEM_8", "OEM_102",
             "OEM_COMMA", "OEM_PERIOD", "OEM_PLUS", "OEM_MINUS"]
 CTRL_OEM = {"OEM_4": "001b", "OEM_5": "001c", "OEM_6": "001d", "OEM_MINUS": "001f", "SPACE": "0020"}
-STANDALONE = {  # dead key id -> conventional standalone (spacing) character
-    "acute": "´", "grave": "`", "circumflex": "^", "diaeresis": "¨",
-    "tilde": "~", "caron": "ˇ", "breve": "˘", "cedilla": "¸",
-    "macron": "¯", "ogonek": "˛", "ring-above": "˚", "dot-above": "˙",
-    "double-acute": "˝",
-}
 PRIVATE_USE_START = 0xE000
 ALNUM = re.compile(r"^[A-Za-z0-9]$")
 
@@ -72,12 +72,13 @@ def _fits(output):
 def _cell(output):
     if output is None:
         return "-1"
-    return output if ALNUM.match(output) else _hex(output)
+    return output if ALNUM.fullmatch(output) else _hex(output)
 
 
 def _name(ch):
-    import unicodedata
-    return unicodedata.name(ch, f"U+{ord(ch):04X}")
+    """Character name for the comments of the file: the frozen table first, so the golden files do not
+    depend on the Unicode version of the interpreter, then unicodedata, else the code point."""
+    return NAMES_AFTER_UNICODE_13.get(ord(ch)) or unicodedata.name(ch, f"U+{ord(ch):04X}")
 
 
 def assign_vks(keys):
@@ -85,7 +86,7 @@ def assign_vks(keys):
     vks, used = {}, set()
     for key in keys:  # pass 1: own VK for ASCII letters and digits at level 1
         base = key.get("levels", {}).get("1")
-        if isinstance(base, str) and ALNUM.match(base) and base.upper() not in used:
+        if isinstance(base, str) and ALNUM.fullmatch(base) and base.upper() not in used:
             vks[key["id"]] = base.upper()
             used.add(base.upper())
     for key in keys:  # pass 2: OEM name of the position
@@ -100,6 +101,9 @@ def assign_vks(keys):
     spare = [v for v in SPARE_VK if v not in used]
     for key in keys:  # pass 3: whatever is left
         if key["id"] not in vks:
+            if not spare:
+                raise ExportError(f"key {key['id']}: no free VK name left (a .klc has 13 spare OEM names; "
+                                  "give the keys a `code` or reduce the non-alphanumeric keys)")
             vks[key["id"]] = spare.pop(0)
             used.add(vks[key["id"]])
     return vks
@@ -129,8 +133,14 @@ def classify_levels(manifest, report):
 
 
 def short_name(layout_id):
-    name = re.sub(r"[^a-z0-9]", "", layout_id.lower())[:8]
-    return name or "oklm"
+    """The KBD short name (8 characters at most, the name of the keyboard DLL): the layoutId reduced
+    to lower-case letters and digits when that fits, else its first 4 characters followed by 4 hexadecimal
+    digits of a CRC-32 of the whole layoutId, so two layouts sharing a long prefix (azerty-global and
+    azerty-global-minimal) do not get the same name."""
+    name = re.sub(r"[^a-z0-9]", "", layout_id.lower())
+    if len(name) <= 8:
+        return name or "oklm"
+    return name[:4] + f"{zlib.crc32(layout_id.encode('utf-8')) & 0xFFFF:04x}"
 
 
 def export(manifest, source_file=None):
@@ -144,6 +154,8 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="any") | reject_duplicate_hid(report, manifest):
+        return None, report.build()
 
     unmapped = [(k["id"], k["hid"]) for k in manifest["keys"] if k["hid"] not in HID_TO_SCANCODE1]
     if unmapped:
@@ -152,14 +164,19 @@ def export(manifest, source_file=None):
         return None, report.build()
 
     keys = sorted(manifest["keys"], key=lambda k: int(HID_TO_SCANCODE1[k["hid"]], 16))
-    vks = assign_vks(keys)
+    try:
+        vks = assign_vks(keys)
+    except ExportError as exc:
+        report.error(str(exc))
+        return None, report.build()
     levels = classify_levels(manifest, report)
+    caps_base = caps_base_levels(resolve_level_modifiers(manifest))
 
     # dead keys: standalone character, blocks
     dead_char, dead_blocks = {}, {}
     private = PRIVATE_USE_START
     for dk in manifest.get("deadKeys", []):
-        standalone = dk.get("display") or dk.get("fallback") or STANDALONE.get(dk["id"])
+        standalone, _ = standalone_char(dk)
         if standalone is None or standalone in dead_blocks:
             while chr(private) in dead_blocks:
                 private += 1
@@ -175,7 +192,9 @@ def export(manifest, source_file=None):
         return None, report.build()
 
     def output_of(key, level):
-        out = key.get("levels", {}).get(level)
+        # A CapsLock level the key does not define reads as the matching level without CapsLock
+        # (same rule as the keylayout and LDML exporters): CapsLock has no effect on that key.
+        out, _ = effective_output(key.get("levels", {}), level, caps_base)
         if out is None:
             return None
         if isinstance(out, dict):
@@ -289,6 +308,8 @@ def export(manifest, source_file=None):
     for field in ("geometry", "layoutId", "version"):
         if field in manifest:
             report.skip(field, "not represented in .klc (the short name comes from layoutId)")
+    declare_unmapped_fields(report, manifest, ".klc (`code` only names the VK)", {"id", "hid", "code", "levels", "role", "modifier"},
+                            {"id", "display", "compositions", "fallback"})
     skip_oklm_only_metadata(report, manifest)
     report.warn("MSKLC was not available: the .klc was never compiled; it is checked by an in-repo parser only")
 

@@ -5,13 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OKLM — Open Keyboard Layout Model</title>
 <meta name="description" content="An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.">
+<link rel="canonical" href="https://oklm.org/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="OKLM">
+<meta property="og:title" content="OKLM — Open Keyboard Layout Model">
+<meta property="og:description" content="An open model to describe, validate and export keyboard layouts: one human-maintainable source of truth, exported to LDML, operating systems, hardware legends and documentation.">
+<meta property="og:url" content="https://oklm.org/">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='6' width='30' height='20' rx='4' fill='%233b82f6'/%3E%3Cg fill='white'%3E%3Crect x='5' y='10' width='4' height='4' rx='1'/%3E%3Crect x='11' y='10' width='4' height='4' rx='1'/%3E%3Crect x='17' y='10' width='4' height='4' rx='1'/%3E%3Crect x='23' y='10' width='4' height='4' rx='1'/%3E%3Crect x='5' y='16' width='4' height='4' rx='1' fill='%23fb923c'/%3E%3Crect x='11' y='16' width='10' height='4' rx='1'/%3E%3Crect x='23' y='16' width='4' height='4' rx='1'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #fafbfd; --bg2: #f1f4f8; --fg: #131922; --muted: #5a6675; --faint: #8f9aa8;
+  --bg: #fafbfd; --bg2: #f1f4f8; --fg: #131922; --muted: #5a6675; --faint: #5c636c;
   --accent: #2563eb; --accent-fg: #2563eb; --accent-soft: rgba(37, 99, 235, .09);
   --dead: #c2410c; --dead-soft: rgba(194, 65, 12, .10);
   --panel: #ffffff; --border: #dde3ea; --border-strong: #c8d1db;
@@ -23,7 +30,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b0e14; --bg2: #0e1219; --fg: #e7ecf3; --muted: #97a2b1; --faint: #626d7c;
+    --bg: #0b0e14; --bg2: #0e1219; --fg: #e7ecf3; --muted: #97a2b1; --faint: #8b939e;
     --accent: #6ea2ff; --accent-fg: #8ab4ff; --accent-soft: rgba(110, 162, 255, .12);
     --dead: #ff9e64; --dead-soft: rgba(255, 158, 100, .12);
     --panel: #12161f; --border: #232a36; --border-strong: #313a49;
@@ -137,6 +144,8 @@ select#layout { font: inherit; font-size: .93rem; font-weight: 600; padding: .5r
 .key:hover { transform: translateY(-2px); border-color: var(--accent);
   box-shadow: 0 6px 16px rgba(0, 0, 0, .18); z-index: 2; }
 .key.sel { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); z-index: 3; }
+.key:focus-visible, .btn:focus-visible, .mod:focus-visible, select#layout:focus-visible, a:focus-visible,
+.brand:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; z-index: 4; }
 .key.frame { background: linear-gradient(180deg, var(--kc-frame1), var(--kc-frame2));
   color: var(--faint); cursor: default; font-size: .64rem; font-weight: 500; }
 .key.frame:hover { transform: none; border-color: var(--kc-border); box-shadow: none; }
@@ -241,13 +250,13 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
     <div class="hero wrap">
       <div>
         <h1>One open source of truth per <em>keyboard layout</em>.</h1>
-        <p class="lead">OKLM is a human-maintainable JSON model to describe, validate and export keyboard layouts — to Unicode LDML Keyboard, operating-system formats, web testers, keycap maps, dynamic key displays and assistant knowledge files.</p>
+        <p class="lead">OKLM is a human-maintainable JSON model to describe, validate and export keyboard layouts — to Unicode LDML Keyboard, operating-system formats and a Stream Deck profile, with web testers, keycap maps and assistant knowledge files on the roadmap.</p>
         <div class="buttons">
           <a class="btn primary" href="https://github.com/AZERTYGlobal/oklm">GitHub repository</a>
           <a class="btn" href="https://github.com/AZERTYGlobal/oklm/blob/main/SPEC.md">Specification</a>
           <a class="btn" href="#demo">Try the demo ↓</a>
         </div>
-        <p class="chip">Draft 0.2 — a bridge to LDML Keyboard: schemas, six example layouts, a validator, one-way exporters with loss reports</p>
+        <p class="chip">Draft 0.2 — a bridge to LDML Keyboard: schemas, six example layouts, a validator, five one-way exporters with loss reports, an LDML importer</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="hero-row"><span class="hk">O</span><span class="hk">K</span></div>
@@ -260,7 +269,8 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
     <div class="wrap">
       <p class="kicker">Live demo</p>
       <h2>The format, demonstrating itself</h2>
-      <p class="sub">This keyboard is rendered from the actual <code>.oklm.json</code> manifests published in the repository — nothing is drawn by hand. Pick a layout, toggle modifiers, click any key. <span class="legend-dot"></span><span style="color:var(--dead); font-weight:600">Orange</span> marks dead keys: click one to see its composition table.</p>
+      <p class="sub">This keyboard is rendered from the actual <code>.oklm.json</code> manifests published in the repository — nothing is drawn by hand. Pick a layout, toggle modifiers, click any key. <span class="legend-dot"></span><span style="color:var(--dead); font-weight:600">Orange</span> marks dead keys: click one to see its composition table. With the keyboard, press Tab to reach a key and Enter or Space to inspect it.</p>
+      <noscript><p class="sub">The demo needs JavaScript. The manifests it draws are in the <a href="https://github.com/AZERTYGlobal/oklm/tree/main/examples">examples</a> directory of the repository.</p></noscript>
       <div class="demo-bar">
         <select id="layout" aria-label="Layout"></select>
         <div class="mods" role="group" aria-label="Modifiers">
@@ -270,18 +280,18 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
           <button class="mod" id="m-caps" aria-pressed="false">Caps Lock</button>
         </div>
       </div>
-      <div class="demo-meta" id="meta"></div>
-      <div class="kb-scroll"><div class="kb-deck"><div class="kb" id="kb"></div></div></div>
-      <p class="kb-hint">Keycap convention: Shift output top-left, base bottom-left, AltGr bottom-right, Shift+AltGr top-right — letters show a single capital plus their AltGr extras. Greyed keys are frame keys, out of the draft 0.2 core.</p>
-      <div class="inspector" id="inspector"><span class="placeholder">Click a key to inspect its outputs, HID usage, XKB name and W3C code.</span></div>
+      <div class="demo-meta" id="meta" aria-live="polite"></div>
+      <div class="kb-scroll"><div class="kb-deck"><div class="kb" id="kb" role="group" aria-label="Virtual keyboard"></div></div></div>
+      <p class="kb-hint">Keycap convention: Shift output top-left, base bottom-left, AltGr bottom-right, Shift+AltGr top-right — letters show a single capital plus their AltGr extras. Greyed keys are frame keys, out of the draft 0.2 core. When a CapsLock level (5-8) has no output, the key shows the output of the matching level without CapsLock.</p>
+      <div class="inspector" id="inspector" role="region" aria-label="Key inspector" aria-live="polite"><span class="placeholder">Click a key (or press Enter or Space on it) to inspect its outputs, HID usage, XKB name and W3C code.</span></div>
     </div>
   </section>
 
   <section id="snippet-s">
     <div class="wrap">
       <p class="kicker">The manifest</p>
-      <h2>A key, in five lines</h2>
-      <p class="sub">Canonical ISO/IEC 9995-1 position, a mandatory USB HID anchor, cross-references for Linux and the web, and outputs by ISO level. Readable, diffable, hand-correctable.</p>
+      <h2>A key, in a few lines</h2>
+      <p class="sub">Canonical ISO/IEC 9995-1 position, a mandatory USB HID anchor, cross-references for Linux and the web, outputs by ISO level and optional tags. This is the Q-position key of the six-key example <code>azerty-global-minimal.oklm.json</code>. Readable, diffable, hand-correctable.</p>
       <pre class="snippet"><code>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"D01"</span>, <span class="tok-k">"hid"</span>: <span class="tok-s">"0x14"</span>, <span class="tok-k">"xkb"</span>: <span class="tok-s">"AD01"</span>, <span class="tok-k">"code"</span>: <span class="tok-s">"KeyQ"</span>,
   <span class="tok-k">"levels"</span>: { <span class="tok-k">"1"</span>: <span class="tok-s">"a"</span>, <span class="tok-k">"2"</span>: <span class="tok-s">"A"</span> },
@@ -315,9 +325,9 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
         <div class="node"><b>OKLM tooling</b><small>validate · convert · report</small></div>
         <div class="arrow">→</div>
         <div class="targets mono">
-          <span>LDML Keyboard 3.0</span><span>Windows / macOS / XKB</span>
-          <span>web testers</span><span>keycaps &amp; stickers</span>
-          <span>dynamic key displays</span><span>assistant knowledge</span>
+          <span>LDML Keyboard 3.0</span><span>Windows .klc / macOS / XKB</span>
+          <span>Stream Deck profile</span><span>web testers (planned)</span>
+          <span>keycaps &amp; stickers (planned)</span><span>assistant knowledge (planned)</span>
         </div>
       </div>
     </div>
@@ -326,17 +336,23 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; align-item
   <section id="exporters">
     <div class="wrap">
       <p class="kicker">Exporters</p>
-      <h2>Three export targets, honest reports</h2>
-      <p class="sub">The v1 exporters convert a manifest to Unicode LDML Keyboard, Linux XKB or macOS keylayout. Every export writes the target file plus a machine-readable conversion report — validated against its own JSON Schema — declaring exactly what was mapped, skipped or approximated. Nothing is silently discarded.</p>
+      <h2>Five export targets, one importer, honest reports</h2>
+      <p class="sub">The exporters convert a manifest to Unicode LDML Keyboard, Linux XKB, macOS keylayout, a Windows .klc source or a Stream Deck profile. Every export writes the target file plus a machine-readable conversion report — validated against its own JSON Schema — declaring exactly what was mapped, skipped or approximated. Nothing is silently discarded. A sixth tool goes the other way: it imports an LDML Keyboard file into an OKLM manifest.</p>
       <pre class="snippet"><code>$ python tools/export.py <span class="tok-k">--target</span> <span class="tok-s">ldml</span> layout.oklm.json
 layout.ldml.xml
-layout.ldml.xml.report.json   <span class="tok-k"># mapped · skipped · approximated</span></code></pre>
+layout.ldml.xml.report.json   <span class="tok-k"># mapped · skipped · approximated</span>
+$ python tools/import_ldml.py keyboard.xml
+keyboard.oklm.json
+keyboard.import.report.json</code></pre>
       <div class="grid2" style="margin-top:1rem">
         <div class="card"><span class="num">LDML</span><h3>Unicode LDML Keyboard 3.0</h3><p>CLDR/UTS #35 Part 7 <code>keyboard3</code> XML — the standards-oriented interchange export.</p></div>
         <div class="card"><span class="num">XKB</span><h3>Linux xkb_symbols</h3><p>A standalone <code>xkb_symbols</code> block covering ISO/IEC 9995 levels 1–4; the report states the scope limits.</p></div>
         <div class="card"><span class="num">KEYLAYOUT</span><h3>macOS .keylayout</h3><p>An Apple <code>.keylayout</code> file with dead keys mapped to terminator states.</p></div>
+        <div class="card"><span class="num">KLC</span><h3>Windows .klc</h3><p>A Microsoft Keyboard Layout Creator source. Checked by a parser in the repository, never compiled with MSKLC.</p></div>
+        <div class="card"><span class="num">STREAM DECK</span><h3>Stream Deck profile</h3><p>An Elgato profile of Text buttons for the characters a layout types, a reminder for rare symbols. Not opened in the Stream Deck software.</p></div>
+        <div class="card"><span class="num">IMPORT</span><h3>LDML Keyboard → OKLM</h3><p>Reads CLDR <code>keyboard3</code> files. The round trip is measured on the six examples and three third-party CLDR keyboards.</p></div>
       </div>
-      <p class="sub" style="margin:1.4rem 0 0">Reference exports for all six example layouts are committed in <a href="https://github.com/AZERTYGlobal/oklm/tree/main/examples/exports"><code>examples/exports/</code></a> and covered by regression, determinism and schema tests.</p>
+      <p class="sub" style="margin:1.4rem 0 0">Reference exports for the six example layouts are committed in <a href="https://github.com/AZERTYGlobal/oklm/tree/main/examples/exports"><code>examples/exports/</code></a> and covered by regression, determinism and schema tests.</p>
     </div>
   </section>
 
@@ -365,14 +381,14 @@ layout.ldml.xml.report.json   <span class="tok-k"># mapped · skipped · approxi
     <div class="wrap">
       <p class="kicker">Status</p>
       <h2>A public draft, in the open</h2>
-      <p class="sub">OKLM is not yet a published standard, and it does not compete with Unicode CLDR/LDML Keyboard: it is a source model and tooling layer that exports to it. Available today: the draft 0.2 manifest schema, a conversion-report schema (draft 0.2), six example layouts, a reference validator and one-way exporters to LDML Keyboard, XKB and macOS keylayout — each with a loss report. Progress is measured by four gates, not dates: the gap review against LDML 48.2, ISO/IEC 9995-1:2026, W3C KeyboardEvent.code and HID Usage Tables 1.7 is done (its <a href="https://github.com/AZERTYGlobal/oklm/blob/main/CLDR-LDML.md#known-gaps-against-ldml-keyboard-482">known gaps</a> are public), the checks run green on a clean machine; the LDML → OKLM round trip and independent use are open. First users: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global, whose website will read its layout from the manifest next. Full order of work: <a href="https://github.com/AZERTYGlobal/oklm/blob/main/ROADMAP.md">ROADMAP</a>.</p>
+      <p class="sub">OKLM is not yet a published standard, and it does not compete with Unicode CLDR/LDML Keyboard: it is a source model and tooling layer that exports to it. Available today: the draft 0.2 manifest schema, a conversion-report schema (draft 0.2), six example layouts, a reference validator, one-way exporters to LDML Keyboard, XKB, macOS keylayout, Windows .klc and a Stream Deck profile — each with a loss report — and an LDML Keyboard importer. Progress is measured by four gates, not dates: the gap review against LDML 48.2, ISO/IEC 9995-1:2026, W3C KeyboardEvent.code and HID Usage Tables 1.7 is done (its <a href="https://github.com/AZERTYGlobal/oklm/blob/main/CLDR-LDML.md#known-gaps-against-ldml-keyboard-482">known gaps</a> are public), the checks run green on a clean machine, and the LDML → OKLM round trip is measured and passed (2026-10-05); independent use, by a project we did not write, is still open. First users: <a href="https://azerty.global">AZERTY Global</a> and QWERTY Global, whose website will read its layout from the manifest next. Full order of work: <a href="https://github.com/AZERTYGlobal/oklm/blob/main/ROADMAP.md">ROADMAP</a>.</p>
     </div>
   </section>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Specification &amp; documentation: CC BY 4.0 · Tooling: EUPL 1.2</span>
+    <span>Copyright 2026 The OKLM contributors. Specification &amp; documentation: CC BY 4.0 · Code, schemas and this page's markup and script: EUPL 1.2 · Layout data: the license of each manifest · <a href="https://github.com/AZERTYGlobal/oklm#licensing">Licensing details</a></span>
     <span><a href="https://github.com/AZERTYGlobal/oklm">github.com/AZERTYGlobal/oklm</a></span>
     <span>OKLM does not replace Unicode CLDR/LDML Keyboard — it exports to it.</span>
   </div>
@@ -435,6 +451,24 @@ function outLabel(out) {
   if (out.modifier) return { text: out.modifier, dead: false };
   return { text: "?", dead: false };
 }
+/* A missing CapsLock level (5-8) takes the output of the matching level without CapsLock (SPEC.md, Key). */
+function levelOutput(k, lv) {
+  const out = k.levels[lv];
+  if (out != null) return out;
+  const n = Number(lv);
+  return n >= 5 && n <= 8 ? k.levels[String(n - 4)] : undefined;
+}
+/* Accessible name of a key: its id and the outputs of its declared levels. */
+function keyLabel(k) {
+  const parts = [];
+  for (let i = 1; i <= 8; i++) {
+    const out = k.levels[String(i)];
+    if (out == null) continue;
+    const o = outLabel(out);
+    parts.push(SELECTOR_NAMES[String(i)] + " " + (o.dead ? "dead key " + o.text : o.text === "␣" ? "space" : o.text));
+  }
+  return k.id + (parts.length ? ": " + parts.join(", ") : "");
+}
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
 function lab(cls, o) {
   return o ? '<span class="lab ' + cls + (o.dead ? " dead" : "") + '">' + esc(o.text) + "</span>" : "";
@@ -476,19 +510,29 @@ function renderKeyboard() {
       const k = !isFrame && byId[id];
       if (isFrame || !k) {
         el.classList.add("frame");
+        el.setAttribute("aria-hidden", "true");
         el.innerHTML = '<span class="lab c">' + (isFrame ? esc(id) : "") + "</span>";
       } else {
         el.dataset.id = id;
         el.setAttribute("role", "button");
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("aria-label", keyLabel(k));
+        el.setAttribute("aria-pressed", selectedKey === id ? "true" : "false");
         el.title = id;
         if (lv) {
-          const o = outLabel(k.levels[lv]);
+          const o = outLabel(levelOutput(k, lv));
           el.innerHTML = o ? lab("c", o) : "";
           if (!o) el.style.opacity = .45;
         } else {
           el.innerHTML = capHTML(k);
         }
         el.addEventListener("click", () => selectKey(id));
+        el.addEventListener("keydown", (ev) => {
+          if (ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar") {
+            ev.preventDefault();
+            selectKey(id);
+          }
+        });
         if (selectedKey === id) el.classList.add("sel");
       }
       kb.appendChild(el);
@@ -502,6 +546,7 @@ function renderKeyboard() {
     const W = 1.5 * U + 0.5 * GAP, H = 2 * U + GAP, cut = 0.25 * (U + GAP), mid = U, r = 7;
     const el = document.createElement("div");
     el.className = "key frame";
+    el.setAttribute("aria-hidden", "true");
     el.style.left = (PAD + 13.5 * (U + GAP)) + "px";
     el.style.top = (PAD + 1 * (U + GAP)) + "px";
     el.style.width = W + "px";
@@ -534,9 +579,9 @@ function renderMeta() {
 
 function selectKey(id) {
   selectedKey = id;
-  document.querySelectorAll(".key.sel").forEach(e => e.classList.remove("sel"));
+  document.querySelectorAll(".key.sel").forEach(e => { e.classList.remove("sel"); e.setAttribute("aria-pressed", "false"); });
   const el = document.querySelector('.key[data-id="' + id + '"]');
-  if (el) el.classList.add("sel");
+  if (el) { el.classList.add("sel"); el.setAttribute("aria-pressed", "true"); }
   const k = (manifest.keys || []).find(x => x.id === id);
   if (!k) return;
   let html = "<h3><span class=\"mono\">" + esc(k.id) + "</span><span class=\"ids mono\">hid " + esc(k.hid) +
@@ -544,7 +589,13 @@ function selectKey(id) {
   html += '<div class="lvl-table">';
   const deadRefs = [];
   for (let i = 1; i <= 8; i++) {
-    const out = k.levels[String(i)];
+    const declared = k.levels[String(i)];
+    if (declared == null && i >= 5 && k.levels[String(i - 4)] != null) {
+      html += '<span class="n">' + i + " · " + SELECTOR_NAMES[String(i)] + "</span>" +
+              '<span class="n mono">same as level ' + (i - 4) + " (not declared)</span>";
+      continue;
+    }
+    const out = declared;
     if (out == null) continue;
     const o = outLabel(out);
     const raw = typeof out === "string"
@@ -576,7 +627,7 @@ async function loadLayout(file) {
   deadIndex = {};
   (manifest.deadKeys || []).forEach(d => deadIndex[d.id] = d);
   selectedKey = null;
-  $("inspector").innerHTML = '<span class="placeholder">Click a key to inspect its outputs, HID usage, XKB name and W3C code.</span>';
+  $("inspector").innerHTML = '<span class="placeholder">Click a key (or press Enter or Space on it) to inspect its outputs, HID usage, XKB name and W3C code.</span>';
   renderMeta();
   renderKeyboard();
 }

@@ -43,6 +43,14 @@
       "reason": "not represented in a Stream Deck profile (only the profile name is taken from `name`)"
     },
     {
+      "path": "keys[].xkb",
+      "reason": "not represented in a Stream Deck profile (only the typed characters are exported)"
+    },
+    {
+      "path": "keys[].code",
+      "reason": "not represented in a Stream Deck profile (only the typed characters are exported)"
+    },
+    {
       "path": "description",
       "reason": "free-text description, not part of any target's mapping model"
     },

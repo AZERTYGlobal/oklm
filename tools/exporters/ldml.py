@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM -> LDML Keyboard 3 exporter (draft v1, one-way).
 
 Targets the CLDR/UTS #35 Part 7 "keyboard3" format. Scope and known
@@ -22,33 +23,42 @@ approximations (see CONVERSIONS.md and the generated report):
   CLDR repository (a partial manifest covers only part of a physical keyboard).
 - Dead keys compile to LDML markers (`\\m{id}`) and simple <transform>
   rules, one per composition entry, in manifest document order. `fallback`
-  is an explicit transform matching the bare marker (E15): that is what the
-  field means in OKLM, so it is not a lossy mapping.
+  is an explicit transform written after the compositions of its dead key, on
+  the marker followed by any character: `from="\\m{id}(.)" to="<fallback>$1"`
+  (E15, C-03). A transform on the bare marker would apply as soon as the dead
+  key is pressed, before any composition. It is not a lossy mapping.
 - The composition base is a literal string (E13): it is escaped before it is
   written as a transform `from` (a regular expression), and every output is
   escaped (backslash, control, format, combining and non-ASCII space
   characters become \\u{...}).
 - The LDML `locale` identifier is derived (E20): locales[0] + "-t-k0-" +
-  layoutId, each layoutId subtag cut to the 8 characters BCP 47 allows (the
-  cut is declared as a lossy mapping).
+  layoutId, each layoutId subtag brought to the 3-8 characters RFC 6497
+  allows (shorter ones merged or padded, longer ones cut; declared as a lossy
+  mapping, see locale_subtags).
 - OKLM-only metadata (description, conformance, exports, metadata,
   extensions, capability lists) is never exported and no `special` element is
   written (E19); it is always recorded as skipped.
 - Modifier keys (role: modifier) carry no output and are not exported (E22).
 """
-import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from .common import (
+    CAPS_FALLBACK_WARNING,
     ReportBuilder,
+    caps_base_levels,
+    declare_unmapped_fields,
+    effective_output,
     resolve_level_modifiers,
     levels_used_by,
+    reject_duplicate_hid,
+    reject_unsafe_text,
     reject_unsupported_v1_scope,
     skip_oklm_only_metadata,
     without_modifier_keys,
     xml_escape,
 )
+from .unicode_frozen import needs_ldml_escape
 
 # USB HID keyboard-usage-page (0x07) -> PC/AT Set 1 scan code, for the
 # alphanumeric-section keys covered by OKLM v1 (Microsoft "Keyboard Scan
@@ -75,11 +85,15 @@ LDML_SCANCODES = {**HID_TO_SCANCODE1, "0x87": "73", "0x89": "7D"}
 
 ROW_ORDER = "EDCBA"
 
+# `conformsTo` values of the keyboard3 DTD (CLDR release-48-2: conformsTo (45 | 46 | 47 | 48)).
+CONFORMS_TO_VALUES = (45, 46, 47, 48)
+
 IMPLIED_FORMS_FILE = Path(__file__).resolve().parent / "data" / "scanCodes-implied.xml"
 IMPLIED_FORM_ORDER = ["us", "iso", "abnt2", "jis", "ks"]
 
-# Metacharacters of the regular expression in a transform `from`.
-FROM_METACHARACTERS = set("\\^$.|?*+()[]{}")
+# Characters the transform `from` grammar requires escaped (UTS #35 "Escapes":
+# \. \( \) \? \[ \\ \] \{ \} \* \/ \^ \+ \| \$ -- 15 characters, the slash included).
+FROM_METACHARACTERS = set("\\^$.|?*+()[]{}/")
 
 # Functional qualifier (SPEC.md "Level Selectors") -> LDML modifier component
 # (UTS #35 Part 7 valid components: none, alt, altL, altR, caps, ctrl,
@@ -104,12 +118,9 @@ def load_implied_forms():
 
 
 def _needs_escape(ch):
-    if ch == "\\":
-        return True
-    category = unicodedata.category(ch)
-    if category in ("Cc", "Cf", "Cs", "Co", "Cn", "Mn", "Mc", "Me", "Zl", "Zp"):
-        return True
-    return category == "Zs" and ch != " "
+    # Frozen Unicode 15.1 categories (unicode_frozen): the escaping must not depend on the Python
+    # version, whose unicodedata may predate a character the manifest uses.
+    return ch == "\\" or needs_ldml_escape(ch)
 
 
 def ldml_escape(text, regex=False, replacement=False):
@@ -128,12 +139,44 @@ def ldml_escape(text, regex=False, replacement=False):
     return "".join(out)
 
 
+def locale_subtags(layout_id):
+    """layoutId -> (subtags of the t-extension field, changes): each subtag must have 3 to 8
+    characters (RFC 6497: field = "k0" *("-" 3*8alphanum)).
+
+    A subtag shorter than 3 characters is merged into the previous one ("qwerty-us" gives
+    "qwertyus"); one that has no neighbour long enough is padded with "x" ("us" gives "usx"); a
+    subtag longer than 8 is cut to 8. `changes` lists what was altered, in words, for the report.
+    """
+    changes = []
+    merged, carry = [], ""
+    for tag in layout_id.split("-"):
+        if carry:  # a leading short subtag goes in front of the next one
+            changes.append(f"subtag '{carry}' (shorter than 3 characters) merged into the following '{tag}'")
+            tag, carry = carry + tag, ""
+        if len(tag) >= 3:
+            merged.append(tag)
+        elif merged:
+            changes.append(f"subtag '{tag}' (shorter than 3 characters) merged into the previous '{merged[-1]}'")
+            merged[-1] += tag
+        else:
+            carry = tag
+    if carry:
+        padded = carry.ljust(3, "x")
+        changes.append(f"subtag '{carry}' (shorter than 3 characters) padded to '{padded}'")
+        merged.append(padded)
+    subtags = []
+    for tag in merged:
+        if len(tag) > 8:
+            changes.append(f"subtag '{tag}' (longer than 8 characters) cut to '{tag[:8]}'")
+        subtags.append(tag[:8])
+    return subtags, changes
+
+
 def derived_locale(manifest):
-    """E20: locales[0] + "-t-k0-" + layoutId. Returns (identifier, cut): cut is True when a
-    layoutId subtag had to be shortened to the 8 characters BCP 47 allows."""
-    subtags = manifest["layoutId"].split("-")
-    cut = any(len(tag) > 8 for tag in subtags)
-    return manifest["locales"][0] + "-t-k0-" + "-".join(tag[:8] for tag in subtags), cut
+    """E20: locales[0] + "-t-k0-" + layoutId. Returns (identifier, changes): `changes` is the list
+    of alterations the layoutId needed to satisfy BCP 47 (empty when none), to be declared lossy."""
+    subtags, changes = locale_subtags(manifest["layoutId"])
+    return manifest["locales"][0] + "-t-k0-" + "-".join(subtags), changes
 
 
 def _rows(manifest):
@@ -199,27 +242,46 @@ def export(manifest, source_file=None):
     if reject_unsupported_v1_scope(report, manifest):
         return None, report.build()
     manifest = without_modifier_keys(report, manifest)
+    if reject_unsafe_text(report, manifest, outputs="any") | reject_duplicate_hid(report, manifest):
+        return None, report.build()
 
     conforms_to = 45
     for export_target in manifest.get("exports", []):
         if export_target.get("target") == "ldml-keyboard-3":
-            conforms_to = export_target.get("options", {}).get("conformsTo", 45)
+            options = export_target.get("options")
+            conforms_to = options.get("conformsTo", 45) if isinstance(options, dict) else 45
             break
+    if type(conforms_to) is not int or conforms_to not in CONFORMS_TO_VALUES:
+        # The value is written in the xmlns and in the conformsTo attribute: only the DTD's own values.
+        report.error(
+            f"exports[].options.conformsTo = {conforms_to!r}: the LDML keyboard3 DTD accepts only "
+            + ", ".join(str(v) for v in CONFORMS_TO_VALUES)
+        )
+        return None, report.build()
 
     locales = manifest["locales"]
-    primary_locale, cut = derived_locale(manifest)
+    primary_locale, changes = derived_locale(manifest)
     report.mapped("locales")
-    if cut:
+    if changes:
         report.lossy(
             "layoutId",
-            "a layoutId subtag longer than 8 characters is cut to 8 in the derived LDML locale "
-            f"identifier '{primary_locale}' (BCP 47 limit)",
+            f"the derived LDML locale identifier '{primary_locale}' needs subtags of 3 to 8 characters "
+            "(RFC 6497, BCP 47): " + "; ".join(changes),
         )
     if len(locales) > 1:
         report.lossy("locales", f"only the primary locale '{locales[0]}' is exported; LDML keyboard3 declares one locale")
 
-    for field in ("layoutId", "authors", "license"):
+    for field in ("layoutId", "license"):
         report.skip(field, "no LDML info attribute for this OKLM identity/provenance field in the v1 exporter")
+    authors = [author for author in manifest.get("authors", []) if author]
+    if authors:
+        report.mapped("authors")  # info@author, the authors joined with ", "
+        if len(authors) > 1:
+            report.lossy("authors", "LDML info has one author attribute: the authors are joined with ', '")
+    if "geometry" in manifest:
+        report.skip("geometry", "the physical form comes from the keys' hid (implied or custom <form>); geometry is not read")
+    declare_unmapped_fields(report, manifest, "LDML keyboard3", {"id", "hid", "levels", "role", "modifier"},
+                            {"id", "display", "compositions", "fallback"})
 
     rows = _rows(manifest)
     unmapped_hid = []
@@ -265,16 +327,19 @@ def export(manifest, source_file=None):
 
     key_elements = []  # (id, output)
     layer_rows = {level: [] for _, level in layers}
+    caps_base = caps_base_levels(resolved)
+    caps_filled = 0
     for row in placement_rows:
         for level in layer_rows:
             layer_rows[level].append([])
         for key in row:
             for _, level in layers:
-                out = key.get("levels", {}).get(level)
+                out, filled = effective_output(key.get("levels", {}), level, caps_base)
                 if out is None:
                     # E21: keep the row aligned with the form scan codes (LDML implicit key).
                     layer_rows[level][-1].append("gap")
                     continue
+                caps_filled += filled
                 elem_id = f"k_{key['id']}_{level}"
                 if isinstance(out, str):
                     output = ldml_escape(out)
@@ -292,9 +357,15 @@ def export(manifest, source_file=None):
         for base, result in dk.get("compositions", {}).items():
             transforms.append((marker + ldml_escape(base, regex=True), ldml_escape(result, replacement=True)))
         if "fallback" in dk:
-            transforms.append((marker, ldml_escape(dk["fallback"], replacement=True)))
+            # After the compositions (the first matching rule wins): the marker followed by any
+            # other character gives the fallback then that character. A rule on the bare marker
+            # would match as soon as the dead key is pressed (a match is tried against the end of
+            # the context) and no composition would ever apply (audit C-03).
+            transforms.append((marker + "(.)", ldml_escape(dk["fallback"], replacement=True) + "$1"))
     if dead_keys:
         report.mapped("deadKeys")
+    if caps_filled:
+        report.warn(CAPS_FALLBACK_WARNING.format(count=caps_filled))
 
     skip_oklm_only_metadata(report, manifest)
 
@@ -305,16 +376,18 @@ def export(manifest, source_file=None):
         f'locale="{xml_escape(primary_locale)}" conformsTo="{conforms_to}">'
     )
     lines.append(f'  <version number="{xml_escape(str(manifest["version"]))}"/>')
-    lines.append(f'  <info name="{xml_escape(manifest["name"])}"/>')
-    lines.append("  <keys>")
-    for elem_id, output in key_elements:
-        lines.append(f'    <key id="{elem_id}" output="{xml_escape(output)}"/>')
-    lines.append("  </keys>")
+    author_attribute = f' author="{xml_escape(", ".join(authors))}"' if authors else ""
+    lines.append(f'  <info name="{xml_escape(manifest["name"])}"{author_attribute}/>')
+    # Element order of the CLDR DTD: info, settings?, displays?, keys?, flicks?, forms?, layers*, ...
     if displays:
         lines.append("  <displays>")
         for marker, display in displays:
             lines.append(f'    <display output="{xml_escape(marker)}" display="{xml_escape(display)}"/>')
         lines.append("  </displays>")
+    lines.append("  <keys>")
+    for elem_id, output in key_elements:
+        lines.append(f'    <key id="{elem_id}" output="{xml_escape(output)}"/>')
+    lines.append("  </keys>")
     if scancode_rows is not None:
         lines.append("  <forms>")
         lines.append(f'    <form id="{form_id}">')

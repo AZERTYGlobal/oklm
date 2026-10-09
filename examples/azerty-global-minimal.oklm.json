@@ -5,7 +5,7 @@
   "version": "2026.0.0",
   "license": "EUPL-1.2",
   "authors": ["AMCF"],
-  "description": "Minimal illustrative subset of AZERTY Global, hand-written to exercise the OKLM manifest schema v0.1. This file is NOT the authoritative source of truth for the layout: it only shows a few AZERTY-inherited letter keys, the space bar and one dead-key pair.",
+  "description": "Minimal illustrative subset of AZERTY Global, hand-written to exercise the OKLM manifest schema v0.2. This file is NOT the authoritative source of truth for the layout: it only shows a few AZERTY-inherited letter keys, the space bar and one dead-key pair.",
   "locales": ["fr", "fr-FR"],
   "geometry": ["iso-full", "iso-tkl"],
   "levelSelectors": {

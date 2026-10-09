@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM importer CLI (draft): LDML Keyboard 3 -> OKLM.
 
 Writes `<name>.oklm.json` and `<name>.import.report.json` (CONVERSIONS.md "LDML to OKLM"). The manifest is

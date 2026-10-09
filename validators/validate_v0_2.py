@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """Validation OKLM v0.2 : meta-validation des schemas, exemples, une fixture positive et
 une negative par regle du validateur (codes stables), migration 0.1 -> 0.2, rapports.
 

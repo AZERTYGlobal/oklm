@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: EUPL-1.2
 """OKLM validator CLI (draft 0.2).
 
 Validate one or more OKLM files against the draft 0.2 JSON Schemas, plus the
@@ -20,22 +21,36 @@ Codes (stable):
   E_DUPLICATE_KEY_ID          two keys share an id
   E_DUPLICATE_EXPORT_ID       two export declarations share an id
   E_DEADKEY_UNDEFINED         an output references a dead key that deadKeys does not define
-  E_LAYERS_UNSUPPORTED        a `layers` member: OKLM outputs live in keys[].levels (D2, D14)
+  E_LAYERS_UNSUPPORTED        a `layers` member, at any depth: OKLM outputs live in keys[].levels (D2, D14)
+  E_LEVEL_RANGE               level key outside 1-8, group key outside 2-9, levelSelectors key outside 2-8
+  E_CONTROL_CHAR              line break or C0/C1 control character (also U+2028/2029) in a name, text or output
   E_SCHEMA_VERSION_MAJOR      schemaVersion MAJOR is not 0
   W_SCHEMA_VERSION_MINOR      schemaVersion MINOR is above 2: valid, not supported
   E_EXTENSIONS_REQUIRED       extensionsRequired is not a subset of extensionsUsed
   W_UNKNOWN_MEMBER            member the schema does not declare (error under --strict)
   W_GEOMETRY_UNKNOWN          geometry family not in the known list (error under --strict)
+  E_DUPLICATE_DEADKEY_ID      two dead keys share an id (same LDML marker)
+  W_DUPLICATE_HID             two keys share a hid, whatever the spelling 0x14 / 0x0014 (error under --strict)
+  W_DUPLICATE_XKB             two keys share an xkb name (error under --strict)
+  W_FEATURE_UNREGISTERED      featuresRequired entry: 0.2 has no feature registry (a warning, even under --strict)
+  W_LEVEL_NO_SELECTOR         level 5-8 used while levelSelectors does not declare it (a warning, even under --strict)
   E_HID_RANGE                 --strict only: hid outside 0x04-0xE7 (E10)
   E_W3C_CODE                  --strict only: code is not a W3C KeyboardEvent.code value (E10)
   E_DUPLICATE_CODE            --strict only: two keys share a code (E11)
+  E_INTERNAL                  a validator stage crashed (validator bug); the other stages and files still run
+  E_DUPLICATE_JSON_KEY        a member name appears twice in one JSON object (the last value would silently win)
+  E_JSON_CONSTANT             NaN, Infinity, -Infinity or a number overflowing a float: not JSON
+  E_SURROGATE                 a string or member name holds an unpaired surrogate (not UTF-8 encodable)
+  E_READ                      file unreadable, not UTF-8 (a BOM is accepted) or not JSON; no file matches a pattern
 
 Dependency: pip install jsonschema  (>= 4.x, Draft 2020-12)
 """
 import argparse
+import glob
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -53,6 +68,9 @@ HID_PHYSICAL_MAX = 0xE7
 
 GEOMETRY_FAMILIES = {"iso", "ansi", "jis", "abnt", "ks", "touch", "custom"}
 GEOMETRY_ALIASES = {"us": "ansi", "abnt2": "abnt"}
+
+# warnings that --strict turns into errors (W_UNKNOWN_MEMBER is handled where it is built)
+STRICT_PROMOTED = {"W_GEOMETRY_UNKNOWN", "W_DUPLICATE_HID", "W_DUPLICATE_XKB"}
 
 HINTS = {
     "layers": "OKLM has no `layers`; outputs live in keys[].levels (D2, D14)",
@@ -102,27 +120,105 @@ def schema_findings(manifest, validator):
     ]
 
 
-def consistency_findings(manifest):
-    """Checks beyond JSON Schema: uniqueness, reference resolution, versions, capability lists."""
-    found = []
-    keys = [k for k in manifest.get("keys", []) if isinstance(k, dict)]
+def _dicts(value):
+    """The dict items of `value` when it is a list, else nothing: a wrong type is E_SCHEMA's business."""
+    return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
 
-    key_ids = [k.get("id") for k in keys]
-    for dup in sorted({i for i in key_ids if key_ids.count(i) > 1}, key=str):
+
+def _duplicates(values):
+    """Sorted string values that occur more than once (one pass, O(n))."""
+    counts = Counter(value for value in values if isinstance(value, str))
+    return sorted(value for value, n in counts.items() if n > 1)
+
+
+def _outputs(key):
+    """Every output string or object of a key, levels (group 1) and groups, whatever the types around."""
+    outputs = []
+    levels = key.get("levels")
+    if isinstance(levels, dict):
+        outputs.extend(levels.values())
+    groups = key.get("groups")
+    if isinstance(groups, dict):
+        for group in groups.values():
+            if isinstance(group, dict):
+                outputs.extend(group.values())
+    return outputs
+
+
+def _huge_int(text):
+    """int(text) for digits, or a very large number for what Python refuses to convert (> 4300 digits)."""
+    try:
+        return int(text)
+    except ValueError:
+        return 10 ** 12
+
+
+def consistency_findings(manifest):
+    """Checks beyond JSON Schema: uniqueness, reference resolution, versions, capability lists.
+
+    Every access is guarded by a type test: a manifest of the wrong shape is reported by the schema
+    (E_SCHEMA), never by a crash here (A-01).
+    """
+    found = []
+    if not isinstance(manifest, dict):
+        return found
+    keys = _dicts(manifest.get("keys"))
+
+    for dup in _duplicates(k.get("id") for k in keys):
         found.append(Finding("E_DUPLICATE_KEY_ID", "error", "keys", f"duplicate key id {dup}"))
 
-    exports = [e for e in manifest.get("exports", []) if isinstance(e, dict)]
-    export_ids = [e["id"] for e in exports if "id" in e]
-    for dup in sorted({i for i in export_ids if export_ids.count(i) > 1}):
+    exports = _dicts(manifest.get("exports"))
+    for dup in _duplicates(e.get("id") for e in exports):
         found.append(Finding("E_DUPLICATE_EXPORT_ID", "error", "exports", f"duplicate export id {dup}"))
 
-    dead_ids = {d.get("id") for d in manifest.get("deadKeys", []) if isinstance(d, dict)}
+    dead_keys = _dicts(manifest.get("deadKeys"))
+    for dup in _duplicates(d.get("id") for d in dead_keys):
+        found.append(Finding("E_DUPLICATE_DEADKEY_ID", "error", "deadKeys",
+                             f"duplicate dead key id {dup}: both would compile to the same LDML marker \\m{{{dup}}}"))
+
+    by_hid, by_xkb = {}, {}
     for key in keys:
-        outputs = list((key.get("levels") or {}).values())
-        for group in (key.get("groups") or {}).values():
-            outputs.extend(group.values())
-        for out in outputs:
-            if isinstance(out, dict) and "deadKey" in out and out["deadKey"] not in dead_ids:
+        hid, xkb = key.get("hid"), key.get("xkb")
+        if isinstance(hid, str) and re.fullmatch(r"0x[0-9A-Fa-f]{2,4}", hid):
+            by_hid.setdefault(int(hid, 16), []).append(str(key.get("id", "?")))
+        if isinstance(xkb, str):
+            by_xkb.setdefault(xkb, []).append(str(key.get("id", "?")))
+    for usage, ids in sorted(by_hid.items()):
+        if len(ids) > 1:
+            found.append(Finding("W_DUPLICATE_HID", "warning", "keys",
+                                 f"hid 0x{usage:02X} is used by keys {', '.join(ids)}: one HID usage names one physical key"))
+    for name, ids in sorted(by_xkb.items()):
+        if len(ids) > 1:
+            found.append(Finding("W_DUPLICATE_XKB", "warning", "keys",
+                                 f"xkb name '{name}' is used by keys {', '.join(ids)}: one XKB name names one physical key"))
+
+    features = manifest.get("featuresRequired")
+    for name in (features if isinstance(features, list) else []):
+        if isinstance(name, str):
+            found.append(Finding("W_FEATURE_UNREGISTERED", "warning", "featuresRequired",
+                                 f"feature '{name}': no registry of core features exists in 0.2, so a reader "
+                                 "cannot know whether it supports it (D31)"))
+
+    selectors = manifest.get("levelSelectors")
+    declared = set(selectors) if isinstance(selectors, dict) else set()
+    used_above_4 = {}
+    for key in keys:
+        groups = key.get("groups")
+        tables = [key.get("levels")] + (list(groups.values()) if isinstance(groups, dict) else [])
+        for table in tables:
+            for name in (table if isinstance(table, dict) else {}):
+                if name in ("5", "6", "7", "8"):
+                    used_above_4[name] = used_above_4.get(name, 0) + 1
+    for name, count in sorted(used_above_4.items()):
+        if name not in declared:
+            found.append(Finding("W_LEVEL_NO_SELECTOR", "warning", "levelSelectors",
+                                 f"level {name} is used by {count} output table(s) but levelSelectors does not "
+                                 "say how it is selected (only levels 2-4 have a default)"))
+
+    dead_ids = {d.get("id") for d in dead_keys if isinstance(d.get("id"), str)}
+    for key in keys:
+        for out in _outputs(key):
+            if isinstance(out, dict) and isinstance(out.get("deadKey"), str) and out["deadKey"] not in dead_ids:
                 found.append(
                     Finding(
                         "E_DEADKEY_UNDEFINED",
@@ -132,16 +228,14 @@ def consistency_findings(manifest):
                     )
                 )
 
-    if "layers" in manifest:
-        found.append(Finding("E_LAYERS_UNSUPPORTED", "error", "layers", HINTS["layers"]))
-
     version = manifest.get("schemaVersion")
     if isinstance(version, str) and re.fullmatch(r"[0-9]+\.[0-9]+", version):
-        major, minor = (int(part) for part in version.split("."))
+        major, minor = (_huge_int(part) for part in version.split("."))
         if major != SUPPORTED_MAJOR:
             found.append(
                 Finding("E_SCHEMA_VERSION_MAJOR", "error", "schemaVersion",
-                        f"MAJOR {major} is not supported (this validator reads MAJOR {SUPPORTED_MAJOR})")
+                        f"MAJOR {version.split('.')[0][:20]} is not supported "
+                        f"(this validator reads MAJOR {SUPPORTED_MAJOR})")
             )
         elif minor > SUPPORTED_MINOR:
             found.append(
@@ -153,14 +247,16 @@ def consistency_findings(manifest):
     used = manifest.get("extensionsUsed")
     required = manifest.get("extensionsRequired")
     if isinstance(required, list):
-        missing = sorted(set(required) - set(used if isinstance(used, list) else []))
+        listed = {name for name in (used if isinstance(used, list) else []) if isinstance(name, str)}
+        missing = sorted({name for name in required if isinstance(name, str)} - listed)
         if missing:
             found.append(
                 Finding("E_EXTENSIONS_REQUIRED", "error", "extensionsRequired",
                         "not listed in extensionsUsed: " + ", ".join(missing))
             )
 
-    for index, value in enumerate(manifest.get("geometry", [])):
+    geometry = manifest.get("geometry")
+    for index, value in enumerate(geometry if isinstance(geometry, list) else []):
         if isinstance(value, str):
             family = value.split("-")[0]
             if family not in GEOMETRY_FAMILIES and family not in GEOMETRY_ALIASES:
@@ -265,25 +361,134 @@ def unknown_member_findings(manifest, schema, strict):
     severity = "error" if strict else "warning"
     out = []
     for here, name in unknown_members(manifest, schema):
-        message = f"unknown member '{name}'"
-        if name in HINTS:
-            message += f" ({HINTS[name]})"
-        elif name != "layers":
-            message += " (a private member goes in an `extensions` object with an OKLM_, EXT_ or <VENDOR>_ prefix)"
-        if name == "layers":
-            continue  # reported as E_LAYERS_UNSUPPORTED
+        if name == "layers":  # at any depth, not only at the root (A-08)
+            out.append(Finding("E_LAYERS_UNSUPPORTED", "error", _fmt_path(here), HINTS["layers"]))
+            continue
+        message = (f"unknown member '{name}' (a private member goes in an `extensions` object "
+                   "with an OKLM_, EXT_ or <VENDOR>_ prefix)")
         out.append(Finding("W_UNKNOWN_MEMBER", severity, _fmt_path(here), message))
     return out
+
+
+CONTROL_CHARS = re.compile("[\x00-\x1f\x7f-\x9f  ]")
+
+
+def _escaped(text):
+    """`text` with every control character written as \\uXXXX, safe to print and to put in a path."""
+    return CONTROL_CHARS.sub(lambda m: f"\\u{ord(m.group()):04x}", text)
+
+
+def control_char_findings(manifest):
+    """No line break and no C0 / C1 control character (nor U+2028 / U+2029) in the text fields and in the
+    outputs (B-03): a newline in a key output, a name or a composition breaks line-based targets (.klc,
+    xkb, .keylayout, .XCompose) and is never a legitimate output. Free-form metadata blocks (training,
+    accessibility, extensions...) are not looked into. Zero-width joiners, no-break spaces, combining
+    marks and astral characters are not controls and stay valid."""
+    found = []
+    if not isinstance(manifest, dict):
+        return found
+
+    def check(value, path):
+        if isinstance(value, str):
+            match = CONTROL_CHARS.search(value)
+            if match:
+                found.append(Finding("E_CONTROL_CHAR", "error", path,
+                                     f"contains control character U+{ord(match.group()):04X}: "
+                                     "no line break or control character in names, texts and outputs"))
+
+    def check_list(value, path):
+        for index, item in enumerate(value if isinstance(value, list) else []):
+            check(item, f"{path}[{index}]")
+
+    for name in ("name", "description", "license"):
+        check(manifest.get(name), name)
+    check_list(manifest.get("authors"), "authors")
+    metadata = manifest.get("metadata")
+    if isinstance(metadata, dict):
+        for name in ("description", "versionLabel", "layoutPattern", "indicator"):
+            check(metadata.get(name), f"metadata.{name}")
+        links = metadata.get("links")
+        for name, value in (links.items() if isinstance(links, dict) else []):
+            check(value, f"metadata.links.{_escaped(name)}")
+    for index, key in enumerate(manifest.get("keys") if isinstance(manifest.get("keys"), list) else []):
+        if not isinstance(key, dict):
+            continue
+        check(key.get("name"), f"keys[{index}].name")
+        check_list(key.get("categories"), f"keys[{index}].categories")
+        levels = key.get("levels")
+        for level, out in (levels.items() if isinstance(levels, dict) else []):
+            check(out, f"keys[{index}].levels.{_escaped(level)}")
+        groups = key.get("groups")
+        for group, table in (groups.items() if isinstance(groups, dict) else []):
+            for level, out in (table.items() if isinstance(table, dict) else []):
+                check(out, f"keys[{index}].groups.{_escaped(group)}.{_escaped(level)}")
+    for index, dead in enumerate(manifest.get("deadKeys") if isinstance(manifest.get("deadKeys"), list) else []):
+        if not isinstance(dead, dict):
+            continue
+        for name in ("name", "display", "fallback"):
+            check(dead.get(name), f"deadKeys[{index}].{name}")
+        compositions = dead.get("compositions")
+        for base, output in (compositions.items() if isinstance(compositions, dict) else []):
+            check(base, f"deadKeys[{index}].compositions.{_escaped(base)}")
+            check(output, f"deadKeys[{index}].compositions.{_escaped(base)}")
+    for index, claim in enumerate(manifest.get("conformance") if isinstance(manifest.get("conformance"), list) else []):
+        if isinstance(claim, dict):
+            for name in ("reference", "scope", "notes"):
+                check(claim.get(name), f"conformance[{index}].{name}")
+    return found
+
+
+LEVEL_KEY = re.compile(r"[1-8]")
+GROUP_KEY = re.compile(r"[2-9]")
+SELECTOR_KEY = re.compile(r"[2-8]")
+
+
+def level_range_findings(manifest):
+    """Level keys 1-8, group keys 2-9 and selector keys 2-8 (SPEC): a key outside the range is an error,
+    strict or not, because every reader would silently ignore its output (A-07). `fullmatch` and an
+    ASCII class: no `01`, no `1\\n`, no full-width digit."""
+    found = []
+    if not isinstance(manifest, dict):
+        return found
+
+    def bad(path, name, expected, what):
+        found.append(Finding("E_LEVEL_RANGE", "error", path,
+                             f"{what} {name!r} is outside {expected}: no reader would use it"))
+
+    selectors = manifest.get("levelSelectors")
+    if isinstance(selectors, dict):
+        for name in selectors:
+            if name not in ("extensions", "layers") and not SELECTOR_KEY.fullmatch(name):
+                bad(f"levelSelectors.{name}", name, "levels 2-8", "level selector")
+    keys = manifest.get("keys")
+    for index, key in enumerate(keys if isinstance(keys, list) else []):
+        if not isinstance(key, dict):
+            continue
+        levels = key.get("levels")
+        if isinstance(levels, dict):
+            for name in levels:
+                if name != "layers" and not LEVEL_KEY.fullmatch(name):
+                    bad(f"keys[{index}].levels.{name}", name, "levels 1-8", "level")
+        groups = key.get("groups")
+        if isinstance(groups, dict):
+            for group, content in groups.items():
+                if group != "layers" and not GROUP_KEY.fullmatch(group):
+                    bad(f"keys[{index}].groups.{group}", group, "groups 2-9 (group 1 is `levels`)", "group")
+                elif isinstance(content, dict):
+                    for name in content:
+                        if name != "layers" and not LEVEL_KEY.fullmatch(name):
+                            bad(f"keys[{index}].groups.{group}.{name}", name, "levels 1-8", "level")
+    return found
 
 
 def strict_findings(manifest):
     """The --strict lint: HID usage ranges (E10), W3C code values and one code per key (E11)."""
     found = []
     codes_seen = {}
-    for key in manifest.get("keys", []):
-        if not isinstance(key, dict):
-            continue
-        key_id = key.get("id", "?")
+    if not isinstance(manifest, dict):
+        return found
+    for key in _dicts(manifest.get("keys")):
+        key_id = str(key.get("id", "?"))
         hid = key.get("hid")
         if isinstance(hid, str) and re.fullmatch(r"0x[0-9A-Fa-f]{2,4}", hid):
             usage = int(hid, 16)
@@ -314,22 +519,153 @@ def strict_findings(manifest):
     return found
 
 
+def guarded(stage):
+    """Run one validator stage. A crash inside it becomes one E_INTERNAL finding: the other stages and
+    the other files of a batch still run (A-01)."""
+    try:
+        return stage()
+    except Exception as exc:  # noqa: BLE001 - RecursionError and MemoryError included, by design
+        return [Finding("E_INTERNAL", "error", "(validator)",
+                        f"internal error, this is a validator bug: {type(exc).__name__}: {str(exc)[:200]}")]
+
+
 def analyze(manifest, schema=None, validator=None, strict=False):
     """All findings for one manifest. Returns a list of Finding."""
     schema = schema if schema is not None else load_schema("oklm-manifest.schema.json")
     validator = validator if validator is not None else Draft202012Validator(schema)
-    found = schema_findings(manifest, validator)
-    found += consistency_findings(manifest)
-    found += unknown_member_findings(manifest, schema, strict)
+    stages = [lambda: schema_findings(manifest, validator),
+              lambda: consistency_findings(manifest),
+              lambda: level_range_findings(manifest),
+              lambda: control_char_findings(manifest),
+              lambda: unknown_member_findings(manifest, schema, strict)]
     if strict:
-        found += strict_findings(manifest)
+        stages.append(lambda: strict_findings(manifest))
+    found = []
+    for stage in stages:
+        found += guarded(stage)
+    out_of_range = {f.path for f in found if f.code == "E_LEVEL_RANGE"}
+    found = [f for f in found if not (f.code == "W_UNKNOWN_MEMBER" and f.path in out_of_range)]
+    if strict:
         for f in found:
-            if f.code == "W_GEOMETRY_UNKNOWN":
+            if f.code in STRICT_PROMOTED:
                 f.severity = "error"
     return found
 
 
+class JsonConstantError(ValueError):
+    """NaN, Infinity, -Infinity or a number that overflows a float: not JSON (RFC 8259)."""
+
+
+class _Object(dict):
+    """A parsed JSON object that remembers the member names it received more than once."""
+    duplicates = ()
+
+
+def _object_from_pairs(pairs):
+    obj = _Object()
+    duplicates = []
+    for name, value in pairs:
+        if name in obj:
+            duplicates.append(name)
+        obj[name] = value
+    if duplicates:
+        obj.duplicates = tuple(duplicates)
+    return obj
+
+
+def _refuse_constant(name):
+    raise JsonConstantError(f"{name} is not valid JSON")
+
+
+def _finite_float(text):
+    value = float(text)
+    if value in (float("inf"), float("-inf")):
+        raise JsonConstantError(f"number {text[:30]} does not fit in a double-precision float")
+    return value
+
+
+def load_json_text(text):
+    """Parse JSON text strictly: duplicate member names are recorded (see text_findings), NaN / Infinity
+    and overflowing numbers raise JsonConstantError."""
+    return json.loads(text, object_pairs_hook=_object_from_pairs, parse_constant=_refuse_constant,
+                      parse_float=_finite_float)
+
+
+def text_findings(instance):
+    """What the JSON text can hide from a parsed document: member names given twice (the last value
+    silently wins, A-11) and lone surrogates, which no UTF-8 file can carry (A-11). Iterative walk: a
+    deeply nested document must not exhaust the stack."""
+    found = []
+    stack = [(instance, [])]
+    while stack:
+        node, path = stack.pop()
+        if isinstance(node, dict):
+            for name in getattr(node, "duplicates", ()):
+                found.append(Finding("E_DUPLICATE_JSON_KEY", "error", _fmt_path(path),
+                                     f"member '{name}' appears more than once in this object: "
+                                     "only the last value would be kept"))
+            for name, value in node.items():
+                if _has_surrogate(name):
+                    found.append(Finding("E_SURROGATE", "error", _fmt_path(path),
+                                         "a member name contains an unpaired surrogate (not UTF-8 encodable)"))
+                stack.append((value, path + [name]))
+        elif isinstance(node, list):
+            stack.extend((value, path + [index]) for index, value in enumerate(node))
+        elif isinstance(node, str) and _has_surrogate(node):
+            found.append(Finding("E_SURROGATE", "error", _fmt_path(path),
+                                 "string contains an unpaired surrogate (not UTF-8 encodable)"))
+    found.sort(key=lambda f: (f.path, f.code))
+    return found
+
+
+def _has_surrogate(text):
+    try:
+        text.encode("utf-8")
+    except UnicodeEncodeError:
+        return True
+    return False
+
+
+def validate_file(path, schema, validator, strict=False, report=False):
+    """All findings for one file. Never raises: a file that cannot be read is E_READ, a crash inside the
+    validator is E_INTERNAL, so that a batch always reaches its last file."""
+    path = Path(path)
+    try:
+        instance = load_json_text(path.read_bytes().decode("utf-8-sig"))
+    except JsonConstantError as exc:
+        return [Finding("E_JSON_CONSTANT", "error", "(file)", f"not JSON: {exc}")]
+    except OSError as exc:
+        if any(c in str(path) for c in "*?[") and not path.exists():
+            return [Finding("E_READ", "error", "(file)", "no file matches this pattern")]
+        return [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
+    except ValueError as exc:
+        return [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
+    except RecursionError:
+        return [Finding("E_READ", "error", "(file)", "cannot read as JSON: nested too deeply")]
+    found = guarded(lambda: text_findings(instance))
+    if report:
+        return found + guarded(lambda: schema_findings(instance, validator))
+    return found + analyze(instance, schema, validator, strict=strict)
+
+
+def expand_arguments(names):
+    """Expand wildcards ourselves: PowerShell 5.1 hands `examples/*.oklm.json` over unexpanded (A-20).
+    A name that exists is kept as is; a pattern without match is kept too, validate_file reports it."""
+    expanded = []
+    for name in names:
+        if any(c in name for c in "*?[") and not Path(name).exists():
+            expanded.extend(sorted(glob.glob(name, recursive=True)) or [name])
+        else:
+            expanded.append(name)
+    return expanded
+
+
 def main():
+    for stream in (sys.stdout, sys.stderr):
+        try:  # redirected stdout is cp1252 on Windows: a CJK member name must not abort the report (A-12)
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
     parser = argparse.ArgumentParser(description="Validate OKLM 0.2 files.")
     parser.add_argument("files", nargs="+", metavar="FILE")
     parser.add_argument("--report", action="store_true",
@@ -346,17 +682,9 @@ def main():
 
     exit_code = 0
     results = []
-    for name in args.files:
+    for name in expand_arguments(args.files):
         path = Path(name)
-        try:
-            instance = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            findings = [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
-        else:
-            if args.report:
-                findings = schema_findings(instance, validator)
-            else:
-                findings = analyze(instance, schema, validator, strict=args.strict)
+        findings = validate_file(path, schema, validator, strict=args.strict, report=args.report)
         errors = [f for f in findings if f.severity == "error"]
         warnings = [f for f in findings if f.severity == "warning"]
         if errors:
