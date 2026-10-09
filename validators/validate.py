@@ -29,6 +29,7 @@ Codes (stable):
   E_HID_RANGE                 --strict only: hid outside 0x04-0xE7 (E10)
   E_W3C_CODE                  --strict only: code is not a W3C KeyboardEvent.code value (E10)
   E_DUPLICATE_CODE            --strict only: two keys share a code (E11)
+  E_INTERNAL                  a validator stage crashed (validator bug); the other stages and files still run
 
 Dependency: pip install jsonschema  (>= 4.x, Draft 2020-12)
 """
@@ -36,6 +37,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -102,27 +104,61 @@ def schema_findings(manifest, validator):
     ]
 
 
-def consistency_findings(manifest):
-    """Checks beyond JSON Schema: uniqueness, reference resolution, versions, capability lists."""
-    found = []
-    keys = [k for k in manifest.get("keys", []) if isinstance(k, dict)]
+def _dicts(value):
+    """The dict items of `value` when it is a list, else nothing: a wrong type is E_SCHEMA's business."""
+    return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
 
-    key_ids = [k.get("id") for k in keys]
-    for dup in sorted({i for i in key_ids if key_ids.count(i) > 1}, key=str):
+
+def _duplicates(values):
+    """Sorted string values that occur more than once (one pass, O(n))."""
+    counts = Counter(value for value in values if isinstance(value, str))
+    return sorted(value for value, n in counts.items() if n > 1)
+
+
+def _outputs(key):
+    """Every output string or object of a key, levels (group 1) and groups, whatever the types around."""
+    outputs = []
+    levels = key.get("levels")
+    if isinstance(levels, dict):
+        outputs.extend(levels.values())
+    groups = key.get("groups")
+    if isinstance(groups, dict):
+        for group in groups.values():
+            if isinstance(group, dict):
+                outputs.extend(group.values())
+    return outputs
+
+
+def _huge_int(text):
+    """int(text) for digits, or a very large number for what Python refuses to convert (> 4300 digits)."""
+    try:
+        return int(text)
+    except ValueError:
+        return 10 ** 12
+
+
+def consistency_findings(manifest):
+    """Checks beyond JSON Schema: uniqueness, reference resolution, versions, capability lists.
+
+    Every access is guarded by a type test: a manifest of the wrong shape is reported by the schema
+    (E_SCHEMA), never by a crash here (A-01).
+    """
+    found = []
+    if not isinstance(manifest, dict):
+        return found
+    keys = _dicts(manifest.get("keys"))
+
+    for dup in _duplicates(k.get("id") for k in keys):
         found.append(Finding("E_DUPLICATE_KEY_ID", "error", "keys", f"duplicate key id {dup}"))
 
-    exports = [e for e in manifest.get("exports", []) if isinstance(e, dict)]
-    export_ids = [e["id"] for e in exports if "id" in e]
-    for dup in sorted({i for i in export_ids if export_ids.count(i) > 1}):
+    exports = _dicts(manifest.get("exports"))
+    for dup in _duplicates(e.get("id") for e in exports):
         found.append(Finding("E_DUPLICATE_EXPORT_ID", "error", "exports", f"duplicate export id {dup}"))
 
-    dead_ids = {d.get("id") for d in manifest.get("deadKeys", []) if isinstance(d, dict)}
+    dead_ids = {d.get("id") for d in _dicts(manifest.get("deadKeys")) if isinstance(d.get("id"), str)}
     for key in keys:
-        outputs = list((key.get("levels") or {}).values())
-        for group in (key.get("groups") or {}).values():
-            outputs.extend(group.values())
-        for out in outputs:
-            if isinstance(out, dict) and "deadKey" in out and out["deadKey"] not in dead_ids:
+        for out in _outputs(key):
+            if isinstance(out, dict) and isinstance(out.get("deadKey"), str) and out["deadKey"] not in dead_ids:
                 found.append(
                     Finding(
                         "E_DEADKEY_UNDEFINED",
@@ -137,11 +173,12 @@ def consistency_findings(manifest):
 
     version = manifest.get("schemaVersion")
     if isinstance(version, str) and re.fullmatch(r"[0-9]+\.[0-9]+", version):
-        major, minor = (int(part) for part in version.split("."))
+        major, minor = (_huge_int(part) for part in version.split("."))
         if major != SUPPORTED_MAJOR:
             found.append(
                 Finding("E_SCHEMA_VERSION_MAJOR", "error", "schemaVersion",
-                        f"MAJOR {major} is not supported (this validator reads MAJOR {SUPPORTED_MAJOR})")
+                        f"MAJOR {version.split('.')[0][:20]} is not supported "
+                        f"(this validator reads MAJOR {SUPPORTED_MAJOR})")
             )
         elif minor > SUPPORTED_MINOR:
             found.append(
@@ -153,14 +190,16 @@ def consistency_findings(manifest):
     used = manifest.get("extensionsUsed")
     required = manifest.get("extensionsRequired")
     if isinstance(required, list):
-        missing = sorted(set(required) - set(used if isinstance(used, list) else []))
+        listed = {name for name in (used if isinstance(used, list) else []) if isinstance(name, str)}
+        missing = sorted({name for name in required if isinstance(name, str)} - listed)
         if missing:
             found.append(
                 Finding("E_EXTENSIONS_REQUIRED", "error", "extensionsRequired",
                         "not listed in extensionsUsed: " + ", ".join(missing))
             )
 
-    for index, value in enumerate(manifest.get("geometry", [])):
+    geometry = manifest.get("geometry")
+    for index, value in enumerate(geometry if isinstance(geometry, list) else []):
         if isinstance(value, str):
             family = value.split("-")[0]
             if family not in GEOMETRY_FAMILIES and family not in GEOMETRY_ALIASES:
@@ -280,10 +319,10 @@ def strict_findings(manifest):
     """The --strict lint: HID usage ranges (E10), W3C code values and one code per key (E11)."""
     found = []
     codes_seen = {}
-    for key in manifest.get("keys", []):
-        if not isinstance(key, dict):
-            continue
-        key_id = key.get("id", "?")
+    if not isinstance(manifest, dict):
+        return found
+    for key in _dicts(manifest.get("keys")):
+        key_id = str(key.get("id", "?"))
         hid = key.get("hid")
         if isinstance(hid, str) and re.fullmatch(r"0x[0-9A-Fa-f]{2,4}", hid):
             usage = int(hid, 16)
@@ -314,19 +353,47 @@ def strict_findings(manifest):
     return found
 
 
+def guarded(stage):
+    """Run one validator stage. A crash inside it becomes one E_INTERNAL finding: the other stages and
+    the other files of a batch still run (A-01)."""
+    try:
+        return stage()
+    except Exception as exc:  # noqa: BLE001 - RecursionError and MemoryError included, by design
+        return [Finding("E_INTERNAL", "error", "(validator)",
+                        f"internal error, this is a validator bug: {type(exc).__name__}: {str(exc)[:200]}")]
+
+
 def analyze(manifest, schema=None, validator=None, strict=False):
     """All findings for one manifest. Returns a list of Finding."""
     schema = schema if schema is not None else load_schema("oklm-manifest.schema.json")
     validator = validator if validator is not None else Draft202012Validator(schema)
-    found = schema_findings(manifest, validator)
-    found += consistency_findings(manifest)
-    found += unknown_member_findings(manifest, schema, strict)
+    stages = [lambda: schema_findings(manifest, validator),
+              lambda: consistency_findings(manifest),
+              lambda: unknown_member_findings(manifest, schema, strict)]
     if strict:
-        found += strict_findings(manifest)
+        stages.append(lambda: strict_findings(manifest))
+    found = []
+    for stage in stages:
+        found += guarded(stage)
+    if strict:
         for f in found:
             if f.code == "W_GEOMETRY_UNKNOWN":
                 f.severity = "error"
     return found
+
+
+def validate_file(path, schema, validator, strict=False, report=False):
+    """All findings for one file. Never raises: a file that cannot be read is E_READ, a crash inside the
+    validator is E_INTERNAL, so that a batch always reaches its last file."""
+    try:
+        instance = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
+    except RecursionError:
+        return [Finding("E_READ", "error", "(file)", "cannot read as JSON: nested too deeply")]
+    if report:
+        return guarded(lambda: schema_findings(instance, validator))
+    return analyze(instance, schema, validator, strict=strict)
 
 
 def main():
@@ -348,15 +415,7 @@ def main():
     results = []
     for name in args.files:
         path = Path(name)
-        try:
-            instance = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            findings = [Finding("E_READ", "error", "(file)", f"cannot read as JSON: {exc}")]
-        else:
-            if args.report:
-                findings = schema_findings(instance, validator)
-            else:
-                findings = analyze(instance, schema, validator, strict=args.strict)
+        findings = validate_file(path, schema, validator, strict=args.strict, report=args.report)
         errors = [f for f in findings if f.severity == "error"]
         warnings = [f for f in findings if f.severity == "warning"]
         if errors:
