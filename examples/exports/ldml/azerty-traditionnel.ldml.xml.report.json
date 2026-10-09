@@ -50,7 +50,7 @@
   "lossyMappings": [
     {
       "path": "layoutId",
-      "detail": "a layoutId subtag longer than 8 characters is cut to 8 in the derived LDML locale identifier 'fr-t-k0-azerty-traditio' (BCP 47 limit)"
+      "detail": "the derived LDML locale identifier 'fr-t-k0-azerty-traditio' needs subtags of 3 to 8 characters (RFC 6497, BCP 47): subtag 'traditionnel' (longer than 8 characters) cut to 'traditio'"
     },
     {
       "path": "locales",

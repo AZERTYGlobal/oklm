@@ -7,7 +7,7 @@ The DTD is a copy of the official ldmlKeyboard3.dtd (CLDR release-48-2, Unicode 
 fixtures/ldml/LICENSE-UNICODE). It is applied with lxml; without lxml the DTD checks are skipped (said
 on the first line of the output) and everything else still runs.
 """
-import copy
+import re
 import sys
 
 from test_exports_support import FIXTURES, check, examples, finish, ldml, minimal, parse_xml
@@ -44,6 +44,18 @@ def main():
         if etree is not None:
             problems = dtd_problems(text)
             check(not problems, f"{stem}/ldml: not valid against the CLDR DTD: {problems[:1]}")
+
+    # C-02: the derived locale is a valid RFC 6497 t-extension (field = tkey 1*("-" 3*8alphanum))
+    tfield = re.compile(r"^[a-z][0-9](-[a-z0-9]{3,8})+$")
+    for stem, manifest in examples():
+        locale = ldml.derived_locale(manifest)[0]
+        check(tfield.match(locale.split("-t-", 1)[1]) is not None, f"{stem}: derived locale '{locale}' is not RFC 6497")
+    for layout_id, expected in (("qwerty-us", "qwertyus"), ("us", "usx"), ("a-b-cdef", "abcdef"), ("ab-cdefghijkl", "abcdefgh"),
+                                ("azerty-global-minimal", "azerty-global-minimal"), ("abcdefghijk-xy", "abcdefgh")):
+        subtags, changes = ldml.locale_subtags(layout_id)
+        check("-".join(subtags) == expected, f"locale_subtags({layout_id!r}) gave {subtags}, expected {expected}")
+        check(all(3 <= len(t) <= 8 for t in subtags), f"locale_subtags({layout_id!r}): subtag length out of 3-8")
+        check(bool(changes) == (expected != layout_id), f"locale_subtags({layout_id!r}): changes {changes}")
 
     # <displays> comes before <keys> (DTD: displays?, keys?), checked without lxml too
     root = parse_xml(ldml.export(minimal(), source_file="x")[0], "minimal/ldml")

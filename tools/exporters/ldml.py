@@ -29,8 +29,9 @@ approximations (see CONVERSIONS.md and the generated report):
   escaped (backslash, control, format, combining and non-ASCII space
   characters become \\u{...}).
 - The LDML `locale` identifier is derived (E20): locales[0] + "-t-k0-" +
-  layoutId, each layoutId subtag cut to the 8 characters BCP 47 allows (the
-  cut is declared as a lossy mapping).
+  layoutId, each layoutId subtag brought to the 3-8 characters RFC 6497
+  allows (shorter ones merged or padded, longer ones cut; declared as a lossy
+  mapping, see locale_subtags).
 - OKLM-only metadata (description, conformance, exports, metadata,
   extensions, capability lists) is never exported and no `special` element is
   written (E19); it is always recorded as skipped.
@@ -131,12 +132,44 @@ def ldml_escape(text, regex=False, replacement=False):
     return "".join(out)
 
 
+def locale_subtags(layout_id):
+    """layoutId -> (subtags of the t-extension field, changes): each subtag must have 3 to 8
+    characters (RFC 6497: field = "k0" *("-" 3*8alphanum)).
+
+    A subtag shorter than 3 characters is merged into the previous one ("qwerty-us" gives
+    "qwertyus"); one that has no neighbour long enough is padded with "x" ("us" gives "usx"); a
+    subtag longer than 8 is cut to 8. `changes` lists what was altered, in words, for the report.
+    """
+    changes = []
+    merged, carry = [], ""
+    for tag in layout_id.split("-"):
+        if carry:  # a leading short subtag goes in front of the next one
+            changes.append(f"subtag '{carry}' (shorter than 3 characters) merged into the following '{tag}'")
+            tag, carry = carry + tag, ""
+        if len(tag) >= 3:
+            merged.append(tag)
+        elif merged:
+            changes.append(f"subtag '{tag}' (shorter than 3 characters) merged into the previous '{merged[-1]}'")
+            merged[-1] += tag
+        else:
+            carry = tag
+    if carry:
+        padded = carry.ljust(3, "x")
+        changes.append(f"subtag '{carry}' (shorter than 3 characters) padded to '{padded}'")
+        merged.append(padded)
+    subtags = []
+    for tag in merged:
+        if len(tag) > 8:
+            changes.append(f"subtag '{tag}' (longer than 8 characters) cut to '{tag[:8]}'")
+        subtags.append(tag[:8])
+    return subtags, changes
+
+
 def derived_locale(manifest):
-    """E20: locales[0] + "-t-k0-" + layoutId. Returns (identifier, cut): cut is True when a
-    layoutId subtag had to be shortened to the 8 characters BCP 47 allows."""
-    subtags = manifest["layoutId"].split("-")
-    cut = any(len(tag) > 8 for tag in subtags)
-    return manifest["locales"][0] + "-t-k0-" + "-".join(tag[:8] for tag in subtags), cut
+    """E20: locales[0] + "-t-k0-" + layoutId. Returns (identifier, changes): `changes` is the list
+    of alterations the layoutId needed to satisfy BCP 47 (empty when none), to be declared lossy."""
+    subtags, changes = locale_subtags(manifest["layoutId"])
+    return manifest["locales"][0] + "-t-k0-" + "-".join(subtags), changes
 
 
 def _rows(manifest):
@@ -210,13 +243,13 @@ def export(manifest, source_file=None):
             break
 
     locales = manifest["locales"]
-    primary_locale, cut = derived_locale(manifest)
+    primary_locale, changes = derived_locale(manifest)
     report.mapped("locales")
-    if cut:
+    if changes:
         report.lossy(
             "layoutId",
-            "a layoutId subtag longer than 8 characters is cut to 8 in the derived LDML locale "
-            f"identifier '{primary_locale}' (BCP 47 limit)",
+            f"the derived LDML locale identifier '{primary_locale}' needs subtags of 3 to 8 characters "
+            "(RFC 6497, BCP 47): " + "; ".join(changes),
         )
     if len(locales) > 1:
         report.lossy("locales", f"only the primary locale '{locales[0]}' is exported; LDML keyboard3 declares one locale")

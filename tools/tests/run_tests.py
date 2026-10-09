@@ -184,11 +184,19 @@ def v02_checks(minimal, report_validator):
     check(all(ldml.ldml_escape(ch, regex=True).startswith("\\u{") for ch in metas), "E13: all 14 metacharacters escaped in `from`")
 
     # E20: derived locale, 8-character subtags
-    check(ldml.derived_locale(minimal) == ("fr-t-k0-azerty-global-minimal", False), "E20: derived locale")
+    check(ldml.derived_locale(minimal) == ("fr-t-k0-azerty-global-minimal", []), "E20: derived locale")
     traditional = load_manifest(ROOT / "examples" / "azerty-traditionnel.oklm.json")
-    check(ldml.derived_locale(traditional) == ("fr-t-k0-azerty-traditio", True), "E20: subtag cut to 8 characters")
+    identifier, changes = ldml.derived_locale(traditional)
+    check(identifier == "fr-t-k0-azerty-traditio" and len(changes) == 1, "E20: subtag cut to 8 characters")
     text, report = ldml.export(traditional, source_file="x")
     check(any(m["path"] == "layoutId" for m in report["lossyMappings"]), "E20: the cut is declared as lossy")
+    # C-02: subtags shorter than 3 characters are merged or padded (RFC 6497: 3*8alphanum)
+    us = load_manifest(ROOT / "examples" / "qwerty-us.oklm.json")
+    check(ldml.derived_locale(us)[0] == "en-t-k0-qwertyus" and ldml.derived_locale(us)[1],
+          "C-02: 'us' merged into 'qwerty' and declared")
+    text, report = ldml.export(us, source_file="x")
+    check('locale="en-t-k0-qwertyus"' in text, "C-02: qwerty-us exports a valid derived locale")
+    check(any(m["path"] == "layoutId" and "merged" in m["detail"] for m in report["lossyMappings"]), "C-02: the merge is declared as lossy")
 
     # E15: fallback is a transform, not a lossy mapping
     text, report = ldml.export(minimal, source_file="x")

@@ -48,6 +48,10 @@
   ],
   "lossyMappings": [
     {
+      "path": "layoutId",
+      "detail": "the derived LDML locale identifier 'en-t-k0-qwertyus' needs subtags of 3 to 8 characters (RFC 6497, BCP 47): subtag 'us' (shorter than 3 characters) merged into the previous 'qwerty'"
+    },
+    {
       "path": "locales",
       "detail": "only the primary locale 'en' is exported; LDML keyboard3 declares one locale"
     }
