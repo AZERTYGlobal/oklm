@@ -35,9 +35,13 @@ Decided on 2026-10-05 with schema 0.2; the exporters and the report schema follo
 - **Groups (E8).** `keys[].groups` stays reserved. Every exporter rejects a manifest that uses it and reports `compatibilityLevel: failed`.
 - **Escaping (E13).** A composition base is a literal string. In LDML `transform@from`, the 14 regex metacharacters (`\ ^ $ . | ? * + ( ) [ ] { }`, the backslash included), the characters of categories Cc, Cf, Cs, Co, Cn, Mn, Mc, Me, Zl, Zp and every non-ASCII space are written `\u{..}`. In `transform@to` and in key outputs the same rule applies, plus `$`, which is escaped in `to`.
 - **Extensions (E19).** `extensions` and `extensionsUsed` are never exported; the report lists them in `skippedFields`. Extensions found by an importer are preserved in a namespace and listed in `preservedAsExtensions`.
-- **Derived LDML locale (E20).** The `keyboard@locale` is `<locales[0]>-t-k0-<layoutId>`. The derived locale respects RFC 6497: every subtag after `k0` has 3 to 8 characters. A subtag longer than 8 characters is cut to 8 and the cut is declared in `lossyMappings` (`layoutId`); the report states what the exporter did with a subtag shorter than 3 characters. <!-- TODO-merge: codes -->
-- **Silent level (E21).** A level 1-4 without output is a key that produces nothing: LDML gets an implicit `gap` at that position, and the schema cannot express a layer `other`. A missing CapsLock level (5-8) is not silent: it takes the output of the matching level without CapsLock (5 from 1, 6 from 2, 7 from 3, 8 from 4). Exporters apply this rule when they write a level, and a reader applies it when it looks up an output. xkb never exports levels 5-8, so the rule changes nothing there. <!-- TODO-merge: codes -->
-- **Normalization.** Outputs are exported as written, without Unicode normalization. LDML Keyboard normalizes keyboard output and matches transforms on decomposed text, so an LDML consumer may recompose an output that OKLM wrote decomposed. The LDML export does not express this difference (it writes no `settings` element); the report declares it as a loss. <!-- TODO-merge: codes -->
+- **Derived LDML locale (E20).** The `keyboard@locale` is `<locales[0]>-t-k0-<layoutId>`. The derived locale respects RFC 6497: every subtag after `k0` has 3 to 8 characters. `layoutId` is split on `-`. A subtag shorter than 3 characters is merged into the previous one (`qwerty-us` gives `en-t-k0-qwertyus`), into the next one when it comes first, or padded with `x` when it stands alone (`us` gives `usx`); a subtag longer than 8 characters is cut to 8. Every such change is declared in `lossyMappings` (`layoutId`), so the export is a `lossy-mapping`. The validator does not check the locale.
+- **Silent level (E21).** A level 1-4 without output is a key that produces nothing: LDML gets an implicit `gap` at that position, and the schema cannot express a layer `other`. A missing CapsLock level (5-8) is not silent: it takes the output of the matching level without CapsLock (5 from 1, 6 from 2, 7 from 3, 8 from 4). Exporters apply this rule when they write a level, and a reader applies it when it looks up an output. xkb never exports levels 5-8, so the rule changes nothing there. The LDML and keylayout reports carry a warning that counts the outputs filled this way; klc applies the same rule without that warning (CapsLock has no effect on such a key). A level key outside 1-8 is `E_LEVEL_RANGE` (the export fails); a level 5-8 that `levelSelectors` does not declare is `W_LEVEL_NO_SELECTOR`, and the exporters skip it and report it.
+- **Normalization.** Outputs are exported as written, without Unicode normalization. LDML Keyboard normalizes keyboard output and matches transforms on decomposed text, so an LDML consumer may recompose an output that OKLM wrote decomposed. The LDML exporter does not express this difference: it writes no `settings` element (the keyboard3 DTD only allows `settings@normalization="disabled"`), and nothing in the report mentions it. This is the gap E5 of [CLDR-LDML.md](CLDR-LDML.md#known-gaps-against-ldml-keyboard-482), still open: it is neither implemented nor declared.
+- **Text an exporter cannot write.** The validator already refuses control characters (`E_CONTROL_CHAR`), but an exporter checks again the text it writes, because it can be called on a manifest that did not go through the validator. It refuses what its target cannot hold: no file is written, `compatibilityLevel` is `failed`, and `errors` names each path and code point (`keys[D01].levels.1: U+0007 (control character) is not exportable`; at most 20, then a count). Identity text (`name`, `version`, `license`, `authors`) may hold no control character, nor U+2028 or U+2029, in any exporter. For outputs: xkb refuses every control character; keylayout writes tab, line feed and carriage return as XML character references and refuses the other controls; LDML, klc and Stream Deck refuse only NUL, lone surrogates, U+FFFE and U+FFFF (LDML writes the other special characters as `\u{..}`). Nothing is altered silently.
+- **Duplicated `hid` or `xkb` name.** The validator only warns (`W_DUPLICATE_HID`, `W_DUPLICATE_XKB`) unless `--strict` is given. The LDML, keylayout and klc exporters refuse a duplicated `hid` in any mode (`compatibilityLevel: failed`); the xkb and Stream Deck exporters do not check it, and no exporter checks a duplicated `xkb` name.
+- **Standalone character of a dead key.** keylayout (terminator) and klc (`DEADKEY` name) share one order of choice, in `tools/exporters/common.py`: the dead key's `fallback`, then its `display`, then a built-in table of conventional spacing characters, then the result the manifest gives for the dead key followed by Space. keylayout declares a lossy mapping when the character did not come from `fallback`; when none exists it writes no terminator and warns. klc then uses a private-use placeholder (lossy), also when two dead keys would get the same character, and refuses a character that is not one BMP character.
+- **Authors in LDML.** `authors` is exported to `info@author`, the entries joined with `, ` (empty entries dropped). With more than one author the join is declared in `lossyMappings` (`authors`). The other exporters do not write `authors` as an author field.
 - **Scan codes (E1).** When the keys cover exactly one of the CLDR implied forms (`us`, `iso`, `abnt2`, `jis`, `ks`, table `scanCodes-implied.xml` bundled in `tools/exporters/data/` with the Unicode license), the exporter uses that form and writes no custom `<form>`. Otherwise it writes a custom form.
 - **Fallback (E15).** `fallback` is exported as a transform on the bare marker. It is not a lossy mapping.
 - **Modifier keys (E22).** A key with `role: "modifier"` is skipped by the exporters and declared in `skippedFields`.
@@ -95,7 +99,7 @@ The report must include:
 
 The root element of an exported file carries `conformsTo`, and the XML namespace carries the same number (`http://unicode.org/cldr/45/keyboard3` for 45). The exporter reads it from the `options.conformsTo` of the manifest's LDML export target and writes 45 when the option is absent; the six example manifests declare 45.
 
-Accepted values are the whole numbers from 45 to 48: the keyboard3 DTD of CLDR 48.2 lists `conformsTo (45 | 46 | 47 | 48)`, and 45 is the CLDR release that introduced keyboard3. Another value makes the manifest or the export fail. <!-- TODO-merge: codes -->
+Accepted values are the whole numbers from 45 to 48: the keyboard3 DTD of CLDR 48.2 lists `conformsTo (45 | 46 | 47 | 48)`, and 45 is the CLDR release that introduced keyboard3. Another value is `E_SCHEMA` for the manifest, and an exporter called on it reports `failed`.
 
 Two different numbers are in play, which is why the documents mention both 45 and 48.2. `conformsTo` is the conformance level the exported file declares. 48.2 is the edition of UTS #35 Part 7 that this project reads and checks its work against. Declaring 45, the lowest accepted value, is a deliberate choice that asks the least of a consumer. The project has not checked that every construct the exporter writes already existed in CLDR 45, and no consumer was tested against 45 specifically, so treat the number as a declaration, not as a measured property.
 
@@ -229,7 +233,8 @@ Known, explicitly reported approximations:
   configuration). macOS keylayout encodes the full composition table
   natively via its `<actions>`/`<terminators>` state machine, including the
   dead key pressed while another dead state is pending; the terminator
-  characters come from `fallback`, then `display`, then a built-in table.
+  characters follow the standalone-character order above (`fallback`, `display`,
+  built-in table, dead key followed by Space).
   The macOS behavior of these `.keylayout` additions is not tested on a Mac
   (checked against the shipped AZERTY Global `.keylayout` only);
 - the exporters run from `tools/export.py` (see `tools/exporters/`) and are
@@ -247,6 +252,10 @@ character the layout types, except ASCII letters, digits and space, on a
 Stream Deck XL grid (8 x 4, 32 buttons per page). It is a reminder and a
 fallback for rarely used symbols, not a layout installer.
 
+- The zip holds stored (not compressed) entries, a fixed timestamp and creator
+  system, sorted entries: the same manifest gives the same bytes on every
+  operating system and Python version. The price is size (13 to 37 KB per
+  example).
 - Always reported as `lossy-mapping` with `roundTripConfidence: low`: key
   ids, levels, modifiers, dead-key sequences and compositions are not
   represented.
@@ -268,9 +277,9 @@ reference for the mapping. In short:
   CapsLock behaviour that needs `SGCap` is reported as lossy;
 - Level5Shift, NumLock and levels without selectors are skipped and reported;
 - ligatures and characters outside the BMP are not exported (reported);
-- a dead key needs a standalone character: `display`, then `fallback`, then a
-  table of conventional spacing accents, then a private-use placeholder
-  (reported as lossy); compositions whose base or result is not one BMP
+- a dead key needs a standalone character: `fallback`, then `display`, then a
+  table of conventional spacing accents, then the result of the dead key
+  followed by Space, then a private-use placeholder (reported as lossy); compositions whose base or result is not one BMP
   character are skipped and counted;
 - always `lossy-mapping`, `roundTripConfidence: low`.
 - **Not compiled.** MSKLC was not available; the files are checked by an

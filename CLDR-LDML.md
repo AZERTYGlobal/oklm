@@ -137,21 +137,21 @@ not attempt (`backspace` transforms, `reorder`, `variables`, `flicks`,
 | E1 | The exporter uses the CLDR implied form (`us`, `iso`, `abnt2`, `jis`, `ks`) when the keys cover it exactly, otherwise a custom form. |
 | E2 | `version` is SemVer; the free label moves to `metadata.versionLabel`. |
 | E3, E4 | `metadata.attribution`, `metadata.layoutPattern` and `metadata.indicator` exist in the manifest; the exporter does not write `info@attribution`, `@layout` or `@indicator` yet. |
-| E5 | Normalization (`settings@normalization`; LDML normalizes keyboard output and matches transforms on decomposed text): OKLM exports outputs as written, without normalization, and declares the difference as a loss. |
+| E5 | Normalization (`settings@normalization`; LDML normalizes keyboard output and matches transforms on decomposed text): OKLM exports outputs as written, without normalization. The exporter writes no `settings` element and the report does not mention the difference: still open. |
 | E6 | `NumLock` stays a level selector; the LDML export skips it and reports the skip. |
 | E7 | Levels 5-8 stay in the core as an OKLM extension beyond ISO; a missing CapsLock level takes the output of the matching level without CapsLock. |
 | E9 | `key.id` is limited to the rows `A` to `E` with two digits; any other physical key is a frame key, outside the core. |
 | E10, E11 | `hid` ranges and the W3C `code` list are checked by `validate.py --strict`. |
 | E13 | Escaping implemented, in `from` (metacharacters and non-printing characters) and in `to` (`$`). A real bug is fixed: a raw backslash was written unescaped. |
 | E15 | `fallback` is an explicit transform, no longer a lossy mapping. |
-| E20 | Locale derived as `<locales[0]>-t-k0-<layoutId>`, subtags cut to 8 characters, the cut reported. |
+| E20 | Locale derived as `<locales[0]>-t-k0-<layoutId>`, subtags of 3 to 8 characters (RFC 6497): shorter ones merged or padded, longer ones cut, every change reported. |
 | E19 | `extensions` (OKLM's counterpart of LDML `special` and vendor data) are never exported; the report declares them as skipped. Extensions found by the LDML importer are preserved in `OKLM_ldml`. |
 | E21 | Omitted level 1-4 means no output; exported as `gap`. |
 | E22 | Modifier keys carry `role` and `modifier`; the output form `{ "modifier": ... }` is removed. |
 | E8 | `groups` stays reserved and rejected. |
 | E12 | `geometry` is no longer a closed enum; the validator checks the family and accepts `us` for `ansi` and `abnt2` for `abnt`. |
 
-Still open: E3, E4 (the manifest members are not exported to `info@attribution`, `info@layout`, `info@indicator`), E7 (levels 5-8 beyond `shift`, `altR`, `caps`), E14 (`display` rule), and the layer `other` of E21.
+Still open: E3, E4 (the manifest members are not exported to `info@attribution`, `info@layout`, `info@indicator`), E7 (levels 5-8 beyond `shift`, `altR`, `caps`), E14 (`display` rule), E5 (normalization: neither written nor declared), and the layer `other` of E21.
 
 ## Positioning
 

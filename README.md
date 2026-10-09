@@ -81,7 +81,7 @@ when prose and schema disagree.
 
 ## Install
 
-Python 3 (tested with 3.13) and `jsonschema` 4 or later (tested with 4.26.0, Draft 2020-12). Nothing else: the tools use the standard library.
+Python 3.11 or later (the CI workflow checks 3.11 and 3.13; tested here with 3.13) and `jsonschema` 4 (`>=4.0,<5` in `requirements.txt`; tested with 4.26.0, Draft 2020-12). Nothing else: the tools use the standard library.
 
 ```text
 pip install -r requirements.txt
@@ -167,7 +167,8 @@ which are not in this repository.
 python tools/tests/run_all.py
 ```
 
-runs every check below in one process and exits with status 1 if one of them fails. Separately:
+runs every check below, each suite in its own process, plus the `test_exports_*.py`, `test_migrate.py` and
+`test_validate.py` suites, and exits with status 1 if one of them fails. Separately:
 
 ```text
 python validators/validate.py examples/*.oklm.json
@@ -184,12 +185,16 @@ python tools/tests/test_ldml_import.py
 reports instead (`python validators/validate.py --report FILE.report.json`).
 `--strict` lints what the schema does not: unknown members and extension
 prefixes, HID usage ranges, W3C `code` values, one physical code per key; it
-turns the warnings `W_UNKNOWN_MEMBER` and `W_GEOMETRY_UNKNOWN` into errors.
+turns the warnings `W_UNKNOWN_MEMBER`, `W_GEOMETRY_UNKNOWN`, `W_DUPLICATE_HID` and
+`W_DUPLICATE_XKB` into errors.
 `--json` prints the findings with stable codes. Beyond the schema, the
 validator refuses duplicated JSON member names, `NaN` and `Infinity`, control
 characters in names and outputs, level and group keys out of bounds and
-duplicated dead keys (see [SPEC.md](SPEC.md#validation-requirements)).
-<!-- TODO-merge: codes -->
+duplicated dead keys (`E_DUPLICATE_JSON_KEY`, `E_JSON_CONSTANT`, `E_CONTROL_CHAR`,
+`E_LEVEL_RANGE`, `E_DUPLICATE_DEADKEY_ID`; the full list of codes is in
+[SPEC.md](SPEC.md#validator-codes)). The other warnings (`W_SCHEMA_VERSION_MINOR`,
+`W_FEATURE_UNREGISTERED`, `W_LEVEL_NO_SELECTOR`) stay warnings even under
+`--strict`.
 
 `run_tests.py` covers the LDML, xkb (with its `.XCompose` companion) and
 keylayout exports of the six examples (18 exports, with their reports). The `.klc` and Stream Deck exports are covered
@@ -201,10 +206,17 @@ parity checks against the QWERTY Global source files when it cannot find them.
 python tools/migrate_0_1_to_0_2.py [--out DIR] FILE.oklm.json [FILE ...]
 ```
 
-migrates a 0.1 manifest to 0.2, and only a 0.1 manifest. **Without `--out` it
-rewrites the file in place**; with `--out DIR` it writes a copy and keeps the
-source. It stops with an error instead of overwriting a value that its changes
-would collide with. <!-- TODO-merge: codes -->
+migrates a 0.1 manifest to 0.2, and only a 0.1 manifest (a `0.2` file is left
+alone, any other `schemaVersion` is refused). **Without `--out` it rewrites the
+file in place**; with `--out DIR` it writes a copy and keeps the source. It
+stops with an error instead of overwriting a value that its changes would
+collide with (an existing `metadata.versionLabel`, an extension of the same
+name), and it refuses to write a manifest the validator would reject. The
+migration has no code of its own: a refusal prints `error: <file>: <message>` on
+stderr, the exit status is 1 and the file is left as it was. `version` becomes
+SemVer; the old text goes to `metadata.versionLabel` when the SemVer does not
+say it back (`2026.1` becomes `2026.1.0` and keeps the label `2026.1`; `1.0`
+becomes `1.0.0` with no label).
 
 ## What this is not
 

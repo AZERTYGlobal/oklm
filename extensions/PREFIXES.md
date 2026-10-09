@@ -9,7 +9,7 @@ Since schema 0.2 the manifest schema is open. Data outside the core goes in an
 ```
 
 A member that matches this pattern is valid only inside `extensions`. Anywhere
-else the schema rejects it, so a typo cannot silently become data. (`D34` and
+else the schema rejects it (`E_SCHEMA`), so a typo cannot silently become data. (`D34` and
 `D38` are decisions of the research journal in [`research/`](../research/), in French.)
 
 ## Prefixes
@@ -23,7 +23,7 @@ else the schema rejects it, so a typo cannot silently become data. (`D34` and
 ## Rules
 
 1. List every namespace a file uses in the root array `extensionsUsed`.
-2. List in `extensionsRequired` (a subset of `extensionsUsed`) the namespaces that a reader must understand to use the file correctly. A reader that does not know one of them refuses the file. Otherwise it ignores the block and keeps it intact. The validator checks a different thing: that `extensionsRequired` is a subset of `extensionsUsed`. <!-- TODO-merge: codes -->
+2. List in `extensionsRequired` (a subset of `extensionsUsed`) the namespaces that a reader must understand to use the file correctly. A reader that does not know one of them refuses the file. Otherwise it ignores the block and keeps it intact. The validator checks a different thing: that `extensionsRequired` is a subset of `extensionsUsed` (`E_EXTENSIONS_REQUIRED`).
 3. Core features needed by a file go in `featuresRequired`, not in an extension.
 4. Exporters never write extensions into the target format. The conversion report lists them in `skippedFields`.
 5. The content of an extension is its owner's business. OKLM validates the namespace name, not the content.
